@@ -1,3 +1,7 @@
+<style>
+pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
+</style>
+
 # HỒI QUY TUYẾN TÍNH (LINEAR REGRESSION)
 
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 4 – Hồi quy tuyến tính.
@@ -171,13 +175,28 @@ với $\eta$ là tốc độ học (learning rate). Cách này phù hợp khi d�
 
 Cho dữ liệu chiều cao và cân nặng của 15 người. Hai người có chiều cao **155 cm** và **160 cm** được tách ra làm **tập kiểm tra**, 13 người còn lại là **tập huấn luyện**.
 
-| Chiều cao (cm) | Cân nặng (kg) | Chiều cao (cm) | Cân nặng (kg) | Chiều cao (cm) | Cân nặng (kg) |
-|---|---|---|---|---|---|
-| 147 | 49 | 158 | 54 | 173 | 63 |
-| 150 | 50 | **160** | **56** | 175 | 64 |
-| 153 | 51 | 163 | 58 | 178 | 66 |
-| **155** | **52** | 165 | 59 | 180 | 67 |
-| 168 | 60 | 170 | 62 | 183 | 68 |
+<table width="100%" style="width: 100%;">
+  <thead>
+    <tr><th>STT</th><th>Chiều cao (cm)</th><th>Cân nặng (kg)</th><th>Tập dữ liệu</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>147</td><td>49</td><td>Huấn luyện</td></tr>
+    <tr><td>2</td><td>150</td><td>50</td><td>Huấn luyện</td></tr>
+    <tr><td>3</td><td>153</td><td>51</td><td>Huấn luyện</td></tr>
+    <tr><td>4</td><td>158</td><td>54</td><td>Huấn luyện</td></tr>
+    <tr><td>5</td><td>163</td><td>58</td><td>Huấn luyện</td></tr>
+    <tr><td>6</td><td>165</td><td>59</td><td>Huấn luyện</td></tr>
+    <tr><td>7</td><td>168</td><td>60</td><td>Huấn luyện</td></tr>
+    <tr><td>8</td><td>170</td><td>62</td><td>Huấn luyện</td></tr>
+    <tr><td>9</td><td>173</td><td>63</td><td>Huấn luyện</td></tr>
+    <tr><td>10</td><td>175</td><td>64</td><td>Huấn luyện</td></tr>
+    <tr><td>11</td><td>178</td><td>66</td><td>Huấn luyện</td></tr>
+    <tr><td>12</td><td>180</td><td>67</td><td>Huấn luyện</td></tr>
+    <tr><td>13</td><td>183</td><td>68</td><td>Huấn luyện</td></tr>
+    <tr><td><b>14</b></td><td><b>155</b></td><td><b>52</b></td><td><b>Kiểm tra</b></td></tr>
+    <tr><td><b>15</b></td><td><b>160</b></td><td><b>56</b></td><td><b>Kiểm tra</b></td></tr>
+  </tbody>
+</table>
 
 *(Các dòng in đậm là tập kiểm tra.)*
 
@@ -208,25 +227,39 @@ plt.ylabel('Can nang (kg)')
 plt.show()
 ```
 
+![Chiều cao và cân nặng của tập huấn luyện](images/chieu_cao_can_nang.png)
+
+*Hình: Chiều cao và cân nặng của 13 người trong tập huấn luyện. Mã nguồn vẽ hình: [images/ve_chieu_cao_can_nang.py](images/ve_chieu_cao_can_nang.py).*
+
 Các điểm dữ liệu nằm **gần như trên một đường thẳng**, vì vậy hồi quy tuyến tính có khả năng cho kết quả tốt.
 
 ### 3.3. Nghiệm theo công thức
 
 ```python
-# Tao ma tran Xbar (them cot 1 vao truoc ma tran X)
+# Bước 1: Tạo ma trận Xbar (thêm cột 1 vào trước ma trận X)
+# X.shape[0] = 13 là số mẫu -> one là vector cột gồm 13 số 1, kích thước 13 x 1
 one = np.ones((X.shape[0], 1))
+# Ghép theo chiều ngang (axis=1): cột 1 là số 1, cột 2 là chiều cao
+# Xbar kích thước 13 x 2, mỗi hàng là [1, x_i] => [1, x_i] . [w_0, w_1] = w_0 + w_1 * x_i
 Xbar = np.concatenate((one, X), axis=1)
 
-# Tinh w = (Xbar^T Xbar)^+ Xbar^T y
+# Tính w = (Xbar^T Xbar)^+ Xbar^T y
+# Bước 2: A = Xbar^T Xbar, kích thước (2 x 13)(13 x 2) = 2 x 2
+#         A = [[N, tổng x_i], [tổng x_i, tổng x_i^2]] = [[13, 2163], [2163, 361527]]
 A = np.dot(Xbar.T, Xbar)
+# Bước 3: b = Xbar^T y, kích thước (2 x 13)(13) = 2
+#         b = [tổng y_i, tổng x_i*y_i] = [771, 129198]
 b = np.dot(Xbar.T, y)
+# Bước 4: Giải hệ phương trình chuẩn A w = b bằng giả nghịch đảo: w = A^+ b
+#         pinv vẫn cho nghiệm khi A không khả nghịch (inv sẽ báo lỗi)
 w = np.dot(np.linalg.pinv(A), b)
 
+# w là mảng 1 chiều: w[0] là hệ số chệch w_0, w[1] là hệ số góc w_1
 w_0, w_1 = w[0], w[1]
 print('w_0 =', w_0)
 print('w_1 =', w_1)
 
-# Ve duong hoi quy
+# Vẽ đường hồi quy
 x0 = np.linspace(145, 185, 2)
 y0 = w_0 + w_1 * x0
 plt.plot(X, y, 'ro')
@@ -235,21 +268,135 @@ plt.xlabel('Chieu cao (cm)')
 plt.ylabel('Can nang (kg)')
 plt.show()
 
-# Du doan tren tap kiem tra
+# Dự đoán trên tập kiểm tra
 y1 = w_1 * 155 + w_0
 y2 = w_1 * 160 + w_0
-print('Chieu cao 155 cm, can nang thuc te 52 kg, du doan %.2f kg' % y1)
-print('Chieu cao 160 cm, can nang thuc te 56 kg, du doan %.2f kg' % y2)
+print('Chiều cao 155 cm, cân nặng thực tế 52 kg, dự đoán %.2f kg' % y1)
+print('Chiều cao 160 cm, cân nặng thực tế 56 kg, dự đoán %.2f kg' % y2)
 ```
+
+#### Giải thích chi tiết phần tính nghiệm
+
+Phần tính nghiệm gồm 4 bước, ứng với công thức ở mục 2.5:
+
+$$
+\bar{\mathbf{w}} = (\bar{\mathbf{X}}^T \bar{\mathbf{X}})^{\dagger} \bar{\mathbf{X}}^T \mathbf{y}
+$$
+
+| Bước | Code | Công thức | Kích thước |
+| --- | --- | --- | --- |
+| 1 | `Xbar = np.concatenate((one, X), axis=1)` | $\bar{\mathbf{X}}$ | $13 \times 2$ |
+| 2 | `A = np.dot(Xbar.T, Xbar)` | $\mathbf{A} = \bar{\mathbf{X}}^T \bar{\mathbf{X}}$ | $(2 \times 13)(13 \times 2) = 2 \times 2$ |
+| 3 | `b = np.dot(Xbar.T, y)` | $\mathbf{b} = \bar{\mathbf{X}}^T \mathbf{y}$ | $(2 \times 13)(13) = 2$ |
+| 4 | `w = np.dot(np.linalg.pinv(A), b)` | $\bar{\mathbf{w}} = \mathbf{A}^{\dagger} \mathbf{b}$ | $(2 \times 2)(2) = 2$ |
+
+**Bước 1: Thêm cột toàn số 1 vào trước $\mathbf{X}$**
+
+```python
+one = np.ones((X.shape[0], 1))
+Xbar = np.concatenate((one, X), axis=1)
+```
+
+- `X.shape[0]` là số mẫu (13), nên `one` là vector cột gồm 13 số 1, kích thước $13 \times 1$.
+- `np.concatenate(..., axis=1)` ghép **theo chiều ngang** (thêm cột): cột 1 là `one`, cột 2 là chiều cao. Nếu dùng `axis=0` thì hai mảng bị xếp chồng theo chiều dọc, sai ý đồ.
+
+$$
+\mathbf{X} = \begin{bmatrix} 147 \\ 150 \\ \vdots \\ 183 \end{bmatrix}
+\quad \longrightarrow \quad
+\bar{\mathbf{X}} = \begin{bmatrix} 1 & 147 \\ 1 & 150 \\ \vdots & \vdots \\ 1 & 183 \end{bmatrix}
+$$
+
+Lý do thêm cột 1: mỗi hàng của $\bar{\mathbf{X}}$ là $\bar{\mathbf{x}}^T = [1, x]$, nên
+
+$$
+\bar{\mathbf{x}}^T \bar{\mathbf{w}} = 1 \cdot w_0 + x \cdot w_1 = w_0 + w_1 x
+$$
+
+Nhờ cột 1, hệ số chệch $w_0$ được gộp vào vector $\bar{\mathbf{w}}$ và tính cùng lúc với $w_1$ bằng một công thức duy nhất.
+
+**Bước 2: Tính $\mathbf{A} = \bar{\mathbf{X}}^T \bar{\mathbf{X}}$**
+
+```python
+A = np.dot(Xbar.T, Xbar)
+```
+
+`Xbar.T` là ma trận chuyển vị, kích thước $2 \times 13$. Nhân với `Xbar` ($13 \times 2$) được ma trận vuông $2 \times 2$:
+
+$$
+\mathbf{A} = \begin{bmatrix} N & \sum x_i \\ \sum x_i & \sum x_i^2 \end{bmatrix}
+= \begin{bmatrix} 13 & 2163 \\ 2163 & 361527 \end{bmatrix}
+$$
+
+- $N = 13$: tổng các tích $1 \cdot 1$, tức số mẫu.
+- $\sum x_i = 2163$: tổng chiều cao.
+- $\sum x_i^2 = 361527$: tổng bình phương chiều cao.
+
+**Bước 3: Tính $\mathbf{b} = \bar{\mathbf{X}}^T \mathbf{y}$**
+
+```python
+b = np.dot(Xbar.T, y)
+```
+
+`Xbar.T` ($2 \times 13$) nhân với `y` (13 phần tử) được vector 2 phần tử:
+
+$$
+\mathbf{b} = \begin{bmatrix} \sum y_i \\ \sum x_i y_i \end{bmatrix}
+= \begin{bmatrix} 771 \\ 129198 \end{bmatrix}
+$$
+
+- $\sum y_i = 771$: tổng cân nặng.
+- $\sum x_i y_i = 129198$: tổng các tích chiều cao × cân nặng.
+
+**Bước 4: Tính $\bar{\mathbf{w}} = \mathbf{A}^{\dagger} \mathbf{b}$**
+
+```python
+w = np.dot(np.linalg.pinv(A), b)
+```
+
+Bước 2 và 3 thực chất là lập **hệ phương trình chuẩn** $\mathbf{A}\bar{\mathbf{w}} = \mathbf{b}$ (mục 2.5). Viết tường minh:
+
+$$
+\begin{cases}
+13\, w_0 + 2163\, w_1 = 771 \\
+2163\, w_0 + 361527\, w_1 = 129198
+\end{cases}
+$$
+
+Giải hệ 2 phương trình 2 ẩn này được $w_0 \approx -33.7354$ và $w_1 \approx 0.5592$. Code giải hệ bằng cách nhân $\mathbf{b}$ với giả nghịch đảo của $\mathbf{A}$:
+
+$$
+\mathbf{A}^{\dagger} \approx \begin{bmatrix} 16.98745 & -0.10164 \\ -0.10164 & 0.00061 \end{bmatrix},
+\qquad
+\bar{\mathbf{w}} = \mathbf{A}^{\dagger}\mathbf{b} \approx \begin{bmatrix} -33.7354 \\ 0.5592 \end{bmatrix}
+$$
+
+Vì sao dùng `pinv` (giả nghịch đảo) mà không dùng `inv` (nghịch đảo)?
+
+- Ở ví dụ này, $\det(\mathbf{A}) = 13 \cdot 361527 - 2163^2 = 21282 \neq 0$, nên $\mathbf{A}$ khả nghịch và `pinv(A)` cho cùng kết quả với `inv(A)`.
+- Khi $\mathbf{A}$ không khả nghịch (ví dụ có hai đặc trưng trùng nhau, hoặc số mẫu ít hơn số đặc trưng), `inv` báo lỗi, còn `pinv` vẫn cho nghiệm. Vì vậy `pinv` an toàn hơn.
+
+**Ghi chú về NumPy**
+
+- `np.dot(P, Q)` là phép nhân ma trận; có thể viết gọn là `P @ Q`. Cả 4 bước có thể viết thành một dòng: `w = np.linalg.pinv(Xbar.T @ Xbar) @ Xbar.T @ y`.
+- `y` là mảng 1 chiều nên `b` và `w` cũng là mảng 1 chiều: `w[0]` là $w_0$, `w[1]` là $w_1$.
+
+**Ý nghĩa của nghiệm**
+
+- $w_1 \approx 0.5592$: cao thêm 1 cm thì cân nặng tăng trung bình khoảng 0.56 kg.
+- $w_0 \approx -33.7354$: là điểm cắt trục tung, giúp đường thẳng nằm đúng vị trí. Giá trị này không có ý nghĩa thực tế (không ai cao 0 cm), vì mô hình chỉ đáng tin trong khoảng chiều cao của dữ liệu (147–183 cm).
 
 **Kết quả:**
 
 ```
 w_0 = -33.7354
 w_1 = 0.5592
-Chieu cao 155 cm, can nang thuc te 52 kg, du doan 52.94 kg
-Chieu cao 160 cm, can nang thuc te 56 kg, du doan 55.74 kg
+Chiều cao 155 cm, cân nặng thực tế 52 kg, dự đoán 52.94 kg
+Chiều cao 160 cm, cân nặng thực tế 56 kg, dự đoán 55.74 kg
 ```
+
+![Đường hồi quy theo nghiệm công thức](images/nghiem_cong_thuc.png)
+
+*Hình: Đường hồi quy $\hat{y} = 0.5592x - 33.7354$ tìm được bằng công thức (xanh dương) đi sát 13 điểm huấn luyện (đỏ). Với tập kiểm tra, ô vuông xanh lá là cân nặng thực tế, dấu × là giá trị dự đoán; đường chấm nối hai giá trị cho thấy sai số. Mã nguồn vẽ hình: [images/ve_nghiem_cong_thuc.py](images/ve_nghiem_cong_thuc.py).*
 
 Kết quả dự đoán khá sát với giá trị thực tế.
 
