@@ -49,6 +49,10 @@ $$
 > **Vì sao cần hệ số chệch $w_0$?**
 > Nếu không có $w_0$, đường hồi quy buộc phải đi qua gốc tọa độ (khi $\mathbf{x} = \mathbf{0}$ thì $\hat{y} = 0$). Điều này thường không hợp lý trong thực tế. Hệ số chệch cho phép đường hồi quy dịch chuyển song song với trục tung, giúp mô tả dữ liệu tốt hơn.
 
+![Vai trò của hệ số chệch w0](images/he_so_chech.png)
+
+*Hình: Mô phỏng 40 căn nhà với giá thực $y \approx 800 + 15x$. Đường **có** $w_0$ (xanh) bám sát dữ liệu. Đường **không có** $w_0$ (đỏ, nét đứt) bị buộc đi qua gốc tọa độ nên phải "dốc" hơn để bù: nó dự đoán thấp với nhà nhỏ và cao với nhà lớn. Mã nguồn vẽ hình: [images/ve_he_so_chech.py](images/ve_he_so_chech.py).*
+
 ---
 
 ## 2. Xây dựng và tối ưu hàm mất mát
@@ -80,6 +84,8 @@ $$
 1. Sai số $e$ có thể âm hoặc dương. Nếu cộng trực tiếp, các sai số sẽ **triệt tiêu lẫn nhau**. Bình phương đảm bảo mọi sai số đều không âm.
 2. Có thể dùng trị tuyệt đối $|e|$, nhưng hàm này **không khả vi tại $e = 0$**, gây khó khăn cho các thuật toán tối ưu dựa trên đạo hàm như Gradient Descent.
 3. Hệ số $\frac{1}{2}$ chỉ để thuận tiện: khi lấy đạo hàm, nó triệt tiêu với số $2$ sinh ra từ bình phương.
+
+> **Lưu ý:** Trong bài này ta dùng **sai số bình phương** vì nó khả vi, lồi và cho **nghiệm dạng đóng** (mục 2.5). Khi lấy trung bình các sai số trên toàn bộ tập dữ liệu, ta thu được các độ đo đánh giá mô hình như MAE, MSE, RMSE (xem mục 6).
 
 ### 2.3. Hàm mất mát
 
