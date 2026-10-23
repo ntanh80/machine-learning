@@ -13,3 +13,6 @@ latext_page/*.toc
 latext_page/*.synctex.gz
 latext_page/*.fdb_latexmk
 latext_page/*.fls
+
+# File khóa tạm của Office
+~$*
