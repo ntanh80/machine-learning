@@ -323,11 +323,11 @@ Phụ lục~\ref{pl:nhatky}.}
   \rowcolor{black!8}\textbf{STT} & \textbf{Họ và tên} & \textbf{Nhiệm vụ phụ trách} & \textbf{Mức độ hoàn thành} \\ \hline
   1 & \svAten\newline \svAma &
     -- Khảo sát, tiền xử lý dữ liệu (Chương 2)\newline
-    -- Xây dựng mô hình \dots\ (Chương 3)\newline
+    -- Xây dựng mô hình \dots\ (Chương 2)\newline
     -- Viết báo cáo các mục \dots & 100\% \\ \hline
   2 & \svBten\newline \svBma &
     -- Phân tích tương quan đặc trưng (Chương 2)\newline
-    -- Tối ưu siêu tham số (Chương 4)\newline
+    -- Tối ưu siêu tham số (Chương 3)\newline
     -- Xây dựng chương trình demo & 100\% \\ \hline
 \end{tabularx}
 \end{center}
@@ -387,16 +387,14 @@ Pandas\dots).}
 
 \section*{5. Bố cục báo cáo}
 Ngoài phần Mở đầu, Kết luận, Tài liệu tham khảo và Phụ lục, báo cáo gồm
-4 chương:
+3 chương:
 \begin{itemize}
   \item \textbf{Chương 1. Tổng quan và cơ sở lý thuyết:} trình bày bài toán,
         các công trình liên quan và cơ sở lý thuyết của các thuật toán sử dụng.
-  \item \textbf{Chương 2. Dữ liệu và tiền xử lý:} mô tả, khảo sát và xử lý
-        dữ liệu, chuẩn bị dữ liệu cho mô hình.
-  \item \textbf{Chương 3. Xây dựng và đánh giá mô hình:} cài đặt, huấn luyện,
-        đánh giá và phân tích kết quả các mô hình.
-  \item \textbf{Chương 4. Tối ưu hóa và cải tiến mô hình:} phân tích hạn chế,
-        cải tiến, tối ưu siêu tham số và lựa chọn mô hình cuối cùng.
+  \item \textbf{Chương 2. Dữ liệu và phương pháp:} mô tả, khảo sát và xử lý
+        dữ liệu; lựa chọn thuật toán, mô hình cơ sở và quy trình huấn luyện.
+  \item \textbf{Chương 3. Thực nghiệm và đánh giá:} kết quả huấn luyện, phân
+        tích kết quả, tối ưu và cải tiến, lựa chọn mô hình cuối cùng.
 \end{itemize}
 
 % =====================================================================
@@ -499,7 +497,7 @@ Với bài toán hồi quy, sai số được đo bằng RMSE:
 % =====================================================================
 %  CHƯƠNG 2
 % =====================================================================
-\chapter{Dữ liệu và tiền xử lý}
+\chapter{Dữ liệu và phương pháp}
 \label{chap:dulieu}
 
 \section{Phát biểu bài toán học máy}
@@ -550,7 +548,9 @@ của nhóm.}
   \end{tabularx}
 \end{table}
 
-\section{Khảo sát thống kê và phân bố dữ liệu}
+\section{Khảo sát và phân tích dữ liệu}
+
+\subsection{Thống kê và phân bố dữ liệu}
 \huongdan{Thống kê mô tả; biểu đồ phân bố các đặc trưng chính và phân bố nhãn.
 Mỗi biểu đồ phải có nhận xét cụ thể.}
 
@@ -564,7 +564,7 @@ Mỗi biểu đồ phải có nhận xét cụ thể.}
 
 \textit{Nhận xét:} Hình~\ref{fig:phanbonhan} cho thấy\dots
 
-\section{Phân tích quan hệ giữa các đặc trưng}
+\subsection{Quan hệ giữa các đặc trưng}
 
 \begin{figure}[H]
   \centering
@@ -614,29 +614,17 @@ chỉ được khớp (fit) trên tập huấn luyện.}
   \end{tabular}
 \end{table}
 
-\section{Lựa chọn phương pháp và chỉ số đánh giá}
-\huongdan{Giải thích vì sao chọn chiến lược đánh giá (hold-out, K-Fold,
-TimeSeriesSplit\dots) và chỉ số (Accuracy, F1, ROC-AUC, RMSE\dots) phù hợp
-với bài toán và dữ liệu.}
+\section{Lựa chọn thuật toán và mô hình cơ sở}
 
-\section{Kết luận chương 2}
-\huongdan{Tóm tắt nội dung chương.}
-
-% =====================================================================
-%  CHƯƠNG 3
-% =====================================================================
-\chapter{Xây dựng và đánh giá mô hình}
-\label{chap:mohinh}
-
-\section{Lựa chọn thuật toán}
+\subsection{Lựa chọn thuật toán}
 \huongdan{Chọn ít nhất 2 thuật toán phù hợp với loại bài toán và đặc điểm
 dữ liệu, nêu lý do lựa chọn.}
 
-\section{Mô hình cơ sở}
+\subsection{Mô hình cơ sở}
 \huongdan{Xây dựng mô hình cơ sở đơn giản (lớp đa số, giá trị trung bình,
 mô hình tuyến tính) để làm mốc so sánh.}
 
-\section{Quy trình huấn luyện và cài đặt}
+\section{Quy trình huấn luyện}
 Tiền xử lý và mô hình được tổ chức thành một quy trình thống nhất bằng
 \texttt{Pipeline} của Scikit-learn \cite{pedregosa2011} nhằm tránh rò rỉ dữ
 liệu (Đoạn mã~\ref{lst:pipeline}).
@@ -661,6 +649,25 @@ cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
 ket_qua = cross_validate(mo_hinh, X_train, y_train, cv=cv,
                          scoring=["f1", "roc_auc"], return_train_score=True)
 \end{lstlisting}
+
+\section{Phương pháp và chỉ số đánh giá}
+\huongdan{Giải thích vì sao chọn chiến lược đánh giá (hold-out, K-Fold,
+TimeSeriesSplit\dots) và chỉ số (Accuracy, F1, ROC-AUC, RMSE\dots) phù hợp
+với bài toán và dữ liệu.}
+
+\section{Kết luận chương 2}
+\huongdan{Tóm tắt nội dung chương và dẫn dắt sang chương sau.}
+
+% =====================================================================
+%  CHƯƠNG 3
+% =====================================================================
+\chapter{Thực nghiệm và đánh giá}
+\label{chap:thucnghiem}
+
+\section{Môi trường thực nghiệm}
+\huongdan{Cấu hình máy, phiên bản Python và các thư viện chính
+(NumPy, Pandas, Scikit-learn\dots), giá trị 	exttt{random\_state} cố định, cách
+chạy lại thí nghiệm (xem Phụ lục~ef{pl:huongdan}).}
 
 \section{Kết quả huấn luyện và đánh giá}
 \huongdan{Báo cáo giá trị trung bình $\pm$ độ lệch chuẩn qua các fold.
@@ -694,16 +701,9 @@ Tập kiểm tra chỉ dùng cho đánh giá cuối cùng.}
 huấn luyện và kiểm định để nhận diện quá khớp/chưa khớp; giải thích vì sao
 mô hình này tốt/kém hơn mô hình kia; các đặc trưng ảnh hưởng nhiều.}
 
-\section{Kết luận chương 3}
-\huongdan{Tóm tắt nội dung chương.}
+\section{Tối ưu hóa và cải tiến mô hình}
 
-% =====================================================================
-%  CHƯƠNG 4
-% =====================================================================
-\chapter{Tối ưu hóa và cải tiến mô hình}
-\label{chap:toiuu}
-
-\section{Phân tích hạn chế của mô hình ban đầu}
+\subsection{Phân tích hạn chế của mô hình ban đầu}
 \huongdan{Chỉ ra hạn chế dựa trên bằng chứng: chênh lệch huấn luyện -- kiểm
 định, đường cong học tập, lỗi tập trung ở nhóm dữ liệu cụ thể\dots}
 
@@ -714,7 +714,6 @@ mô hình này tốt/kém hơn mô hình kia; các đặc trưng ảnh hưởng 
   \label{fig:learningcurve}
 \end{figure}
 
-\section{Đề xuất và thực hiện giải pháp cải tiến}
 \subsection{Cải tiến dữ liệu và đặc trưng}
 \huongdan{Thiết kế đặc trưng mới, lựa chọn đặc trưng, giảm chiều, xử lý
 mất cân bằng\dots và đo tác động.}
@@ -769,16 +768,18 @@ kiểm định chéo; không dùng tập kiểm tra để chọn siêu tham số
   \label{fig:sosanhmohinh}
 \end{figure}
 
-\section{Khả năng tổng quát hóa của mô hình cuối}
+\section{Khả năng tổng quát hóa và lựa chọn mô hình cuối}
+
+\subsection{Khả năng tổng quát hóa}
 \huongdan{Đánh giá mô hình cuối trên tập kiểm tra giữ lại; so sánh với kết
 quả kiểm định chéo; nhận xét độ ổn định qua các fold/lần chạy.}
 
-\section{Lựa chọn mô hình cuối cùng}
+\subsection{Lựa chọn mô hình cuối cùng}
 \huongdan{Lựa chọn dựa trên đánh đổi giữa độ chính xác, độ ổn định, thời gian
 và khả năng diễn giải; giải thích vì sao cải tiến có/không hiệu quả.}
 
-\section{Kết luận chương 4}
-\huongdan{Tóm tắt nội dung chương.}
+\section{Kết luận chương 3}
+\huongdan{Tóm tắt kết quả chính của chương.}
 
 % =====================================================================
 %  KẾT LUẬN
