@@ -97,3 +97,8 @@ bảng điểm trang nhận xét, chữ ký lời cam đoan và bảng phân cô
   MiKTeX/TeX Live xử lý được khi đặt trong dấu nháy; trên Overleaf cũng được.
 - **Console Windows báo `UnicodeEncodeError`** khi in tiếng Việt từ Python: đặt
   `PYTHONIOENCODING=utf8` hoặc dùng `scripts/build.py` (đã tự xử lý).
+- **Tên "Đoạn mã" nằm cuối trang, khung mã sang trang sau:** đặt
+  `\needspace{8\baselineskip}` ngay trước `lstlisting` (gói `needspace` đã nạp).
+- **Sơ đồ TikZ có đường cắt qua khối/nhãn:** đặt khối nằm ngoài vùng `fit`
+  (ví dụ "Tập kiểm tra" ở x = 7,6 cm trong Hình 2.1), rút ngắn nhãn của khung
+  `fit`, rồi render trang ra ảnh để kiểm tra bằng mắt.

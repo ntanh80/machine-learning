@@ -66,7 +66,7 @@
 \renewcommand{\arraystretch}{1.25}
 \usepackage[table]{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta,calc}
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds}
 \usepackage{caption}
 \captionsetup{labelsep=period,labelfont=bf,font=normalsize,skip=6pt}
 \captionsetup[table]{position=top}
@@ -76,6 +76,7 @@
 \usepackage{enumitem}
 \setlist{nosep,leftmargin=1.6cm}
 \usepackage{listings}
+\usepackage{needspace}
 \usepackage{cite}                % gộp trích dẫn: [4-6], [2, 4-6]
 \usepackage{fancyhdr}
 \usepackage[unicode]{hyperref}
@@ -543,10 +544,67 @@ dữ liệu, nêu lý do lựa chọn.}
 mô hình tuyến tính) để làm mốc so sánh.}
 
 \section{Quy trình huấn luyện}
-Tiền xử lý và mô hình được tổ chức thành một quy trình thống nhất bằng
-\texttt{Pipeline} của Scikit-learn \cite{pedregosa2011} nhằm tránh rò rỉ dữ
-liệu (Đoạn mã~\ref{lst:pipeline}).
+Quy trình huấn luyện và đánh giá mô hình được mô tả trong
+Hình~\ref{fig:quytrinhhuanluyen}. Dữ liệu được chia thành tập huấn luyện và
+tập kiểm tra ngay từ đầu; tiền xử lý và mô hình được tổ chức thành một quy
+trình thống nhất bằng \texttt{Pipeline} của Scikit-learn \cite{pedregosa2011}
+và chỉ được khớp trên tập huấn luyện nhằm tránh rò rỉ dữ liệu
+(Đoạn mã~\ref{lst:pipeline}). Tập kiểm tra chỉ được dùng một lần để đánh giá
+mô hình cuối cùng.
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      font=\small,
+      buoc/.style={draw,rounded corners=3pt,fill=black!5,align=center,
+                   minimum height=1cm,text width=3.4cm},
+      buocrong/.style={buoc,text width=5.2cm},
+      dulieu/.style={draw,fill=black!12,align=center,minimum height=0.9cm,
+                     text width=3.4cm},
+      mui/.style={-{Stealth[length=2.5mm]},thick},
+      muinet/.style={-{Stealth[length=2.5mm]},thick,dashed}]
+    % Dữ liệu và chia tập
+    \node[dulieu] (dl) at (0,0) {Dữ liệu đã làm sạch};
+    \node[buoc] (chia) at (0,-1.6) {Chia tập dữ liệu\\(phân tầng, cố định \texttt{random\_state})};
+    \node[dulieu] (train) at (0,-3.3) {Tập huấn luyện};
+    \node[dulieu,text width=2.6cm] (test) at (7.6,-3.3) {Tập kiểm tra\\(giữ lại)};
+    % Kiểm định chéo trên tập huấn luyện
+    \node[buoc] (p1) at (-4.4,-5.4) {Tiền xử lý\\(chuẩn hóa, mã hóa)};
+    \node[buoc] (p2) at (0,-5.4) {Huấn luyện\\mô hình};
+    \node[buoc] (p3) at (4.4,-5.4) {Đánh giá trên\\fold kiểm định};
+    \node[buocrong] (sth) at (0,-7.0) {Tìm siêu tham số\\(Grid/Random Search)};
+    \begin{scope}[on background layer]
+      \node[draw,dashed,rounded corners=4pt,fill=black!2,inner sep=8pt,
+            fit=(p1)(p3)(sth),label={[font=\small\itshape,anchor=south west]north west:%
+            Kiểm định chéo $K$-fold (Pipeline)}] (cv) {};
+    \end{scope}
+    % Huấn luyện lại và đánh giá cuối
+    \node[buocrong] (fit) at (0,-9.3) {Huấn luyện lại mô hình tốt nhất\\trên toàn bộ tập huấn luyện};
+    \node[buocrong] (eval) at (0,-10.9) {Đánh giá cuối trên tập kiểm tra};
+    \node[dulieu,text width=5.2cm] (final) at (0,-12.4) {Mô hình cuối cùng};
+    % Mũi tên
+    \draw[mui] (dl) -- (chia);
+    \draw[mui] (chia) -- (train);
+    \draw[mui] (chia.east) -| (test.north);
+    \draw[mui] (train) -- (cv.north -| train);
+    \draw[mui] (p1) -- (p2);
+    \draw[mui] (p2) -- (p3);
+    \draw[mui] (p3.south) |- (sth.east);
+    \draw[mui] (sth.west) -| (p1.south);
+    \draw[mui] (cv.south -| fit) -- (fit);
+    \draw[mui] (fit) -- (eval);
+    \draw[mui] (eval) -- (final);
+    \draw[muinet] (test.south) |- node[pos=0.25,right,font=\footnotesize\itshape,align=left]
+      {chỉ dùng\\một lần} (eval.east);
+  \end{tikzpicture}
+  \caption{Quy trình huấn luyện và đánh giá mô hình}
+  \label{fig:quytrinhhuanluyen}
+\end{figure}
+
+\huongdan{Điều chỉnh sơ đồ cho đúng quy trình của nhóm (cách chia tập, các
+bước tiền xử lý, phương pháp tìm siêu tham số).}
+
+\needspace{8\baselineskip}
 \begin{lstlisting}[caption={Xây dựng Pipeline và kiểm định chéo},label={lst:pipeline}]
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
