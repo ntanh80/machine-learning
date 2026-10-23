@@ -3,7 +3,7 @@
 %  ---------------------------------------------------------------------
 %  Biên dịch bằng XeLaTeX (hoặc LuaLaTeX), chạy 2 lần để cập nhật mục lục.
 %  Trên Overleaf: Menu > Compiler > XeLaTeX.
-%  Trên máy:      latexmk -xelatex main.tex
+%  Trên máy:      latexmk -xelatex "Mau bao cao mon Hoc may.tex"
 %
 %  Cách dùng mẫu:
 %   1. Sửa THÔNG TIN BÁO CÁO ở mục (A) bên dưới.
@@ -83,7 +83,20 @@
   pdftitle={\tendetai},
   pdfauthor={\svAten, \svBten},
   pdfsubject={\loaibaocao\ học phần \hocphan},
+  bookmarksnumbered=true,   % bookmark có số thứ tự chương, mục
+  bookmarksopen=true,
+  bookmarksopenlevel=0,
 }
+% Bookmark dạng "Chương 1. Tên chương", "1.1. Tên mục", "Phụ lục A. ..."
+\newcommand{\bmchapname}{Chương}
+\makeatletter
+\newcommand*{\bm@prefix}{}
+\let\bm@orig@writebookmark\Hy@writebookmark
+\renewcommand*{\Hy@writebookmark}[5]{%
+  \ifnum#4=0 \def\bm@prefix{\bmchapname\space}\else\def\bm@prefix{}\fi
+  \bm@orig@writebookmark{#1}{#2}{#3}{#4}{#5}}
+\renewcommand*{\Hy@numberline}[1]{\bm@prefix#1. }
+\makeatother
 
 % ---------------- Màu & định dạng mã nguồn ----------------
 \definecolor{codebg}{RGB}{247,247,247}
@@ -838,6 +851,7 @@ pp.~2825--2830.
 %  PHỤ LỤC
 % =====================================================================
 \appendix
+\renewcommand{\bmchapname}{Phụ lục}
 \addtocontents{toc}{\protect\renewcommand{\protect\tocchapname}{\appendixname}}
 
 \chapter{Hướng dẫn cài đặt và chạy chương trình}
