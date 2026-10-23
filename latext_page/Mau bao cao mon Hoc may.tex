@@ -34,6 +34,7 @@
 \newcommand{\lophocphan}{KHMT K22}
 \newcommand{\hocky}{Học kỳ 1, năm học 2026--2027}
 \newcommand{\tendetai}{ỨNG DỤNG HỌC MÁY DỰ ĐOÁN KẾT QUẢ HỌC TẬP CỦA SINH VIÊN}
+\newcommand{\tenbaitoan}{dự đoán kết quả học tập của sinh viên} % dùng trong tên Chương 1
 \newcommand{\giangvien}{Nguyễn Tuấn Anh}  % thêm học hàm/học vị nếu cần
 \newcommand{\nhom}{Nhóm 01}
 \newcommand{\svAten}{Nguyễn Văn A}
@@ -322,11 +323,11 @@ Phụ lục~\ref{pl:nhatky}.}
   \hline
   \rowcolor{black!8}\textbf{STT} & \textbf{Họ và tên} & \textbf{Nhiệm vụ phụ trách} & \textbf{Mức độ hoàn thành} \\ \hline
   1 & \svAten\newline \svAma &
-    -- Khảo sát, tiền xử lý dữ liệu (Chương 2)\newline
+    -- Khảo sát, tiền xử lý dữ liệu (Chương 3)\newline
     -- Xây dựng mô hình \dots\ (Chương 2)\newline
     -- Viết báo cáo các mục \dots & 100\% \\ \hline
   2 & \svBten\newline \svBma &
-    -- Phân tích tương quan đặc trưng (Chương 2)\newline
+    -- Phân tích tương quan đặc trưng (Chương 3)\newline
     -- Tối ưu siêu tham số (Chương 3)\newline
     -- Xây dựng chương trình demo & 100\% \\ \hline
 \end{tabularx}
@@ -389,18 +390,20 @@ Pandas\dots).}
 Ngoài phần Mở đầu, Kết luận, Tài liệu tham khảo và Phụ lục, báo cáo gồm
 3 chương:
 \begin{itemize}
-  \item \textbf{Chương 1. Tổng quan và cơ sở lý thuyết:} trình bày bài toán,
+  \item \textbf{Chương 1. Tổng quan về học máy và bài toán \tenbaitoan:} trình bày bài toán,
         các công trình liên quan và cơ sở lý thuyết của các thuật toán sử dụng.
-  \item \textbf{Chương 2. Dữ liệu và phương pháp:} mô tả, khảo sát và xử lý
-        dữ liệu; lựa chọn thuật toán, mô hình cơ sở và quy trình huấn luyện.
-  \item \textbf{Chương 3. Thực nghiệm và đánh giá:} kết quả huấn luyện, phân
-        tích kết quả, tối ưu và cải tiến, lựa chọn mô hình cuối cùng.
+  \item \textbf{Chương 2. Mô hình hóa bài toán và phương pháp giải quyết:} phát biểu bài
+        toán, mục tiêu, lựa chọn thuật toán, mô hình cơ sở, quy trình huấn
+        luyện và phương pháp đánh giá.
+  \item \textbf{Chương 3. Thực nghiệm và đánh giá:} dữ liệu thực nghiệm (mô
+        tả, khảo sát, tiền xử lý), kết quả huấn luyện, phân tích, tối ưu và
+        cải tiến, lựa chọn mô hình cuối cùng.
 \end{itemize}
 
 % =====================================================================
 %  CHƯƠNG 1
 % =====================================================================
-\chapter{Tổng quan và cơ sở lý thuyết}
+\chapter{Tổng quan về học máy và bài toán \tenbaitoan}
 \label{chap:tongquan}
 
 \section{Giới thiệu bài toán}
@@ -497,8 +500,8 @@ Với bài toán hồi quy, sai số được đo bằng RMSE:
 % =====================================================================
 %  CHƯƠNG 2
 % =====================================================================
-\chapter{Dữ liệu và phương pháp}
-\label{chap:dulieu}
+\chapter{Mô hình hóa bài toán và phương pháp giải quyết}
+\label{chap:phuongphap}
 
 \section{Phát biểu bài toán học máy}
 \huongdan{Xác định loại bài toán (hồi quy, phân loại, phân cụm\dots), đơn vị
@@ -529,7 +532,57 @@ của nhóm.}
   \end{tabularx}
 \end{table}
 
-\section{Nguồn và mô tả dữ liệu}
+\section{Lựa chọn thuật toán và mô hình cơ sở}
+
+\subsection{Lựa chọn thuật toán}
+\huongdan{Chọn ít nhất 2 thuật toán phù hợp với loại bài toán và đặc điểm
+dữ liệu, nêu lý do lựa chọn.}
+
+\subsection{Mô hình cơ sở}
+\huongdan{Xây dựng mô hình cơ sở đơn giản (lớp đa số, giá trị trung bình,
+mô hình tuyến tính) để làm mốc so sánh.}
+
+\section{Quy trình huấn luyện}
+Tiền xử lý và mô hình được tổ chức thành một quy trình thống nhất bằng
+\texttt{Pipeline} của Scikit-learn \cite{pedregosa2011} nhằm tránh rò rỉ dữ
+liệu (Đoạn mã~\ref{lst:pipeline}).
+
+\begin{lstlisting}[caption={Xây dựng Pipeline và kiểm định chéo},label={lst:pipeline}]
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import StratifiedKFold, cross_validate
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+SEED = 42
+tien_xu_ly = ColumnTransformer([
+    ("so", StandardScaler(), cot_so),
+    ("phan_loai", OneHotEncoder(handle_unknown="ignore"), cot_phan_loai),
+])
+mo_hinh = Pipeline([
+    ("tien_xu_ly", tien_xu_ly),
+    ("rf", RandomForestClassifier(n_estimators=300, random_state=SEED)),
+])
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+ket_qua = cross_validate(mo_hinh, X_train, y_train, cv=cv,
+                         scoring=["f1", "roc_auc"], return_train_score=True)
+\end{lstlisting}
+
+\section{Phương pháp và chỉ số đánh giá}
+\huongdan{Giải thích vì sao chọn chiến lược đánh giá (hold-out, K-Fold,
+TimeSeriesSplit\dots) và chỉ số (Accuracy, F1, ROC-AUC, RMSE\dots) phù hợp
+với bài toán và dữ liệu.}
+
+\section{Kết luận chương 2}
+\huongdan{Tóm tắt nội dung chương và dẫn dắt sang chương sau.}
+
+% =====================================================================
+%  CHƯƠNG 3
+% =====================================================================
+\chapter{Thực nghiệm và đánh giá}
+\label{chap:thucnghiem}
+
+\section{Dữ liệu thực nghiệm}
 \huongdan{Nêu nguồn, điều kiện sử dụng, số mẫu, số đặc trưng, kiểu dữ liệu,
 đường dẫn nguồn. Lập từ điển dữ liệu như Bảng~\ref{tab:tudien}.}
 
@@ -614,60 +667,10 @@ chỉ được khớp (fit) trên tập huấn luyện.}
   \end{tabular}
 \end{table}
 
-\section{Lựa chọn thuật toán và mô hình cơ sở}
-
-\subsection{Lựa chọn thuật toán}
-\huongdan{Chọn ít nhất 2 thuật toán phù hợp với loại bài toán và đặc điểm
-dữ liệu, nêu lý do lựa chọn.}
-
-\subsection{Mô hình cơ sở}
-\huongdan{Xây dựng mô hình cơ sở đơn giản (lớp đa số, giá trị trung bình,
-mô hình tuyến tính) để làm mốc so sánh.}
-
-\section{Quy trình huấn luyện}
-Tiền xử lý và mô hình được tổ chức thành một quy trình thống nhất bằng
-\texttt{Pipeline} của Scikit-learn \cite{pedregosa2011} nhằm tránh rò rỉ dữ
-liệu (Đoạn mã~\ref{lst:pipeline}).
-
-\begin{lstlisting}[caption={Xây dựng Pipeline và kiểm định chéo},label={lst:pipeline}]
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold, cross_validate
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
-SEED = 42
-tien_xu_ly = ColumnTransformer([
-    ("so", StandardScaler(), cot_so),
-    ("phan_loai", OneHotEncoder(handle_unknown="ignore"), cot_phan_loai),
-])
-mo_hinh = Pipeline([
-    ("tien_xu_ly", tien_xu_ly),
-    ("rf", RandomForestClassifier(n_estimators=300, random_state=SEED)),
-])
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-ket_qua = cross_validate(mo_hinh, X_train, y_train, cv=cv,
-                         scoring=["f1", "roc_auc"], return_train_score=True)
-\end{lstlisting}
-
-\section{Phương pháp và chỉ số đánh giá}
-\huongdan{Giải thích vì sao chọn chiến lược đánh giá (hold-out, K-Fold,
-TimeSeriesSplit\dots) và chỉ số (Accuracy, F1, ROC-AUC, RMSE\dots) phù hợp
-với bài toán và dữ liệu.}
-
-\section{Kết luận chương 2}
-\huongdan{Tóm tắt nội dung chương và dẫn dắt sang chương sau.}
-
-% =====================================================================
-%  CHƯƠNG 3
-% =====================================================================
-\chapter{Thực nghiệm và đánh giá}
-\label{chap:thucnghiem}
-
 \section{Môi trường thực nghiệm}
 \huongdan{Cấu hình máy, phiên bản Python và các thư viện chính
-(NumPy, Pandas, Scikit-learn\dots), giá trị 	exttt{random\_state} cố định, cách
-chạy lại thí nghiệm (xem Phụ lục~ef{pl:huongdan}).}
+(NumPy, Pandas, Scikit-learn\dots), giá trị \texttt{random\_state} cố định, cách
+chạy lại thí nghiệm (xem Phụ lục~\ref{pl:huongdan}).}
 
 \section{Kết quả huấn luyện và đánh giá}
 \huongdan{Báo cáo giá trị trung bình $\pm$ độ lệch chuẩn qua các fold.
