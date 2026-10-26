@@ -12,7 +12,7 @@ Tài liệu này áp dụng khi viết hoặc sửa bất kỳ nội dung nào c
 ## 1. Nguyên tắc nội dung: mục tiêu là chuẩn, giáo trình để tham khảo
 
 1. **`1_objectives.md` của bài là chuẩn.** Cấu trúc, phạm vi, thứ tự mục và mức độ (Hiểu/Vận dụng) của nội dung bám theo các mục CĐR (ví dụ 3.1.1, 3.1.2, …) trong file này. Không thêm, bớt hay đổi thứ tự mục.
-2. **Giáo trình chỉ để tham khảo**: `Bai giang/Giáo_trình_Machine_Learning 2026.pdf` (275 trang). Với mỗi mục CĐR, tra phần tương ứng trong giáo trình (mục 4) để lấy kiến thức, ví dụ, công thức; ưu tiên dùng thuật ngữ, ký hiệu giống giáo trình cho thống nhất.
+2. **Giáo trình chỉ để tham khảo**: `textbook/Giáo_trình_Machine_Learning 2026.pdf` (275 trang). Với mỗi mục CĐR, tra phần tương ứng trong giáo trình (mục 4) để lấy kiến thức, ví dụ, công thức; ưu tiên dùng thuật ngữ, ký hiệu giống giáo trình cho thống nhất.
 3. **Khi giáo trình không khớp mục tiêu** (chương không trùng một-một với bài, hoặc thiếu mục CĐR):
    - Mục tiêu có, giáo trình không có → vẫn viết đủ, dùng nguồn chuẩn khác (sách, tài liệu scikit-learn, …). Không cắt mục tiêu cho vừa giáo trình.
    - Giáo trình có, mục tiêu không yêu cầu → không đưa vào.
