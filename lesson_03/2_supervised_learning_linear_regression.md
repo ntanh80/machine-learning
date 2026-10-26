@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 1 – Các khái niệm cơ bản; Chương 4 – Hồi quy tuyến tính. Elastic Net, các độ đo MAE, $R^2$ và kiểm định chéo không có trong giáo trình, tham khảo tài liệu scikit-learn.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các notebook đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [3.1. Học có giám sát và mô hình hồi quy tuyến tính](#31-học-có-giám-sát-và-mô-hình-hồi-quy-tuyến-tính)
 - [3.2. Tinh chỉnh mô hình hồi quy tuyến tính](#32-tinh-chỉnh-mô-hình-hồi-quy-tuyến-tính)
@@ -223,7 +225,7 @@ $$
 \boxed{\mathbf{w} = (\mathbf{X}^T \mathbf{X})^{\dagger} \mathbf{X}^T \mathbf{y}}
 $$
 
-Trong Python, giả nghịch đảo được tính bằng `numpy.linalg.pinv()`.
+Trong Python, giả nghịch đảo được tính bằng `numpy.linalg.pinv()`. Công thức phương trình chuẩn giúp hiểu toán học; khi tính thực tế nên giải trực tiếp `np.linalg.lstsq(X, y, rcond=None)[0]` hoặc `np.linalg.pinv(X) @ y`, vì lập $X^T X$ có thể làm bình phương số điều kiện và khuếch đại sai số số học. Ví dụ giá nhà trong notebook dùng `lstsq`; ví dụ tính tay vẫn giữ phương trình chuẩn để minh họa.
 
 > **Ghi chú:** Giáo trình viết $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_N]$ (mỗi **cột** là một mẫu), khi đó công thức có dạng $\mathbf{w} = (\mathbf{X}\mathbf{X}^T)^\dagger \mathbf{X}\mathbf{y}$. Tài liệu này dùng quy ước **mỗi hàng là một mẫu** để khớp với NumPy và scikit-learn. Hai cách viết là tương đương.
 
@@ -585,17 +587,17 @@ Bậc $p$ càng cao, mô hình càng **linh hoạt**, nhưng cũng càng dễ **
 
 #### c) Ví dụ minh họa
 
-Lấy ngẫu nhiên **20 căn nhà** từ bộ dữ liệu giá nhà làm tập huấn luyện, dùng một đặc trưng là diện tích, và so sánh trên tập kiểm tra:
+Chia dữ liệu giá nhà thành train/test trước, rồi lấy ngẫu nhiên **20 căn nhà chỉ từ tập train** làm tập huấn luyện nhỏ, dùng một đặc trưng là diện tích, và so sánh trên tập kiểm tra:
 
 ![Quá khớp với đa thức bậc cao](images/overfitting.png)
 
-*Hình 3.4: Đa thức bậc 1 (xanh dương) nắm được xu hướng chung. Đa thức bậc 10 (đỏ, nét đứt) uốn lượn để đi qua các điểm huấn luyện: sai số huấn luyện giảm (RMSE 482) nhưng sai số kiểm tra tăng gấp 8 lần (RMSE 4351). Cùng đa thức bậc 10 nhưng có điều chuẩn Ridge (xanh lá) trở lại mượt và có RMSE kiểm tra 555. Mã nguồn vẽ hình: [images/plot_overfitting.py](images/plot_overfitting.py); tính lại trong [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 9).*
+*Hình 3.4: Đa thức bậc 1 (xanh dương) nắm được xu hướng chung. Đa thức bậc 10 (đỏ, nét đứt) uốn lượn để đi qua các điểm huấn luyện: sai số huấn luyện giảm (RMSE 309) nhưng sai số kiểm tra tăng khoảng 1.7 lần (RMSE 944 so với 555 của bậc 1). Cùng đa thức bậc 10 nhưng có điều chuẩn Ridge (xanh lá) trở lại mượt và có RMSE kiểm tra 596. Mã nguồn vẽ hình: [images/plot_overfitting.py](images/plot_overfitting.py); tính lại trong [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 9).*
 
 | Mô hình | RMSE huấn luyện | RMSE kiểm tra |
 |---|---|---|
-| Đa thức bậc 1 | 577 | 533 |
-| Đa thức bậc 10 | **482** | **4351** |
-| Đa thức bậc 10 + Ridge ($\alpha = 1$) | 577 | 555 |
+| Đa thức bậc 1 | 369 | 555 |
+| Đa thức bậc 10 | **309** | **944** |
+| Đa thức bậc 10 + Ridge ($\alpha = 1$) | 379 | 596 |
 
 Một dấu hiệu quan trọng: ở mô hình bậc 10 không điều chuẩn, các hệ số $w_j$ có độ lớn **khổng lồ** (hàng trăm nghìn, trong khi mô hình bậc 1 và mô hình có Ridge chỉ cỡ $10^3$) và trái dấu nhau để triệt tiêu, khiến mô hình thay đổi rất mạnh khi $x$ thay đổi ít.
 
@@ -644,7 +646,7 @@ Với $\mathbf{w} = [w_1, \dots, w_d]^T$:
 
 | Chuẩn | Công thức | Ý nghĩa hình học (2 chiều) |
 |---|---|---|
-| L2 (Euclid) | $\lVert \mathbf{w} \rVert_2^2 = \sum_{j=1}^{d} w_j^2$ | Tập $\lVert \mathbf{w} \rVert_2 \le t$ là **hình tròn** |
+| L2 (Euclid) | $\lVert \mathbf{w} \rVert_2 = \sqrt{\sum_{j=1}^{d} w_j^2}$; bình phương chuẩn là $\lVert \mathbf{w} \rVert_2^2$ | Tập $\lVert \mathbf{w} \rVert_2 \le t$ là **hình tròn** |
 | L1 (Manhattan) | $\lVert \mathbf{w} \rVert_1 = \sum_{j=1}^{d} \lvert w_j \rvert$ | Tập $\lVert \mathbf{w} \rVert_1 \le t$ là **hình thoi** |
 
 - **Điều chuẩn L2**: $R(\mathbf{w}) = \lVert \mathbf{w} \rVert_2^2$. Phạt nặng các hệ số lớn (do bình phương), làm **co đều** mọi hệ số về gần 0 nhưng hiếm khi bằng 0. Còn gọi là *weight decay*.
@@ -942,7 +944,7 @@ R2 trên tập huấn luyện = 0.9690
 Diễn giải:
 - Trung bình, giá dự đoán lệch khoảng **241 triệu** (MAE) so với giá thực; RMSE = 302 triệu, lớn hơn MAE vì có một số căn bị dự đoán lệch nhiều.
 - Mô hình giải thích được **96.85%** sự biến thiên của giá nhà.
-- $R^2$ trên tập huấn luyện (0.9690) và tập kiểm tra (0.9685) **gần như bằng nhau** → mô hình **không bị quá khớp**.
+- $R^2$ trên tập huấn luyện (0.9690) và tập kiểm tra (0.9685) **gần như bằng nhau** → chưa thấy dấu hiệu quá khớp rõ trong lần chia này.
 
 #### c) So sánh các mô hình
 
@@ -961,35 +963,42 @@ Nhận xét:
 
 #### d) Chọn siêu tham số bằng kiểm định chéo
 
-**Kiểm định chéo k-fold** (k-fold cross-validation): chia tập huấn luyện thành $k$ phần; lần lượt dùng $k-1$ phần để huấn luyện và 1 phần để đánh giá; lấy trung bình $k$ lần. Giá trị $\lambda$ cho sai số trung bình nhỏ nhất được chọn. scikit-learn cung cấp sẵn `RidgeCV`, `LassoCV`, `ElasticNetCV`:
+**Kiểm định chéo k-fold**: chia tập huấn luyện thành $k$ phần; mỗi lượt dùng $k-1$ phần để fit và một phần để xác thực. Chọn siêu tham số theo **RMSE CV**. Dùng `GridSearchCV` bao ngoài **toàn bộ pipeline** để `StandardScaler` chỉ học từ phần huấn luyện của mỗi fold. Nếu đặt `RidgeCV`, `LassoCV`, `ElasticNetCV` sau scaler, các lớp đó chia fold bên trong sau khi scaler đã fit toàn bộ tập train: vẫn có rò rỉ giữa các fold, dù tập test bên ngoài được giữ riêng.
 
 ```python
-from sklearn.linear_model import RidgeCV, LassoCV, ElasticNetCV
+from sklearn.model_selection import GridSearchCV, KFold
 
-alphas = np.logspace(-3, 3, 13)   # 0.001 ... 1000
+alphas = np.logspace(-3, 3, 13)   # lưới cường độ điều chuẩn: 0.001 ... 1000
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
 cv_models = {
-    'RidgeCV': RidgeCV(alphas=alphas, cv=5),
-    'LassoCV': LassoCV(alphas=alphas, cv=5),
-    'ElasticNetCV': ElasticNetCV(alphas=alphas, l1_ratio=[0.1, 0.5, 0.9, 1.0], cv=5),
+    'Ridge': (Ridge(), {'ridge__alpha': alphas}),
+    'Lasso': (Lasso(max_iter=10000), {'lasso__alpha': alphas}),
+    'Elastic Net': (ElasticNet(max_iter=10000),
+                    {'elasticnet__alpha': alphas, 'elasticnet__l1_ratio': [0.1, 0.5, 0.9, 1.0]}),
 }
-for name, model_cv in cv_models.items():
-    pipeline = make_pipeline(StandardScaler(), model_cv).fit(X_train, y_train)
-    y_pred = pipeline.predict(X_test)
-    print(name, 'alpha =', pipeline[-1].alpha_, 'R2 = %.4f' % r2_score(y_test, y_pred),
-          'RMSE = %.2f' % np.sqrt(mean_squared_error(y_test, y_pred)))
+searches = {}                    # lưu mô hình được chọn hoàn toàn từ tập train
+for name, (regressor, param_grid) in cv_models.items():
+    search = GridSearchCV(make_pipeline(StandardScaler(), regressor), param_grid,
+                          cv=cv, scoring='neg_root_mean_squared_error')
+    search.fit(X_train, y_train)
+    searches[name] = search
+    pred = search.predict(X_test)
+    print(name, 'tham số =', search.best_params_, 'RMSE CV = %.3f' % (-search.best_score_),
+          'RMSE test = %.3f' % np.sqrt(mean_squared_error(y_test, pred)),
+          'R2 test = %.4f' % r2_score(y_test, pred))
 ```
 
 *Mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 12).*
 
-**Kết quả:**
+**Kết quả** (mọi cấu hình được chọn từ CV trên train; không chọn mô hình theo chênh lệch điểm test):
 
 | Mô hình | Siêu tham số được chọn | RMSE kiểm tra | $R^2$ kiểm tra |
 |---|---|---|---|
-| RidgeCV | $\alpha = 0.1$ | 302.05 | 0.9685 |
-| LassoCV | $\alpha \approx 0.032$ | 302.06 | 0.9685 |
-| ElasticNetCV | $\alpha \approx 0.032$, `l1_ratio = 1.0` | 302.06 | 0.9685 |
+| Ridge + GridSearchCV | $\alpha \approx 0.316$ | 302.05 | 0.9685 |
+| Lasso + GridSearchCV | $\alpha \approx 0.032$ | 302.06 | 0.9685 |
+| Elastic Net + GridSearchCV | $\alpha \approx 0.032$, `l1_ratio = 1.0` | 302.06 | 0.9685 |
 
-Kiểm định chéo chọn các giá trị $\alpha$ **rất nhỏ** (gần như không điều chuẩn), và Elastic Net tự chọn `l1_ratio = 1` (tức Lasso). Kết luận cho bộ dữ liệu này: **OLS là lựa chọn phù hợp**, vì đơn giản nhất mà cho kết quả tốt như các mô hình có điều chuẩn. Ngược lại, ở ví dụ mục 3.2.4 d) với ít mẫu và nhiều đặc trưng nhiễu, Lasso cho kết quả tốt hơn rõ rệt.
+CV 5 fold xáo trộn với `random_state=42` chọn cường độ điều chuẩn nhẹ trong lưới trên; RMSE CV của ba quy trình đều xấp xỉ 302.057 triệu. Elastic Net chọn `l1_ratio = 1` (tức Lasso). Kết luận cho bộ dữ liệu này: **OLS là lựa chọn phù hợp**, vì đơn giản nhất mà cho kết quả tốt như các mô hình có điều chuẩn. Ngược lại, ở ví dụ mục 3.2.4 d) với ít mẫu và nhiều đặc trưng nhiễu, Lasso cho kết quả tốt hơn rõ rệt.
 
 ---
 
@@ -1046,5 +1055,5 @@ Kiểm định chéo chọn các giá trị $\alpha$ **rất nhỏ** (gần như
 
 13. Với dữ liệu [data/house_prices.csv](data/house_prices.csv):
     - a. Thêm các đặc trưng đa thức bậc 2 (`PolynomialFeatures(degree=2)`), huấn luyện lại OLS và so sánh $R^2$ với mô hình tuyến tính ban đầu.
-    - b. Chỉ dùng 50 căn nhà để huấn luyện, thêm 10 đặc trưng nhiễu. So sánh OLS, `RidgeCV`, `LassoCV`, `ElasticNetCV` theo RMSE trên tập kiểm tra và số hệ số bằng 0.
+    - b. Chỉ dùng 50 căn nhà để huấn luyện, thêm 10 đặc trưng nhiễu. Dùng `GridSearchCV` bao ngoài pipeline chuẩn hóa cho Ridge, Lasso, Elastic Net; so sánh với OLS theo RMSE trên tập kiểm tra và số hệ số bằng 0.
     - c. Rút ra nhận xét về ảnh hưởng của số lượng mẫu đến lợi ích của điều chuẩn.

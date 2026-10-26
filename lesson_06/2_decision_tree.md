@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 8 – Cây quyết định. Thuật toán C4.5 (Gain Ratio, thuộc tính liên tục) không được trình bày trong giáo trình, tham khảo J. R. Quinlan, *C4.5: Programs for Machine Learning*, Morgan Kaufmann, 1993; cắt tỉa theo độ phức tạp chi phí tham khảo L. Breiman và cộng sự, *Classification and Regression Trees*, 1984 và tài liệu scikit-learn (*Decision Trees*). Bộ dữ liệu Balance Scale lấy từ UCI Machine Learning Repository.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [6.1. Cây quyết định](#61-cây-quyết-định)
 - [6.2. Thực hành: phân loại dữ liệu bằng cây quyết định](#62-thực-hành-phân-loại-dữ-liệu-bằng-cây-quyết-định)

@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Lời nói đầu; Chương 1 – Các khái niệm cơ bản; Chương 13 – Mạng nơ-ron nhân tạo. Phần 1.2 (môi trường lập trình) không có trong giáo trình, tham khảo tài liệu chính thức của Anaconda, NumPy, Pandas, Matplotlib, scikit-learn và Jupyter.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các notebook đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [1.1. Tổng quan về Học máy](#11-tổng-quan-về-học-máy)
 - [1.2. Cài đặt môi trường Anaconda](#12-cài-đặt-môi-trường-anaconda)
@@ -41,7 +43,7 @@ Khái niệm 3 cho một "khung" để mô tả **bất kỳ** bài toán học 
 
 #### b) Lập trình truyền thống và học máy
 
-Trong **lập trình truyền thống**, lập trình viên tự viết các quy tắc; máy tính áp dụng quy tắc lên dữ liệu để cho ra kết quả. Trong **học máy**, ta đưa cho máy dữ liệu **cùng với kết quả mong muốn**; máy tự tìm ra quy tắc (gọi là **mô hình**), rồi dùng mô hình đó cho dữ liệu mới.
+Trong **lập trình truyền thống**, lập trình viên tự viết các quy tắc; máy tính áp dụng quy tắc lên dữ liệu để cho ra kết quả. Trong **học có giám sát**, ta đưa cho máy dữ liệu **cùng với kết quả mong muốn**; máy tự tìm ra quy tắc (gọi là **mô hình**), rồi dùng mô hình đó cho dữ liệu mới. Các phương thức học khác sử dụng tín hiệu học khác: học không giám sát khám phá cấu trúc từ dữ liệu không có nhãn, còn học tăng cường sử dụng điểm thưởng.
 
 ```
 Lập trình truyền thống:   Dữ liệu + Quy tắc (người viết)  ──►  Kết quả
@@ -61,7 +63,7 @@ Ngược lại, nếu bài toán có lời giải chính xác bằng công thứ
 
 #### c) Bản chất toán học: học là tối ưu
 
-Về bản chất, học máy là quá trình tìm một **hàm ánh xạ** từ không gian đầu vào $\mathcal{X}$ sang không gian đầu ra $\mathcal{Y}$:
+Xét trước **học có giám sát**: ta tìm một **hàm ánh xạ** từ không gian đầu vào $\mathcal{X}$ sang không gian đầu ra $\mathcal{Y}$:
 
 $$
 f_\theta : \mathcal{X} \to \mathcal{Y}
@@ -77,7 +79,7 @@ trong đó $L$ là **hàm mất mát** (loss function), đo mức độ sai lệ
 
 *Ví dụ (giáo trình):* dự đoán doanh thu của một cửa hàng từ số lượng khách và chi phí quảng cáo mỗi ngày. Mỗi ngày là một cặp $(\mathbf{x}_i, y_i)$, với $\mathbf{x}_i$ = (số khách, chi phí quảng cáo), $y_i$ = doanh thu thực tế. Ban đầu mô hình dự đoán sai lệch nhiều; điều chỉnh dần $\theta$ để giảm sai số trung bình, ta thu được mô hình phù hợp nhất với dữ liệu đã quan sát.
 
-Từ công thức trên, mọi hệ thống học máy gồm bốn thành phần:
+Trong khuôn mẫu học có giám sát trên, ta phân biệt bốn thành phần:
 
 | Thành phần | Ý nghĩa | Học ở |
 |---|---|---|
@@ -271,11 +273,11 @@ Trường muốn tự động dịch thông báo từ tiếng Việt sang tiến
 
 *Hình 1.1: Học sâu là một nhánh của học máy, học máy là một nhánh của trí tuệ nhân tạo. Mã nguồn vẽ hình: [images/plot_ai_ml_dl.py](images/plot_ai_ml_dl.py).*
 
-| | Trí tuệ nhân tạo (AI) | Học máy (ML) | Học sâu (DL) |
+| | Trí tuệ nhân tạo (AI) | Học máy (ML, gồm cả DL) | Học sâu (DL) |
 |---|---|---|---|
 | Khái niệm | Lĩnh vực làm cho máy thực hiện các việc đòi hỏi trí thông minh | Nhánh của AI: máy **học quy luật từ dữ liệu** thay vì được lập trình tường minh | Nhánh của ML: dùng **mạng nơ-ron nhiều tầng** để học trực tiếp từ dữ liệu thô |
-| Cách đạt được "trí thông minh" | Luật do con người viết, tìm kiếm, suy diễn logic, hoặc học từ dữ liệu | Thuật toán học thống kê trên đặc trưng đã chuẩn bị | Mạng nơ-ron tự học các tầng đặc trưng |
-| Phạm vi ứng dụng | Rộng nhất: hệ chuyên gia, lập kế hoạch, robot, trò chơi, mọi ứng dụng ML/DL | Dự đoán, phân loại, phân cụm trên dữ liệu có cấu trúc (bảng): tài chính, kinh doanh, y tế, giáo dục | Dữ liệu phi cấu trúc khối lượng lớn: ảnh, video, âm thanh, văn bản; AI tạo sinh |
+| Cách đạt được "trí thông minh" | Luật do con người viết, tìm kiếm, suy diễn logic, hoặc học từ dữ liệu | Học quy luật từ dữ liệu; đặc trưng có thể được thiết kế hoặc học tự động | Mạng nơ-ron tự học các tầng đặc trưng |
+| Phạm vi ứng dụng | Rộng nhất: hệ chuyên gia, lập kế hoạch, robot, trò chơi, mọi ứng dụng ML/DL | Dự đoán, phân loại, phân cụm trên dữ liệu bảng, ảnh, văn bản, âm thanh và các dạng dữ liệu khác | Đặc biệt hiệu quả với ảnh, video, âm thanh, văn bản; AI tạo sinh |
 | Ví dụ | Chương trình tìm đường đi ngắn nhất, hệ chuyên gia chẩn đoán | Lọc thư rác, dự đoán giá nhà, chấm điểm tín dụng | Nhận dạng khuôn mặt, dịch máy, ChatGPT |
 
 Mọi hệ thống học sâu đều là học máy, mọi hệ thống học máy đều là AI, nhưng điều ngược lại không đúng.

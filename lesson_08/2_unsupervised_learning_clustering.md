@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 1 – Phân nhóm các thuật toán học máy; Chương 11 – Phân cụm K-means; Chương 12 – Phân cụm phân cấp. Khởi tạo k-means++ tham khảo D. Arthur, S. Vassilvitskii, *k-means++: The advantages of careful seeding*, SODA 2007; liên kết Ward và chỉ số Adjusted Rand tham khảo tài liệu scikit-learn (*Clustering*). Bộ dữ liệu Iris lấy từ UCI Machine Learning Repository.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [8.1. Học không giám sát và bài toán phân cụm](#81-học-không-giám-sát-và-bài-toán-phân-cụm)
 - [8.2. Thực hành: phân cụm dữ liệu hoa Iris bằng K-means](#82-thực-hành-phân-cụm-dữ-liệu-hoa-iris-bằng-k-means)
@@ -208,7 +210,7 @@ print(model.predict([[0, 0]]))     # cụm của điểm mới
 
 #### e) Chọn số cụm K
 
-$K$ phải chọn trước. $K$ quá nhỏ gộp các nhóm khác biệt; $K$ quá lớn chia vụn dữ liệu thành các nhóm không có ý nghĩa. Lưu ý $J$ **luôn giảm** khi tăng $K$ (bằng 0 khi $K = N$, mỗi điểm một cụm), nên không thể chọn $K$ bằng cách cực tiểu $J$.
+$K$ phải chọn trước. $K$ quá nhỏ gộp các nhóm khác biệt; $K$ quá lớn chia vụn dữ liệu thành các nhóm không có ý nghĩa. Giá trị **tối ưu toàn cục** $J^*(K)$ **không tăng** khi tăng $K$ (bằng 0 khi $K = N$, mỗi điểm một cụm), nên không thể chọn $K$ chỉ bằng cách cực tiểu inertia. Kết quả thực nghiệm của các lần chạy Lloyd hữu hạn có thể không giảm đều do khởi tạo và nghiệm cục bộ khác nhau; cần chạy nhiều khởi tạo trước khi so sánh.
 
 **Phương pháp Elbow (khuỷu tay).** Chạy K-means với $K = 1, 2, \dots$, vẽ $J(K)$ theo $K$. Ban đầu $J$ giảm nhanh (tách được các nhóm thật), sau một giá trị $K$ thì giảm chậm hẳn (chỉ còn chia nhỏ các nhóm thật). Điểm gãy trên đồ thị, giống khuỷu tay, là $K$ hợp lý.
 

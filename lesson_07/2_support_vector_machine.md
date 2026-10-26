@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 10 – Máy vector hỗ trợ. SVM lề mềm và hàm kernel chỉ được nhắc tới trong giáo trình (phần câu hỏi ôn tập), tham khảo C. Cortes, V. Vapnik, *Support-vector networks*, Machine Learning, 1995; C. M. Bishop, *Pattern Recognition and Machine Learning*, Springer, 2006 (Chương 6, 7) và tài liệu scikit-learn (*Support Vector Machines*).
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [7.1. Mô hình SVM](#71-mô-hình-svm)
 - [7.2. Thực hành: phân loại dữ liệu bằng SVM](#72-thực-hành-phân-loại-dữ-liệu-bằng-svm)
@@ -134,7 +136,7 @@ Khi đó mọi điểm thỏa $y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1$ và lề
 > **Bài toán tối ưu của SVM (lề cứng)**
 > $$\min_{\mathbf{w}, b}\ \frac{1}{2}\|\mathbf{w}\|_2^2 \quad \text{với ràng buộc} \quad y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1, \quad i = 1, 2, \dots, N$$
 
-Đây là bài toán **quy hoạch toàn phương** (quadratic programming): hàm mục tiêu bậc hai lồi, các ràng buộc tuyến tính. Bài toán lồi nên có **nghiệm duy nhất**, giải được bằng các thuật toán tối ưu chuẩn, không lo cực tiểu địa phương như mạng nơ-ron.
+Đây là bài toán **quy hoạch toàn phương** (quadratic programming): hàm mục tiêu bậc hai lồi, các ràng buộc tuyến tính. Tính lồi bảo đảm mọi nghiệm cực tiểu địa phương là **tối ưu toàn cục**, nhưng tự nó không bảo đảm tính duy nhất. Riêng bài toán lề cứng khả thi với đủ hai lớp có vector $\mathbf{w}$ tối ưu duy nhất nhờ tính lồi nghiêm ngặt theo $\mathbf{w}$; hai lớp xác định $b$ tại vị trí lề lớn nhất. Các nhân tử đối ngẫu không nhất thiết duy nhất. Không suy rộng tính duy nhất này cho mọi SVM lề mềm hay mọi kernel.
 
 #### b) Lề, hai siêu phẳng biên và vector hỗ trợ
 
@@ -415,7 +417,7 @@ print(search.best_params_, search.score(X_test, y_test))   # {'svc__C': 1, 'svc_
 
 | Ưu điểm | Nhược điểm |
 |---|---|
-| Lề lớn giúp tổng quát hóa tốt; bài toán lồi, nghiệm duy nhất | Huấn luyện chậm với dữ liệu lớn (thời gian khoảng $O(N^2)$ đến $O(N^3)$, bộ nhớ ma trận kernel $N \times N$): khó dùng khi $N$ hàng trăm nghìn |
+| Lề lớn giúp tổng quát hóa tốt; với kernel hợp lệ, bài toán lồi và nghiệm cực tiểu địa phương là tối ưu toàn cục | Huấn luyện chậm với dữ liệu lớn (thời gian khoảng $O(N^2)$ đến $O(N^3)$, bộ nhớ ma trận kernel $N \times N$): khó dùng khi $N$ hàng trăm nghìn |
 | Hiệu quả với dữ liệu **nhiều chiều**, kể cả khi số đặc trưng lớn hơn số mẫu (văn bản, gen) | Nhạy cảm với thang đo đặc trưng: bắt buộc chuẩn hóa |
 | Mô hình gọn: chỉ cần lưu các vector hỗ trợ | Phải chọn kernel và các siêu tham số $C$, $\gamma$ |
 | Kernel cho phép ranh giới phi tuyến linh hoạt mà không cần tạo đặc trưng tường minh | Không trực tiếp cho xác suất (`decision_function` chỉ là điểm số; `probability=True` ước lượng thêm, tốn thời gian) |

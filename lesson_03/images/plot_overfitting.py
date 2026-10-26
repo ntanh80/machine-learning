@@ -16,11 +16,11 @@ DATA = IMAGES.parent / 'data'                        # thư mục data/
 df = pd.read_csv(DATA / "house_prices.csv")
 X = df[["area"]].values                              # chỉ dùng đặc trưng diện tích
 y = df["price"].values
-_, X_test, _, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_pool, X_test, y_pool, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Tập huấn luyện nhỏ: 20 căn nhà chọn ngẫu nhiên
-train_idx = np.random.RandomState(0).choice(len(df), 20, replace=False)
-X_train, y_train = X[train_idx], y[train_idx]
+# Tập huấn luyện nhỏ: chỉ lấy 20 căn trong tập train, không giao với test
+train_idx = np.random.RandomState(0).choice(len(X_pool), 20, replace=False)
+X_train, y_train = X_pool[train_idx], y_pool[train_idx]
 
 # (tên, mô hình, bậc đa thức, màu, kiểu nét)
 models = [

@@ -1,0 +1,17 @@
+# Các phiên bản trực tiếp đã chạy notebook trên Python 3.10.11 (Windows).
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+matplotlib==3.10.9
+pillow==12.2.0
+ipython==8.39.0
+jupyterlab==4.6.4
+ipykernel==7.3.0
+nbclient==0.11.0
+nbformat==5.11.1
+
+# PyTorch cho Bài 9 và Streamlit cho ứng dụng ở Bài 3.
+# Máy kiểm chứng dùng torch 2.11.0+cu128; bản CPU/CUDA chọn theo máy.
+torch==2.11.0
+streamlit==1.61.1

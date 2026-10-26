@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Lời nói đầu; Chương 13 – Mạng nơ-ron nhân tạo; Chương 14 – Một số dự án học máy tiêu biểu (Random Forest). Bagging, Boosting, Stacking chỉ có Random Forest trong giáo trình, phần còn lại tham khảo L. Breiman, *Bagging predictors*, Machine Learning, 1996; Y. Freund, R. Schapire, *A decision-theoretic generalization of on-line learning and an application to boosting*, 1997; J. Friedman, *Greedy function approximation: a gradient boosting machine*, 2001; D. Wolpert, *Stacked generalization*, 1992; I. Goodfellow, Y. Bengio, A. Courville, *Deep Learning*, MIT Press, 2016 và tài liệu scikit-learn (*Neural network models*, *Ensembles*).
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`). Notebook dùng PyTorch cần cài thêm thư viện `torch`.
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [9.1. Mạng nơ-ron nhân tạo ANN](#91-mạng-nơ-ron-nhân-tạo-ann)
 - [9.2. Học tổ hợp (Ensemble Learning)](#92-học-tổ-hợp-ensemble-learning)
@@ -345,7 +347,7 @@ Mạng 64 – 64 – 10 (4810 tham số) hội tụ sau 172 epoch, đạt độ 
 | (256,) | 19 210 | 1.0000 | 0.9756 |
 | (64, 32) | 6 570 | 1.0000 | 0.9644 |
 
-Mạng quá nhỏ (5 nơ-ron) chưa đủ khả năng biểu diễn; tăng kích thước cải thiện tới một mức rồi bão hòa. Mạng sâu hơn (hai lớp ẩn) không tự động tốt hơn với dữ liệu nhỏ. Để so sánh, trên cùng dữ liệu: hồi quy Logistic 0.9689, cây quyết định 0.8556, SVM RBF 0.9822.
+Trong lần chia và khởi tạo này, mạng 5 nơ-ron đạt 99.11% trên train nhưng chỉ 90% trên test, cho thấy khoảng cách tổng quát hóa lớn. **Chưa đủ cơ sở kết luận mạng bị thiếu khả năng biểu diễn hoặc underfitting chỉ vì ít nơ-ron**, bởi nó đã khớp gần hết nhãn huấn luyện. Muốn chẩn đoán cần xem train/validation loss, điều kiện hội tụ và nhiều lần khởi tạo hoặc kiểm định chéo. Các mạng lớn hơn cho kết quả test cao hơn trong thí nghiệm này, nhưng mạng hai lớp ẩn không tự động tốt hơn. Để so sánh, trên cùng dữ liệu: hồi quy Logistic 0.9689, cây quyết định 0.8556, SVM RBF 0.9822. Các điểm test ở đây minh họa kết quả của cấu hình cố định; lựa chọn kiến trúc phải dựa trên validation/CV.
 
 *Mã nguồn: [codes/04_mlp_sklearn.ipynb](codes/04_mlp_sklearn.ipynb).*
 
@@ -384,7 +386,7 @@ Mạng có 165 tham số; mất mát giảm từ 0.627 (epoch 20) xuống 0.061 
 
 #### g) Một số vấn đề khi huấn luyện mạng sâu
 
-- **Vanishing gradient** (gradient tiêu biến): công thức $\boldsymbol{\delta}^{(l)} = (\mathbf{W}^{(l+1)})^T\boldsymbol{\delta}^{(l+1)} \odot f'(\mathbf{z}^{(l)})$ nhân thêm $f'$ ở mỗi lớp. Đạo hàm sigmoid không vượt quá 0.25, qua 10 lớp gradient có thể bị nhân với $0.25^{10} \approx 10^{-6}$: các lớp gần đầu vào gần như không học được (giáo trình ví von như trò chơi truyền tin, mỗi người chỉ nhớ một nửa thông tin).
+- **Vanishing gradient** (gradient tiêu biến): công thức $\boldsymbol{\delta}^{(l)} = (\mathbf{W}^{(l+1)})^T\boldsymbol{\delta}^{(l+1)} \odot f'(\mathbf{z}^{(l)})$ gồm cả ma trận trọng số và đạo hàm kích hoạt. Riêng tích của 10 đạo hàm sigmoid không vượt quá $0.25^{10} \approx 10^{-6}$; đây **không phải cận trên của gradient đầy đủ**, vì còn các ma trận trọng số và nhiều đường truyền. Khi tích các Jacobian có chuẩn nhỏ, gradient suy giảm mạnh và các lớp gần đầu vào học rất chậm.
 - **Exploding gradient** (gradient bùng nổ): ngược lại, khi các thừa số lớn hơn 1, gradient tăng theo cấp số nhân, cập nhật quá lớn, huấn luyện mất ổn định.
 - **Cách khắc phục** (giáo trình, Chương 13): dùng ReLU cho lớp ẩn (đạo hàm bằng 1 khi $z > 0$); khởi tạo trọng số hợp lý (Xavier: $\text{Var}(W) = \frac{2}{n_{in} + n_{out}}$; He cho ReLU: $\text{Var}(W) = \frac{2}{n_{in}}$); Batch Normalization; cắt gradient (gradient clipping); kết nối tắt (residual connection) như mạng ResNet.
 - **Quá khớp**: mạng có rất nhiều tham số nên dễ quá khớp; dùng điều chuẩn L2 (`alpha` trong `MLPClassifier`, Bài 3), dropout, dừng sớm (early stopping), tăng dữ liệu.
@@ -535,7 +537,7 @@ Với bốn mô hình cơ sở hồi quy Logistic (0.959), SVM (0.947), k-NN (0.
 | Tạo đa dạng | Mẫu bootstrap, tập con đặc trưng ngẫu nhiên | Trọng số mẫu, phần dư | Thuật toán khác nhau |
 | Kết hợp | Bỏ phiếu, trung bình | Tổng có trọng số | Mô hình meta học cách kết hợp |
 | Giảm chủ yếu | Phương sai | Thiên lệch (và phương sai) | Tùy mô hình cơ sở |
-| Nguy cơ quá khớp | Thấp; thêm cây không gây quá khớp | Có thể quá khớp nếu quá nhiều vòng, cần chỉnh $\nu$, số cây | Cần kiểm định chéo cẩn thận |
+| Nguy cơ quá khớp | Thường giảm nhờ trung bình hóa; vẫn phụ thuộc độ sâu cây, cỡ lá và dữ liệu | Có thể quá khớp nếu quá nhiều vòng, cần chỉnh $\nu$, số cây | Cần kiểm định chéo cẩn thận |
 | Song song hóa | Dễ | Khó (tuần tự) | Một phần |
 
 ---
@@ -601,7 +603,7 @@ Với dữ liệu hai nửa vầng trăng có nhiễu (500 điểm, kiểm đị
 | AdaBoost | 0.889 | 0.930 | 0.942 | 0.942 | 0.942 | 0.959 |
 | Gradient Boosting | 0.626 | 0.906 | 0.930 | 0.936 | 0.936 | 0.942 |
 
-Độ chính xác tăng nhanh trong khoảng vài chục mô hình đầu rồi ổn định. Với Random Forest, thêm cây **không gây quá khớp**, chỉ tốn thêm thời gian; với Boosting, quá nhiều vòng có thể quá khớp nên số cây và tốc độ học cần chọn bằng kiểm định chéo. (Gradient Boosting với 1 cây và tốc độ học 0.1 mới chỉ dịch dự đoán một chút từ giá trị hằng nên độ chính xác thấp.)
+Trong thí nghiệm này, độ chính xác nhìn chung tăng rồi ổn định, nhưng không tăng đều ở mọi bước. Với Random Forest, thêm cây thường làm giảm dao động do lấy mẫu ngẫu nhiên và đưa dự đoán tới mức ổn định; **không bảo đảm accuracy luôn tăng hoặc mô hình không thể quá khớp**. Cần kiểm soát độ sâu, cỡ lá và đánh giá bằng OOB hoặc CV. Với Boosting, quá nhiều vòng có thể quá khớp nên số cây và tốc độ học cần chọn bằng kiểm định chéo. (Gradient Boosting với 1 cây và tốc độ học 0.1 mới chỉ dịch dự đoán một chút từ giá trị hằng nên độ chính xác thấp.) Nhận định về accuracy theo số cây tham khảo Probst và Boulesteix, [*To tune or not to tune the number of trees in random forest?*](https://arxiv.org/abs/1705.05654).
 
 *Mã nguồn: [codes/09_single_vs_ensemble.ipynb](codes/09_single_vs_ensemble.ipynb).*
 

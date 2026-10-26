@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 3 – Tối ưu hóa bằng hạ dốc; Chương 4 – Hồi quy tuyến tính.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [5.1. Gradient Descent](#51-gradient-descent)
 - [5.2. Các biến thể của Gradient Descent](#52-các-biến-thể-của-gradient-descent)
@@ -57,7 +59,7 @@ Xét hàm $f: \mathbb{R}^d \to \mathbb{R}$:
 
 Mọi cực tiểu toàn cục đều là cực tiểu địa phương, nhưng điều ngược lại không đúng. Tại cực tiểu (của hàm khả vi), đạo hàm bằng 0.
 
-Với **hàm lồi** (đồ thị có dạng "cái bát", như MSE của hồi quy tuyến tính hay cross-entropy của hồi quy Logistic), mọi cực tiểu địa phương đều là cực tiểu toàn cục, nên GD (với tốc độ học phù hợp) tìm được nghiệm tốt nhất. Với hàm không lồi (như hàm mất mát của mạng nơ-ron), GD có thể dừng ở cực tiểu địa phương; trong thực tế, một cực tiểu địa phương đủ tốt thường vẫn được chấp nhận.
+Với **hàm lồi** (như MSE của hồi quy tuyến tính hay cross-entropy của hồi quy Logistic), mọi cực tiểu địa phương đều là cực tiểu toàn cục. Để bảo đảm GD tìm nghiệm, còn cần nghiệm hữu hạn tồn tại và các điều kiện về độ trơn, tốc độ học. Ví dụ Logistic không điều chuẩn trên dữ liệu tách biệt tuyến tính có thể giảm loss về 0 nhưng chuẩn trọng số tăng không bị chặn (Bài 4); giảm loss không đồng nghĩa vector tham số hội tụ. Với hàm không lồi (như hàm mất mát của mạng nơ-ron), GD có thể gặp cực tiểu địa phương hoặc điểm dừng khác; trong thực tế, một nghiệm có chất lượng đủ tốt thường vẫn được chấp nhận.
 
 ---
 
@@ -166,8 +168,8 @@ print(numerical_grad(w))    # [-3.333 -7.667]  -> khớp với công thức
 #### a) Hàm một biến
 
 Giả sử sau vòng lặp $t$ ta đang ở $x_t$. Từ mục 5.1.2:
-- Nếu $f'(x_t) > 0$, $x_t$ nằm bên phải cực tiểu, cần **giảm** $x$; nếu $f'(x_t) < 0$, cần **tăng** $x$. Vậy bước dịch chuyển phải **ngược dấu** với $f'(x_t)$.
-- Càng xa cực tiểu, $|f'(x_t)|$ thường càng lớn, nên bước dịch chuyển nên **tỉ lệ** với $|f'(x_t)|$: xa thì bước dài, gần thì bước ngắn.
+- Nếu $f'(x_t) > 0$, một bước đủ nhỏ theo hướng **giảm** $x$ làm $f$ giảm; nếu $f'(x_t) < 0$, hướng giảm cục bộ là **tăng** $x$. Dấu đạo hàm cho hướng giảm cục bộ; chỉ với hàm lồi một biến có nghiệm cực tiểu mới có thể suy ra phía của cực tiểu từ dấu này.
+- Chọn độ dài bước **tỉ lệ** với $|f'(x_t)|$: nơi dốc thì bước dài, nơi thoải thì bước ngắn. Độ lớn đạo hàm không phải khoảng cách tới cực tiểu; hàm không lồi có thể có vùng bằng phẳng ở xa nghiệm tốt.
 
 Từ đó có quy tắc cập nhật:
 

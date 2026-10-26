@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 7 – Mô hình nơ-ron Perceptron; Chương 9 – Hồi quy logistic. Ma trận nhầm lẫn và độ chính xác chỉ xuất hiện trong phần thực hành (Chương 8, Chương 14); Precision, Recall, F1, ROC-AUC không có trong giáo trình, tham khảo tài liệu scikit-learn (*Model evaluation*) và T. Fawcett, *An introduction to ROC analysis*, Pattern Recognition Letters, 2006. Bộ dữ liệu ung thư phổi lấy từ Kaggle.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [4.1. Mô hình hồi quy Logistic](#41-mô-hình-hồi-quy-logistic)
 - [4.2. Thuật toán PLA](#42-thuật-toán-pla)
@@ -210,7 +212,7 @@ Cả hai đều có dạng chung $\hat{y} = f(\mathbf{x}^T\mathbf{w})$, chỉ kh
 
 #### a) Ước lượng hợp lý cực đại (MLE)
 
-Không thể dùng MSE như hồi quy tuyến tính, vì khi kết hợp với sigmoid, MSE không còn là hàm lồi (có nhiều cực tiểu địa phương). Hàm mất mát của hồi quy Logistic được xây dựng từ phương pháp **ước lượng hợp lý cực đại** (Maximum Likelihood Estimation – MLE): *chọn $\mathbf{w}$ sao cho xác suất mô hình sinh ra đúng các nhãn quan sát được là lớn nhất.*
+MSE vẫn có thể dùng để đo sai số của dự đoán xác suất, nhưng khi kết hợp với sigmoid, hàm mục tiêu theo trọng số **có thể không lồi**, khiến tối ưu khó hơn. Vì vậy, ở đây ta dùng **cross-entropy**, xuất phát từ phương pháp **ước lượng hợp lý cực đại** (Maximum Likelihood Estimation – MLE): *chọn $\mathbf{w}$ sao cho xác suất mô hình sinh ra đúng các nhãn quan sát được là lớn nhất.* Không đồng nhất “không lồi” với “chắc chắn có nhiều cực tiểu địa phương”.
 
 **Bước 1 – Xác suất của một mẫu.** Đặt $a_i = \sigma(\mathbf{x}_i^T\mathbf{w})$. Theo mô hình:
 
@@ -244,7 +246,7 @@ $$
 - Nếu $y_i = 1$: mất mát là $-\ln a_i$. Mô hình dự đoán $a_i \to 1$ (đúng) thì mất mát $\to 0$; dự đoán $a_i \to 0$ (sai) thì mất mát $\to +\infty$.
 - Nếu $y_i = 0$: mất mát là $-\ln(1 - a_i)$, tương tự theo chiều ngược lại.
 
-Như vậy cross-entropy **phạt rất nặng** những dự đoán sai mà lại tự tin. $J(\mathbf{w})$ là hàm **lồi** theo $\mathbf{w}$, nên Gradient Descent hội tụ về cực tiểu toàn cục (khi chọn tốc độ học phù hợp).
+Như vậy cross-entropy **phạt rất nặng** những dự đoán sai mà lại tự tin. $J(\mathbf{w})$ là hàm **lồi** theo $\mathbf{w}$, nên mọi cực tiểu địa phương đều là cực tiểu toàn cục. Khi nghiệm hữu hạn tồn tại và chọn tốc độ học phù hợp với độ trơn của hàm, GD có thể tìm nghiệm tối ưu. Tính lồi riêng nó không bảo đảm nghiệm hữu hạn tồn tại: với dữ liệu tách biệt tuyến tính và không điều chuẩn, loss tiến về 0 trong khi chuẩn trọng số có thể tăng không bị chặn; vector tham số không hội tụ tới một nghiệm MLE hữu hạn.
 
 #### b) Gradient của hàm mất mát
 
@@ -536,9 +538,13 @@ rồi vẽ điểm (FPR, TPR). Ngưỡng $\tau = 1$ cho điểm $(0, 0)$ (không
 | 0.5 | Không hơn đoán ngẫu nhiên (đường chéo) |
 | < 0.5 | Tệ hơn ngẫu nhiên (thường do đảo nhãn) |
 
-**Diễn giải xác suất:** AUC bằng xác suất để một mẫu dương chọn ngẫu nhiên được mô hình cho điểm (xác suất dự đoán) **cao hơn** một mẫu âm chọn ngẫu nhiên. Ví dụ ôn thi có AUC $= 0.895$: trong $10 \times 10 = 100$ cặp (người đỗ, người trượt), khoảng 89.5% số cặp người đỗ được mô hình cho xác suất cao hơn.
+**Diễn giải xác suất:** với điểm số $s$ càng cao càng nghiêng về lớp dương,
 
-Ưu điểm của ROC-AUC: **không phụ thuộc ngưỡng**, dùng để so sánh các mô hình với nhau; ít bị ảnh hưởng bởi tỉ lệ giữa hai lớp hơn Accuracy. Để tính AUC cần dùng **xác suất dự đoán** (`predict_proba`), không phải nhãn 0/1.
+$$\mathrm{AUC} = P(s_+ > s_-) + \frac{1}{2}P(s_+ = s_-).$$
+
+Trường hợp bằng điểm được tính nửa trọng số. Ví dụ ôn thi có $10 \times 10 = 100$ cặp (người đỗ, người trượt): 89 cặp người đỗ có điểm cao hơn, 1 cặp bằng điểm và 10 cặp thấp hơn. Vì vậy AUC $= (89 + 0.5)/100 = 0.895$, còn tỉ lệ cao hơn nghiêm ngặt là 89%.
+
+Ưu điểm của ROC-AUC: **không phụ thuộc một ngưỡng phân loại cụ thể**, dùng để so sánh các mô hình với nhau; ít bị ảnh hưởng bởi tỉ lệ giữa hai lớp hơn Accuracy. Với phân loại nhị phân, đầu vào nên là **điểm số liên tục hoặc xác suất của lớp dương**, từ `decision_function` hoặc `predict_proba`, thay cho nhãn 0/1 sau khi áp ngưỡng. Điểm số phải có chiều phù hợp với lớp dương.
 
 ```python
 from sklearn.metrics import roc_curve, roc_auc_score
@@ -680,7 +686,7 @@ Lưu ý: một lần cập nhật có thể làm **điểm khác** đang đúng 
 
 > **Thuật toán PLA**
 > 1. Khởi tạo $\mathbf{w}_0$ (ngẫu nhiên hoặc $\mathbf{0}$), $t = 0$.
-> 2. Nếu không có điểm nào bị phân loại sai ($y_i\,\mathbf{x}_i^T\mathbf{w}_t > 0$ với mọi $i$; điểm có $\mathbf{x}_i^T\mathbf{w}_t = 0$ được xét theo quy ước $\text{sgn}(0) = 1$), **dừng**.
+> 2. Tính $z_i = \mathbf{x}_i^T\mathbf{w}_t$, dự đoán $\hat y_i = +1$ nếu $z_i \ge 0$, ngược lại $-1$ (quy ước $\text{sgn}(0) = +1$). Nếu $\hat y_i = y_i$ với mọi $i$, **dừng**. Tương đương: lớp $+1$ cần $z_i \ge 0$, lớp $-1$ cần $z_i < 0$.
 > 3. Chọn một điểm bị phân loại sai $(\mathbf{x}_i, y_i)$, cập nhật $\mathbf{w}_{t+1} = \mathbf{w}_t + y_i\,\mathbf{x}_i$.
 > 4. $t \leftarrow t + 1$, quay lại bước 2.
 
@@ -775,7 +781,7 @@ print(perceptron_model.intercept_, perceptron_model.coef_, perceptron_model.scor
 | Đầu ra | Nhãn cứng | Xác suất, cho phép chọn ngưỡng |
 | Hàm mất mát | $\sum_{\mathcal{M}} -y_i\,\mathbf{x}_i^T\mathbf{w}$ (chỉ điểm sai) | Cross-entropy (mọi điểm) |
 | Quy tắc cập nhật | $\mathbf{w} \leftarrow \mathbf{w} + y_i\,\mathbf{x}_i$ khi điểm sai | $\mathbf{w} \leftarrow \mathbf{w} - \eta(a_i - y_i)\,\mathbf{x}_i$ |
-| Dữ liệu không tách biệt tuyến tính | Không hội tụ | Vẫn hội tụ (hàm mất mát lồi) |
+| Dữ liệu không tách biệt tuyến tính | Không thể hết điểm sai | Có thể tối ưu hàm lồi; cần điều kiện tồn tại nghiệm hữu hạn, tốc độ học và điều kiện dừng phù hợp |
 | Nghiệm | Nhiều nghiệm, phụ thuộc khởi tạo và thứ tự duyệt; có thể nằm sát dữ liệu | Duy nhất (với điều chuẩn), xác định bởi toàn bộ dữ liệu |
 
 Nhược điểm "nghiệm nằm sát dữ liệu" của PLA dẫn tới ý tưởng chọn siêu phẳng có **lề lớn nhất** của SVM (Bài 7). Nhược điểm "chỉ phân tách tuyến tính" (ví dụ không học được hàm XOR) được khắc phục bằng **mạng nơ-ron nhiều lớp** (Bài 9).
@@ -981,35 +987,64 @@ Hai mô hình có cùng Accuracy nhưng nhầm theo hai kiểu khác nhau: mô h
 
 #### c) Chọn ngưỡng phân loại
 
-Thay vì đổi trọng số lớp, có thể giữ mô hình mặc định và thay đổi ngưỡng $\tau$:
+**Chỉ chọn ngưỡng từ tập huấn luyện.** Trước khi xem kết quả test, đặt tiêu chí giả định cho bài tập: Recall OOF ít nhất 0.95, sau đó tối đa hóa độ đặc hiệu trong các ngưỡng đạt yêu cầu. Đây là cách minh họa một ràng buộc nghiệp vụ, không phải khuyến nghị y khoa. Dùng `cross_val_predict` trên 220 mẫu train để mỗi mẫu nhận xác suất từ mô hình không học mẫu đó. `Pipeline` bảo đảm scaler cũng chỉ fit trên phần huấn luyện của mỗi fold.
 
 ```python
-for tau in [0.5, 0.7, 0.8, 0.9]:
-    y_tau = (y_prob >= tau).astype(int)
-    tn, fp, fn, tp = confusion_matrix(y_test, y_tau).ravel()
-    print(tau, 'TN=%d FP=%d FN=%d TP=%d' % (tn, fp, fn, tp),
-          'Recall=%.3f Đặc hiệu=%.3f' % (tp / (tp + fn), tn / (tn + fp)))
+from sklearn.model_selection import cross_val_predict, StratifiedKFold
+# Chọn ngưỡng chỉ từ dự đoán ngoài fold của tập huấn luyện
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+oof_prob = cross_val_predict(model, X_train, y_train, cv=cv, method='predict_proba')[:, 1]
+recall_target = 0.95       # chỉ tiêu giả định cho bài tập, không phải ngưỡng y khoa
+threshold_rows = []
+for tau in [0.0, 0.3, 0.5, 0.7, 0.8, 0.9]:
+    tn, fp, fn, tp = confusion_matrix(y_train, oof_prob >= tau, labels=[0, 1]).ravel()
+    threshold_rows.append({'threshold': tau, 'TN': tn, 'FP': fp, 'FN': fn, 'TP': tp,
+                           'recall': tp / (tp + fn), 'specificity': tn / (tn + fp)})
+threshold_table = pd.DataFrame(threshold_rows)
+eligible = threshold_table[threshold_table['recall'] >= recall_target]
+# Trong các ngưỡng đạt Recall mục tiêu, ưu tiên độ đặc hiệu lớn nhất
+selected = eligible.sort_values(['specificity', 'recall', 'threshold'],
+                                 ascending=[False, False, True]).iloc[0]
+best_threshold = float(selected['threshold'])
+print(threshold_table.round(3).to_string(index=False))
+print('Ngưỡng chốt từ OOF train:', best_threshold)
 ```
 
-| Ngưỡng $\tau$ | TN | FP | FN | TP | Recall (lớp bệnh) | Độ đặc hiệu (lớp không bệnh) |
-|---|---|---|---|---|---|---|
-| 0.5 | 4 | 4 | 2 | 46 | 0.958 | 0.500 |
-| 0.7 | 5 | 3 | 3 | 45 | 0.938 | 0.625 |
-| 0.8 | 7 | 1 | 6 | 42 | 0.875 | 0.875 |
-| 0.9 | 8 | 0 | 8 | 40 | 0.833 | 1.000 |
+*Mã nguồn: [codes/10_lung_cancer_logistic_regression.ipynb](codes/10_lung_cancer_logistic_regression.ipynb); notebook chốt ngưỡng trước các bước đánh giá test.*
 
-Nâng ngưỡng làm giảm báo nhầm nhưng tăng bỏ sót. Với bài toán **sàng lọc** ung thư, bỏ sót một người bệnh (FN) nguy hiểm hơn nhiều so với yêu cầu một người khỏe đi xét nghiệm thêm (FP), nên ưu tiên **Recall cao**, chọn ngưỡng thấp (ví dụ $\tau = 0.5$ hoặc thấp hơn). Việc chọn ngưỡng là quyết định theo bài toán thực tế, không phải chỉ theo một chỉ số.
+**Kết quả OOF trên tập huấn luyện (220 mẫu, 30 âm và 190 dương):**
+
+| Ngưỡng | TN | FP | FN | TP | Recall | Độ đặc hiệu |
+|---|---|---|---|---|---|---|
+| 0.0 | 0 | 30 | 0 | 190 | 1.000 | 0.000 |
+| 0.3 | 10 | 20 | 3 | 187 | 0.984 | 0.333 |
+| 0.5 | 17 | 13 | 6 | 184 | 0.968 | 0.567 |
+| **0.7** | **20** | **10** | **8** | **182** | **0.958** | **0.667** |
+| 0.8 | 21 | 9 | 23 | 167 | 0.879 | 0.700 |
+| 0.9 | 24 | 6 | 35 | 155 | 0.816 | 0.800 |
+
+Ngưỡng **0.7** được chốt từ OOF train: có độ đặc hiệu cao nhất trong các ứng viên đạt Recall mục tiêu. Sau đó áp dụng đúng ngưỡng này cho mô hình đã fit trên toàn bộ train, đánh giá một lần trên test:
+
+```python
+y_selected = (y_prob >= best_threshold).astype(int)
+print(confusion_matrix(y_test, y_selected, labels=[0, 1]))
+print(classification_report(y_test, y_selected, digits=3, zero_division=0))
+```
+
+*Mã nguồn: [codes/10_lung_cancer_logistic_regression.ipynb](codes/10_lung_cancer_logistic_regression.ipynb).*
+
+Trên test: TN = 5, FP = 3, FN = 3, TP = 45; Recall = 0.938 và độ đặc hiệu = 0.625. Recall test không nhất thiết đạt 0.95 dù Recall OOF đã đạt: đánh giá trên mẫu hữu hạn có dao động. **Không điều chỉnh lại ngưỡng theo kết quả test.** Các cấu hình ngưỡng 0.5 và `balanced` ở trên là đối chiếu được định trước để minh họa, không dùng làm cuộc thi chọn mô hình theo test.
 
 #### d) Đánh giá ổn định bằng kiểm định chéo
 
-Tập kiểm tra chỉ có 8 mẫu lớp 0, nên mỗi mẫu đoán sai làm độ đặc hiệu thay đổi 12.5%: kết quả phụ thuộc nhiều vào cách chia ngẫu nhiên. Kiểm định chéo 5 phần (Bài 3) cho đánh giá ổn định hơn:
+Tập test chỉ có 8 mẫu lớp 0, nên mỗi mẫu đoán sai làm độ đặc hiệu thay đổi 12.5 điểm phần trăm. Để xem thêm độ dao động, thực hiện CV 5 phần **chỉ trên train**, giữ nguyên test. Các điểm dưới đây đánh giá Logistic mặc định với ngưỡng 0.5; chúng không phải ước lượng độc lập cho quy trình chọn ngưỡng từ chính các fold đó. Nếu đánh giá toàn bộ quy trình chọn ngưỡng bằng CV, cần CV lồng nhau:
 
 ```python
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 for metric in ['accuracy', 'f1', 'roc_auc']:
-    scores = cross_val_score(model, X, y, cv=cv, scoring=metric)
+    scores = cross_val_score(model, X_train, y_train, cv=cv, scoring=metric)
     print(metric, scores.round(3), 'trung bình = %.3f' % scores.mean())
 ```
 
@@ -1017,11 +1052,11 @@ for metric in ['accuracy', 'f1', 'roc_auc']:
 
 | Chỉ số | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 | Trung bình |
 |---|---|---|---|---|---|---|
-| Accuracy | 0.911 | 0.909 | 0.927 | 0.945 | 0.891 | 0.917 |
-| F1 | 0.947 | 0.949 | 0.959 | 0.969 | 0.938 | 0.953 |
-| ROC-AUC | 0.948 | 0.952 | 0.932 | 0.973 | 0.859 | 0.933 |
+| Accuracy | 0.886 | 0.909 | 0.955 | 0.864 | 0.955 | 0.914 |
+| F1 | 0.935 | 0.947 | 0.974 | 0.925 | 0.974 | 0.951 |
+| ROC-AUC | 0.899 | 0.912 | 0.969 | 0.877 | 0.947 | 0.921 |
 
-ROC-AUC trung bình khoảng 0.93: mô hình hồi quy Logistic phân biệt khá tốt hai nhóm trên bộ dữ liệu này.
+ROC-AUC trung bình trên các fold của train khoảng 0.92: mô hình hồi quy Logistic phân biệt khá tốt hai nhóm trên bộ dữ liệu này.
 
 ---
 

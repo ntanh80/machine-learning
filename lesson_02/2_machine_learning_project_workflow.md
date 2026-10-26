@@ -7,6 +7,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 1 – Các khái niệm cơ bản; Chương 2 – Các kỹ thuật xây dựng đặc trưng; Chương 4 – Hồi quy tuyến tính. Quy tắc IQR phát hiện ngoại lai, kiểm định chéo và các công cụ `SimpleImputer`, `Pipeline`, `GridSearchCV` không có trong giáo trình, tham khảo tài liệu scikit-learn.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các notebook đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [2.1. Quy trình một dự án Học máy hoàn chỉnh](#21-quy-trình-một-dự-án-học-máy-hoàn-chỉnh)
 - [2.2. Tham số của mô hình Học máy](#22-tham-số-của-mô-hình-học-máy)
@@ -249,7 +251,7 @@ $$
 \mathbf{x} = (10, 20, 30, 40) \;\text{(theo hàng)} \quad \text{hoặc} \quad (10, 30, 20, 40) \;\text{(theo cột)}
 $$
 
-Cách này đơn giản nhưng **mất thông tin về quan hệ không gian** giữa các điểm ảnh (hai điểm cạnh nhau theo chiều dọc bị đặt cách xa nhau trong vector).
+Cách này đơn giản và **không làm mất giá trị hay vị trí điểm ảnh nếu giữ kích thước ảnh và thứ tự duỗi**: có thể khôi phục chính xác bằng `reshape`. Tuy nhiên, vector phẳng không thể hiện trực tiếp quan hệ lân cận hai chiều; mô hình xử lý vector thông thường không khai thác sẵn cấu trúc này như mạng tích chập (CNN).
 
 *Mã nguồn: [codes/01_grayscale_image.ipynb](codes/01_grayscale_image.ipynb) (ảnh xám $20 \times 20$ thành vector 400 phần tử).*
 
@@ -272,7 +274,9 @@ $$
 \text{TFIDF}(t, d) = \text{TF}(t, d) \times \text{IDF}(t)
 $$
 
-với $f_{t,d}$ là số lần từ $t$ xuất hiện trong văn bản $d$, $N$ là số văn bản, $n_t$ là số văn bản chứa $t$. Trong ví dụ trên, "Sinh", "viên", "ICTU" có mặt ở cả hai câu nên $\text{IDF} = \log(2/2) = 0$, còn "trí", "tuệ", "dữ", "liệu" có TF–IDF dương, mang thông tin phân biệt hai câu.
+với $f_{t,d}$ là số lần từ $t$ xuất hiện trong văn bản $d$, $N$ là số văn bản, $n_t$ là số văn bản chứa $t$. **Theo quy ước giáo khoa này**, "Sinh", "viên", "ICTU" có mặt ở cả hai câu nên $\text{IDF} = \log(2/2) = 0$, còn "trí", "tuệ", "dữ", "liệu" có TF–IDF dương, mang thông tin phân biệt hai câu.
+
+**Quy ước trong scikit-learn.** Notebook dùng `TfidfVectorizer()` mặc định: TF là số lần xuất hiện, $\text{IDF}(t) = \ln\frac{1+N}{1+n_t} + 1$, sau đó chuẩn hóa mỗi vector TF–IDF về độ dài L2 bằng 1. Vì vậy một từ có mặt ở mọi văn bản có IDF bằng **1**, không phải 0. Đây là hai quy ước tính trọng số; không so trực tiếp kết quả tính tay ở trên với đầu ra mặc định của thư viện. Ngay cả `smooth_idf=False` vẫn giữ số hạng cộng 1 trong IDF.
 
 *Mã nguồn: [codes/02_bag_of_words.ipynb](codes/02_bag_of_words.ipynb).*
 
@@ -304,8 +308,8 @@ Khi các đặc trưng có đơn vị, thang đo rất khác nhau (diện tích 
 
 | Phương pháp | Công thức | Kết quả | Ví dụ |
 |---|---|---|---|
-| Chuyển khoảng (min-max) | $x' = \dfrac{x - \min}{\max - \min}$ | Giá trị trong $[0, 1]$ | Diện tích trong $[50, 200]$, nhà 120 m²: $x' = \frac{120 - 50}{200 - 50} = 0.47$ |
-| Theo phân phối chuẩn (z-score, `StandardScaler`) | $x' = \dfrac{x - \bar{x}}{\sigma}$ | Trung bình 0, độ lệch chuẩn 1 | Tuổi trung bình 40, độ lệch chuẩn 10, người 50 tuổi: $x' = 1$ |
+| Chuyển khoảng (min-max) | $x' = \dfrac{x - \min}{\max - \min}$ | Trên tập fit: giá trị trong $[0, 1]$; dữ liệu mới vượt min/max có thể ra ngoài khoảng này | Diện tích trong $[50, 200]$, nhà 120 m²: $x' = \frac{120 - 50}{200 - 50} = 0.47$ |
+| Chuẩn hóa z-score (`StandardScaler`) | $x' = \dfrac{x - \bar{x}}{\sigma}$ | Trên tập fit: trung bình 0, độ lệch chuẩn 1 nếu phương sai khác 0; không biến dữ liệu thành phân phối chuẩn | Tuổi trung bình 40, độ lệch chuẩn 10, người 50 tuổi: $x' = 1$ |
 | Theo norm | $\mathbf{x}' = \dfrac{\mathbf{x}}{\lVert \mathbf{x} \rVert_2}$ | Vector có độ dài 1 | $\mathbf{x} = (3, 4)$, $\lVert \mathbf{x} \rVert_2 = 5$: $\mathbf{x}' = (0.6, 0.8)$ |
 
 Trong đó $\lVert \mathbf{x} \rVert_2 = \sqrt{\sum_i x_i^2}$ là **chuẩn $\ell_2$** (độ dài Euclid); tổng quát, chuẩn $\ell_p$ là $\lVert \mathbf{x} \rVert_p = \left(\sum_i |x_i|^p\right)^{1/p}$, với $\ell_1$ là tổng trị tuyệt đối.
@@ -641,12 +645,13 @@ Khám phá cho thấy: giá từ 300 đến khoảng 7700 triệu, trung bình k
 df = raw.drop_duplicates().copy()                               # xóa dòng trùng
 df['district'] = df['district'].str.strip().str.lower()         # thống nhất chữ viết
 df = df.dropna(subset=['price'])                                # xóa dòng thiếu nhãn
-q1, q3 = df['area'].quantile([0.25, 0.75])
-df = df[df['area'] <= q3 + 1.5 * (q3 - q1)]                     # xóa ngoại lai (lỗi nhập liệu)
+df = df[df['area'].between(30, 200)]                           # miền hợp lệ xác định từ bộ sinh dữ liệu
 df['age'] = 2026 - df['year_built']                             # đặc trưng mới: tuổi nhà
 ```
 
-Còn 989 căn nhà. **Lựa chọn đặc trưng** (mục 2.1.4 g): dùng diện tích, số phòng ngủ, khoảng cách, tuổi nhà và khu vực; loại màu sơn.
+Còn 989 căn nhà. Khoảng diện tích **30–200 m²** là quy tắc cố định của bộ dữ liệu mô phỏng, xác định từ notebook sinh dữ liệu, không được ước lượng từ tập kiểm tra. Sáu lỗi nhân diện tích với 10 đều nằm ngoài khoảng này. IQR ở phần trước chỉ minh họa phát hiện điểm cần kiểm tra; nếu dùng ngưỡng thống kê trong mô hình thực tế, phải học ngưỡng trên tập huấn luyện. Không áp dụng khoảng 30–200 m² này cho nhà thực tế nói chung.
+
+**Lựa chọn đặc trưng** (mục 2.1.4 g): dùng diện tích, số phòng ngủ, khoảng cách, tuổi nhà và khu vực; quyết định loại màu sơn sẽ được kiểm tra bằng CV trên tập huấn luyện, không dựa vào nhãn của tập test.
 
 **Chia tập** 80/20 (791 căn huấn luyện, 198 căn kiểm tra), rồi gói các bước biến đổi có "học" từ dữ liệu vào `Pipeline` để chúng chỉ `fit` trên tập huấn luyện:
 
