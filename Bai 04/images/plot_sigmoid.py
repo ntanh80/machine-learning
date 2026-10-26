@@ -1,9 +1,13 @@
-# Ve ham sigmoid (muc 4.1.2): so sanh cac ham kich hoat va dao ham cua sigmoid
+# Vẽ hàm sigmoid (mục 4.1.2): so sánh các hàm kích hoạt và đạo hàm của sigmoid
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
 
+IMAGES = Path(__file__).resolve().parent   # thư mục images/
+
 s = np.linspace(-6, 6, 400)
-sigmoid = 1 / (1 + np.exp(-s))
+sigmoid = 1 / (1 + np.exp(-s))   # giá trị σ(s)
 
 fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
 
@@ -26,4 +30,4 @@ ax.set_title("(b) Hàm sigmoid và đạo hàm")
 ax.legend(loc="upper left"); ax.grid(alpha=0.3)
 
 fig.tight_layout()
-fig.savefig("images/sigmoid.png", dpi=150)
+fig.savefig(IMAGES / "sigmoid.png", dpi=150)
