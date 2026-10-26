@@ -62,6 +62,6 @@ Hoặc dùng công cụ Read với tham số `pages` (tối đa 20 trang/lần) 
 
 - `1. Muc tieu.md` – mục tiêu, chuẩn đầu ra, phân bổ nội dung (chuẩn của bài).
 - `2. <Tên bài>.md` – nội dung lý thuyết chính, đề mục theo các mục CĐR.
-- `3.`, `4.`, … – notebook/code thực hành, đánh số theo thứ tự trình bày.
+- `codes/` – code demo Python **viết dạng notebook `.ipynb`** (không viết `.py`), tên file có số thứ tự theo trình tự chuyên môn trong bài: `01_<ten>.ipynb`, `02_<ten>.ipynb`, … Mỗi notebook chạy độc lập từ đầu đến cuối (Restart & Run All), xen kẽ ô Markdown giải thích bằng tiếng Việt với ô code, đọc dữ liệu từ `../data/` (dùng `Path('..') / 'data'`, vì notebook chạy với thư mục hiện hành là `codes/`). Ngoại lệ duy nhất: ứng dụng phải chạy bằng lệnh riêng (ví dụ app Streamlit chạy bằng `streamlit run`) thì để `.py`. Trong file `2.` đặt link `codes/...` ngay sau đoạn code tương ứng.
 - `images/` – hình minh họa (kèm script `.py` sinh hình), `data/` – dữ liệu.
 - Viết bằng tiếng Việt có dấu.

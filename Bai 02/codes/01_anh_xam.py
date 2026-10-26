@@ -2,12 +2,13 @@
 Tạo ảnh đa cấp xám 20x20, đọc lại ảnh và in giá trị điểm ảnh
 dưới dạng mảng hai chiều (2D) và mảng một chiều (1D).
 """
+from pathlib import Path
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 
 H, W = 20, 20
-TEN_FILE = "anh_xam_20x20.png"
+TEN_FILE = Path(__file__).resolve().parent / "anh_xam_20x20.png"
 
 # ---------- 1. Tạo ảnh đa cấp xám ----------
 # Nền là dải chuyển màu ngang từ đen (0) sang trắng (255)

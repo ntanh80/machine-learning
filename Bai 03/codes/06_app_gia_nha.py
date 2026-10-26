@@ -1,5 +1,5 @@
 # Demo Streamlit: dự đoán giá nhà bằng hồi quy tuyến tính
-# Chạy: streamlit run "8. app_gia_nha.py"
+# Chạy: streamlit run "codes/06_app_gia_nha.py"
 from pathlib import Path
 
 import numpy as np
@@ -13,7 +13,7 @@ DAC_TRUNG = ['dien_tich', 'so_phong_ngu', 'khoang_cach']
 
 @st.cache_data
 def doc_du_lieu():
-    return pd.read_csv(Path(__file__).parent / 'data' / 'gia_nha.csv')
+    return pd.read_csv(Path(__file__).resolve().parent.parent / 'data' / 'gia_nha.csv')
 
 
 @st.cache_resource
