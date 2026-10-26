@@ -1,5 +1,5 @@
 # Demo Streamlit: dự đoán giá nhà bằng hồi quy tuyến tính
-# Chạy: streamlit run "codes/06_house_price_app.py"
+# Chạy: streamlit run "codes/04_house_price_app.py"
 from pathlib import Path
 
 import numpy as np

@@ -124,7 +124,7 @@ $$
 \hat{y} = \bar{\mathbf{x}}^T \bar{\mathbf{w}}
 $$
 
-*Vector cột và phép chuyển vị trong NumPy: [codes/02_vector_transpose.ipynb](codes/02_vector_transpose.ipynb).*
+*Vector cột và phép chuyển vị trong NumPy: [codes/01_vector_argmin.ipynb](codes/01_vector_argmin.ipynb) (Phần 1).*
 
 > **Vì sao cần hệ số chệch $w_0$?**
 > Nếu không có $w_0$, đường hồi quy buộc phải đi qua gốc tọa độ (khi $\mathbf{x} = \mathbf{0}$ thì $\hat{y} = 0$). Điều này thường không hợp lý trong thực tế. Hệ số chệch cho phép đường hồi quy dịch chuyển song song với trục tung, giúp mô tả dữ liệu tốt hơn.
@@ -171,7 +171,7 @@ $$
 \mathbf{w}^* = \arg\min_{\mathbf{w}} \mathcal{L}(\mathbf{w})
 $$
 
-*Ví dụ về min, max, argmin, argmax: [codes/01_argmin_argmax.ipynb](codes/01_argmin_argmax.ipynb).*
+*Ví dụ về min, max, argmin, argmax: [codes/01_vector_argmin.ipynb](codes/01_vector_argmin.ipynb) (Phần 2, 3).*
 
 Phương pháp tìm $\mathbf{w}$ bằng cách cực tiểu tổng bình phương sai số được gọi là **phương pháp bình phương tối thiểu** (Ordinary Least Squares – **OLS**).
 
@@ -341,7 +341,7 @@ print('Chiều cao 155 cm, cân nặng thực tế 52 kg, dự đoán %.2f kg' %
 print('Chiều cao 160 cm, cân nặng thực tế 56 kg, dự đoán %.2f kg' % pred_160)
 ```
 
-*Mã nguồn: [codes/03_height_weight_regression.ipynb](codes/03_height_weight_regression.ipynb).*
+*Mã nguồn: [codes/02_height_weight_regression.ipynb](codes/02_height_weight_regression.ipynb).*
 
 ##### Giải thích chi tiết phần tính nghiệm
 
@@ -487,7 +487,7 @@ print("w0 =", w[0])
 
 Hai kết quả **trùng nhau**: $w_1 \approx 0.5592$, $w_0 \approx -33.7354$.
 
-*Mã nguồn: [codes/03_height_weight_regression.ipynb](codes/03_height_weight_regression.ipynb).*
+*Mã nguồn: [codes/02_height_weight_regression.ipynb](codes/02_height_weight_regression.ipynb).*
 
 ---
 
@@ -857,9 +857,9 @@ print(model.predict(new_house))        # [3343.61]
 
 Căn nhà 100 m², 3 phòng ngủ, cách trung tâm 10 km có giá dự đoán khoảng **3.344 triệu VND**.
 
-> Ứng dụng web minh họa: chạy `streamlit run "codes/06_house_price_app.py"` để nhập thông số căn nhà và xem giá dự đoán trực tiếp.
+> Ứng dụng web minh họa: chạy `streamlit run "codes/04_house_price_app.py"` để nhập thông số căn nhà và xem giá dự đoán trực tiếp.
 
-*Notebook đầy đủ các bước khám phá dữ liệu, nghiệm công thức, Gradient Descent, Ridge và Lasso: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb).*
+*Notebook đầy đủ các bước khám phá dữ liệu, nghiệm công thức, Gradient Descent, Ridge và Lasso: [codes/03_house_price_regression.ipynb](codes/03_house_price_regression.ipynb).*
 
 #### Bước 5: Huấn luyện các mô hình có điều chuẩn
 
@@ -895,7 +895,7 @@ Kết quả được phân tích ở mục 3.3.2.
 
 $R^2 = 1$: dự đoán hoàn hảo; $R^2 = 0$: mô hình không tốt hơn việc luôn dự đoán giá trị trung bình $\bar{y}$; $R^2 < 0$: mô hình còn tệ hơn thế.
 
-*Ví dụ tính tay các độ đo trên bài toán chiều cao – cân nặng: [codes/04_model_evaluation.ipynb](codes/04_model_evaluation.ipynb).*
+*Ví dụ tính tay các độ đo trên bài toán chiều cao – cân nặng: [codes/02_height_weight_regression.ipynb](codes/02_height_weight_regression.ipynb) (Phần 2).*
 
 #### b) Đánh giá mô hình OLS trên tập kiểm tra
 
