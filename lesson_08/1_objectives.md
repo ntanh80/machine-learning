@@ -19,21 +19,16 @@ Sau khi hoàn thành bài học, sinh viên có thể:
 4. Áp dụng được K-means và phân cụm phân cấp để phân tích dữ liệu không có nhãn.
 5. So sánh được ưu nhược điểm của hai phương pháp phân cụm trong các tình huống dữ liệu khác nhau.
 
-## 3. Nội dung và phân bổ thời gian
+## 3. Nội dung
 
-| CĐR | Nội dung | Thời lượng | Hình thức | Mức độ |
-| --- | --- | --- | --- | --- |
-| 8.1 | Học không giám sát và bài toán phân cụm | 3 tiết | Giảng dạy lý thuyết | Hiểu |
-| 8.2 | Phân cụm dữ liệu hoa Iris bằng K-means | 2 tiết | Hướng dẫn thực hành, làm bài tập | Vận dụng |
+### CĐR 1. Hiểu về học không giám sát và bài toán phân cụm
 
-### CĐR 8.1. Hiểu về học không giám sát và bài toán phân cụm
+- Khái niệm học không giám sát
+- Bài toán phân cụm
+- Phương pháp phân cụm K-means
+- Phương pháp phân cụm phân cấp (hierarchical clustering)
 
-- 8.1.1. Khái niệm học không giám sát
-- 8.1.2. Bài toán phân cụm
-- 8.1.3. Phương pháp phân cụm K-means
-- 8.1.4. Phương pháp phân cụm phân cấp (hierarchical clustering)
+### CĐR 2. Vận dụng K-means phân cụm dữ liệu
 
-### CĐR 8.2. Vận dụng K-means phân cụm dữ liệu
-
-- 8.2.1. Đọc và tiền xử lý dữ liệu
-- 8.2.2. Phân cụm dữ liệu hoa Iris bằng K-means
+- Đọc và tiền xử lý dữ liệu
+- Phân cụm dữ liệu hoa Iris bằng K-means

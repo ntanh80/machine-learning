@@ -19,20 +19,15 @@ Sau khi hoàn thành bài học, sinh viên có thể:
 4. Áp dụng được cây quyết định để giải bài toán phân loại cơ bản.
 5. Phân tích được ưu nhược điểm và nguy cơ quá khớp (overfitting) của cây quyết định.
 
-## 3. Nội dung và phân bổ thời gian
+## 3. Nội dung
 
-| CĐR | Nội dung | Thời lượng | Hình thức | Mức độ |
-| --- | --- | --- | --- | --- |
-| 6.1 | Cây quyết định | 3 tiết | Giảng dạy lý thuyết | Hiểu |
-| 6.2 | Thực hành phân loại bằng cây quyết định | 2 tiết | Hướng dẫn thực hành, làm bài tập | Vận dụng |
+### CĐR 1. Hiểu về cây quyết định
 
-### CĐR 6.1. Hiểu về cây quyết định
+- Khái niệm và cấu trúc cây quyết định: nút gốc, nút lá, nhánh
+- Xây dựng cây theo tiêu chí chia: Entropy và Information Gain
+- So sánh các thuật toán ID3, C4.5, CART
+- Quá khớp (overfitting) và kỹ thuật cắt tỉa (pruning)
 
-- 6.1.1. Khái niệm và cấu trúc cây quyết định: nút gốc, nút lá, nhánh
-- 6.1.2. Xây dựng cây theo tiêu chí chia: Entropy và Information Gain
-- 6.1.3. So sánh các thuật toán ID3, C4.5, CART
-- 6.1.4. Quá khớp (overfitting) và kỹ thuật cắt tỉa (pruning)
+### CĐR 2. Vận dụng cây quyết định để phân loại dữ liệu
 
-### CĐR 6.2. Vận dụng cây quyết định để phân loại dữ liệu
-
-- 6.2.1. Xây dựng cây quyết định trên bộ dữ liệu có sẵn
+- Xây dựng cây quyết định trên bộ dữ liệu có sẵn

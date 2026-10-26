@@ -18,19 +18,14 @@ Sau khi hoàn thành bài học, sinh viên có thể:
 4. Áp dụng được SVM để giải bài toán phân loại nhị phân trên dữ liệu thực tế.
 5. Phân tích được ưu nhược điểm của SVM, đặc biệt với dữ liệu nhiều chiều hoặc không tuyến tính.
 
-## 3. Nội dung và phân bổ thời gian
+## 3. Nội dung
 
-| CĐR | Nội dung | Thời lượng | Hình thức | Mức độ |
-| --- | --- | --- | --- | --- |
-| 7.1 | Mô hình SVM | 3 tiết | Giảng dạy lý thuyết | Hiểu |
-| 7.2 | Thực hành phân loại bằng SVM | 1 tiết | Hướng dẫn thực hành, làm bài tập | Vận dụng |
+### CĐR 1. Hiểu về mô hình SVM
 
-### CĐR 7.1. Hiểu về mô hình SVM
+- Siêu phẳng phân chia (hyperplane) và biên tối ưu
+- Bài toán tối ưu và khái niệm lề (margin)
+- Hàm kernel ánh xạ dữ liệu không tuyến tính
 
-- 7.1.1. Siêu phẳng phân chia (hyperplane) và biên tối ưu
-- 7.1.2. Bài toán tối ưu và khái niệm lề (margin)
-- 7.1.3. Hàm kernel ánh xạ dữ liệu không tuyến tính
+### CĐR 2. Vận dụng SVM để phân loại dữ liệu
 
-### CĐR 7.2. Vận dụng SVM để phân loại dữ liệu
-
-- 7.2.1. Xây dựng mô hình SVM trên bộ dữ liệu có sẵn
+- Xây dựng mô hình SVM trên bộ dữ liệu có sẵn

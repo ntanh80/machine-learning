@@ -19,32 +19,26 @@ Sau khi hoàn thành bài học, sinh viên có thể:
 4. Áp dụng hồi quy Logistic và PLA để giải các bài toán phân loại nhị phân cơ bản.
 5. Phân tích được ranh giới quyết định (decision boundary) và đánh giá mô hình phân loại bằng các chỉ số phù hợp.
 
-## 3. Nội dung và phân bổ thời gian
+## 3. Nội dung
 
-| CĐR | Nội dung | Thời lượng | Hình thức | Mức độ |
-| --- | --- | --- | --- | --- |
-| 4.1 | Mô hình hồi quy Logistic | 2 tiết | Giảng dạy lý thuyết | Hiểu |
-| 4.2 | Thuật toán PLA | 1 tiết | Giảng dạy lý thuyết | Hiểu |
-| 4.3 | Thực hành mô hình hồi quy Logistic | 1 tiết | Hướng dẫn thực hành, làm bài tập | Vận dụng |
+### CĐR 1. Hiểu mô hình hồi quy Logistic
 
-### CĐR 4.1. Hiểu mô hình hồi quy Logistic
+- Phát biểu bài toán phân loại dữ liệu
+- Hàm sigmoid
+- Mô hình hồi quy Logistic
+- Hàm mất mát và tối ưu hàm mất mát (MLE, Gradient Descent)
+- Ma trận nhầm lẫn (Confusion Matrix)
+- Các chỉ số đánh giá: Accuracy, Precision, Recall, F1-Score, ROC-AUC
 
-- 4.1.1. Phát biểu bài toán phân loại dữ liệu
-- 4.1.2. Hàm sigmoid
-- 4.1.3. Mô hình hồi quy Logistic
-- 4.1.4. Hàm mất mát và tối ưu hàm mất mát (MLE, Gradient Descent)
-- 4.1.5. Ma trận nhầm lẫn (Confusion Matrix)
-- 4.1.6. Các chỉ số đánh giá: Accuracy, Precision, Recall, F1-Score, ROC-AUC
+### CĐR 2. Hiểu thuật toán PLA
 
-### CĐR 4.2. Hiểu thuật toán PLA
+- Khái niệm Perceptron
+- Phương trình siêu phẳng phân loại
+- Hàm mất mát và quy tắc cập nhật trọng số
 
-- 4.2.1. Khái niệm Perceptron
-- 4.2.2. Phương trình siêu phẳng phân loại
-- 4.2.3. Hàm mất mát và quy tắc cập nhật trọng số
+### CĐR 3. Vận dụng hồi quy Logistic dự đoán nguy cơ mắc ung thư phổi
 
-### CĐR 4.3. Vận dụng hồi quy Logistic dự đoán nguy cơ mắc ung thư phổi
-
-- 4.3.1. Thu thập dữ liệu từ Kaggle
-- 4.3.2. Tiền xử lý dữ liệu
-- 4.3.3. Xây dựng mô hình hồi quy Logistic
-- 4.3.4. Đánh giá mô hình
+- Thu thập dữ liệu từ Kaggle
+- Tiền xử lý dữ liệu
+- Xây dựng mô hình hồi quy Logistic
+- Đánh giá mô hình

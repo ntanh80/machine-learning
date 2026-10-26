@@ -19,20 +19,15 @@ Sau khi hoàn thành bài học, sinh viên có thể:
 4. Áp dụng được mạng nơ-ron đơn giản hoặc mô hình học tổ hợp để giải bài toán phân loại.
 5. So sánh được ưu nhược điểm của mô hình đơn lẻ và mô hình tổ hợp trong các tình huống thực tiễn.
 
-## 3. Nội dung và phân bổ thời gian
+## 3. Nội dung
 
-| CĐR | Nội dung | Thời lượng | Hình thức | Mức độ |
-| --- | --- | --- | --- | --- |
-| 9.1 | Mạng nơ-ron nhân tạo ANN | 2 tiết | Giảng dạy lý thuyết | Hiểu |
-| 9.2 | Học tổ hợp (Ensemble Learning) | 2 tiết | Giảng dạy lý thuyết | Hiểu |
+### CĐR 1. Hiểu về mạng nơ-ron nhân tạo ANN
 
-### CĐR 9.1. Hiểu về mạng nơ-ron nhân tạo ANN
+- Giới thiệu học sâu và vai trò của mạng nơ-ron trong Học máy hiện đại
+- Cấu trúc mạng nơ-ron cơ bản: lớp vào, lớp ẩn, lớp ra và hàm kích hoạt
+- Lan truyền xuôi và lan truyền ngược (backpropagation)
 
-- 9.1.1. Giới thiệu học sâu và vai trò của mạng nơ-ron trong Học máy hiện đại
-- 9.1.2. Cấu trúc mạng nơ-ron cơ bản: lớp vào, lớp ẩn, lớp ra và hàm kích hoạt
-- 9.1.3. Lan truyền xuôi và lan truyền ngược (backpropagation)
+### CĐR 2. Hiểu về học tổ hợp (Ensemble Learning)
 
-### CĐR 9.2. Hiểu về học tổ hợp (Ensemble Learning)
-
-- 9.2.1. Khái niệm học tổ hợp và các phương pháp chính: Bagging, Boosting, Stacking
-- 9.2.2. So sánh mô hình đơn lẻ và mô hình tổ hợp về hiệu năng và khả năng tổng quát hóa
+- Khái niệm học tổ hợp và các phương pháp chính: Bagging, Boosting, Stacking
+- So sánh mô hình đơn lẻ và mô hình tổ hợp về hiệu năng và khả năng tổng quát hóa

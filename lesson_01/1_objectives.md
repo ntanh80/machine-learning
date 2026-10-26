@@ -22,24 +22,19 @@ Sau khi hoàn thành bài học, sinh viên có thể:
 5. Giải thích được vai trò nền tảng của Học máy đối với các môn chuyên sâu như Học sâu, Xử lý ngôn ngữ tự nhiên và Thị giác máy tính.
 6. Cài đặt được môi trường Anaconda phục vụ Học máy.
 
-## 3. Nội dung và phân bổ thời gian
+## 3. Nội dung
 
-| CĐR | Nội dung | Thời lượng | Hình thức | Mức độ |
-| --- | --- | --- | --- | --- |
-| 1.1 | Tổng quan về Học máy | 3 tiết | Giảng dạy lý thuyết | Hiểu |
-| 1.2 | Cài đặt môi trường Anaconda | 2 tiết | Hướng dẫn thực hành, làm bài tập | Vận dụng |
+### CĐR 1. Tổng quan về Học máy
 
-### CĐR 1.1. Tổng quan về Học máy
+- Khái niệm, mục tiêu và vai trò của Học máy trong AI
+- Tổng quan về các phương thức học máy
+- Một số ví dụ về Học máy trong đời sống và ứng dụng
+- Phân biệt Học máy và Học sâu
+- Học máy – nền tảng của Xử lý ngôn ngữ tự nhiên và Thị giác máy tính
 
-- 1.1.1. Khái niệm, mục tiêu và vai trò của Học máy trong AI
-- 1.1.2. Tổng quan về các phương thức học máy
-- 1.1.3. Một số ví dụ về Học máy trong đời sống và ứng dụng
-- 1.1.4. Phân biệt Học máy và Học sâu
-- 1.1.5. Học máy – nền tảng của Xử lý ngôn ngữ tự nhiên và Thị giác máy tính
+### CĐR 2. Cài đặt môi trường Anaconda
 
-### CĐR 1.2. Cài đặt môi trường Anaconda
-
-- 1.2.1. Cài đặt môi trường Anaconda
-- 1.2.2. Một số thư viện phổ biến: NumPy, Pandas, Matplotlib, Scikit-learn
-- 1.2.3. Lập trình Python trên Jupyter Notebook
-- 1.2.4. Bài tập thực hành
+- Cài đặt môi trường Anaconda
+- Một số thư viện phổ biến: NumPy, Pandas, Matplotlib, Scikit-learn
+- Lập trình Python trên Jupyter Notebook
+- Bài tập thực hành
