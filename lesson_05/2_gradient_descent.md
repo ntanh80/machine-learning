@@ -38,8 +38,8 @@ Bước 3 là một **bài toán tối ưu**. Nói cách khác, "học" trong h�
 | Mô hình | Hàm mất mát | Bài |
 |---|---|---|
 | Hồi quy tuyến tính | $\mathcal{L}(\mathbf{w}) = \frac{1}{2N}\sum_{i=1}^{N}(y_i - \mathbf{x}_i^T\mathbf{w})^2$ (MSE) | 3 |
-| Hồi quy Logistic | $J(\mathbf{w}) = -\frac{1}{N}\sum_{i=1}^{N}\big[y_i\ln a_i + (1 - y_i)\ln(1 - a_i)\big]$ (cross-entropy) | 4 |
-| Perceptron | $J(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} -y_i\,\mathbf{x}_i^T\mathbf{w}$ | 4 |
+| Hồi quy Logistic | $\mathcal{L}(\mathbf{w}) = -\frac{1}{N}\sum_{i=1}^{N}\big[y_i\ln a_i + (1 - y_i)\ln(1 - a_i)\big]$ (cross-entropy) | 4 |
+| Perceptron | $\mathcal{L}(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} -y_i\,\mathbf{x}_i^T\mathbf{w}$ | 4 |
 | Mạng nơ-ron | Cross-entropy hoặc MSE, với hàng nghìn đến hàng tỉ tham số | 9 |
 
 #### b) Nghiệm giải tích và phương pháp lặp
@@ -268,7 +268,7 @@ x0 =  5: x = -1.1105, f(x) = -3.2464, sau 30 vòng lặp
 
 ![Gradient Descent cho hàm một biến](images/gd_1d.png)
 
-*Hình 5.1: GD với $\eta = 0.1$ từ hai điểm khởi tạo khác nhau. Mã nguồn vẽ hình: [images/plot_gd_1d.py](images/plot_gd_1d.py).*
+*Hình 5.1: GD với $\eta = 0.1$ từ hai điểm khởi tạo khác nhau. Mã nguồn vẽ hình: [images/plot_gd_1d.ipynb](images/plot_gd_1d.ipynb).*
 
 Cả hai điểm khởi tạo đều tới cùng nghiệm $x \approx -1.11$, nhưng số vòng lặp khác nhau. Từ $x_0 = 5$, quỹ đạo phải đi qua vùng quanh $x \approx 2.5$ nơi đồ thị gần như **nằm ngang** (đạo hàm nhỏ nhưng khác 0), các bước rất ngắn nên tiến triển chậm. Đây là hiện tượng **vùng bằng phẳng** (plateau) thường gặp trong huấn luyện mạng nơ-ron.
 
@@ -282,7 +282,7 @@ Tốc độ học $\eta$ quyết định độ dài mỗi bước đi. Đây là
 
 ![Ảnh hưởng của tốc độ học](images/learning_rate.png)
 
-*Hình 5.2: GD trên $f(x) = x^2 + 5\sin x$ từ $x_0 = -5$ với ba tốc độ học, và giá trị $f(x_t)$ theo vòng lặp. Mã nguồn vẽ hình: [images/plot_learning_rate.py](images/plot_learning_rate.py).*
+*Hình 5.2: GD trên $f(x) = x^2 + 5\sin x$ từ $x_0 = -5$ với ba tốc độ học, và giá trị $f(x_t)$ theo vòng lặp. Mã nguồn vẽ hình: [images/plot_learning_rate.ipynb](images/plot_learning_rate.ipynb).*
 
 | $\eta$ | Hiện tượng |
 |---|---|
@@ -320,7 +320,7 @@ Với hàm hai biến $\mathcal{L}(w_0, w_1)$, có thể vẽ **đường đồn
 
 ![Đường đồng mức và quỹ đạo GD](images/contours.png)
 
-*Hình 5.3: Đường đồng mức của hàm mất mát MSE (dữ liệu 1000 điểm gần đường $y = 4 + 3x$, mục 5.3.1) và quỹ đạo GD từ $\mathbf{w} = (2, 1)$ với $\eta = 1$ và $\eta = 0.1$ trong 100 vòng lặp. Mã nguồn vẽ hình: [images/plot_contours.py](images/plot_contours.py).*
+*Hình 5.3: Đường đồng mức của hàm mất mát MSE (dữ liệu 1000 điểm gần đường $y = 4 + 3x$, mục 5.3.1) và quỹ đạo GD từ $\mathbf{w} = (2, 1)$ với $\eta = 1$ và $\eta = 0.1$ trong 100 vòng lặp. Mã nguồn vẽ hình: [images/plot_contours.ipynb](images/plot_contours.ipynb).*
 
 Các đường đồng mức có dạng **elip dẹt**: theo một hướng hàm rất dốc, theo hướng kia lại rất thoải. GD đi nhanh xuống "đáy thung lũng" rồi bò chậm dọc theo đáy. Với $\eta = 0.1$, sau 100 vòng lặp vẫn chưa tới nghiệm.
 
@@ -332,7 +332,7 @@ Với hàm không lồi, kết quả của GD phụ thuộc vào **điểm khở
 
 ![Cực tiểu địa phương](images/local_minima.png)
 
-*Hình 5.4: Hàm $f(x) = x^4 - 3x^2 + x$ có cực tiểu toàn cục tại $x \approx -1.30$ và cực tiểu địa phương tại $x \approx 1.13$. GD từ $x_0 = -2$ tới cực tiểu toàn cục, từ $x_0 = 2$ mắc kẹt ở cực tiểu địa phương. Mã nguồn vẽ hình: [images/plot_local_minima.py](images/plot_local_minima.py).*
+*Hình 5.4: Hàm $f(x) = x^4 - 3x^2 + x$ có cực tiểu toàn cục tại $x \approx -1.30$ và cực tiểu địa phương tại $x \approx 1.13$. GD từ $x_0 = -2$ tới cực tiểu toàn cục, từ $x_0 = 2$ mắc kẹt ở cực tiểu địa phương. Mã nguồn vẽ hình: [images/plot_local_minima.ipynb](images/plot_local_minima.ipynb).*
 
 Tại cực tiểu địa phương, đạo hàm bằng 0 nên GD dừng lại, không có cách nào "biết" rằng còn điểm thấp hơn ở chỗ khác. Một số cách giảm thiểu: chạy GD nhiều lần với các điểm khởi tạo khác nhau rồi chọn kết quả tốt nhất; dùng SGD hoặc mini-batch (nhiễu trong gradient có thể giúp thoát khỏi cực tiểu nông, mục 5.2); dùng Momentum. Với các hàm lồi như MSE của hồi quy tuyến tính, vấn đề này không xảy ra.
 
@@ -351,12 +351,12 @@ Tại cực tiểu địa phương, đạo hàm bằng 0 nên GD dừng lại, k
 Hàm mất mát trong học máy thường là **trung bình** mất mát trên từng mẫu:
 
 $$
-\mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N}\mathcal{L}_i(\mathbf{w})
+\mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N}\ell_i(\mathbf{w})
 \quad\Rightarrow\quad
-\nabla\mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N}\nabla\mathcal{L}_i(\mathbf{w})
+\nabla\mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N}\nabla\ell_i(\mathbf{w})
 $$
 
-với $\mathcal{L}_i$ là mất mát trên mẫu thứ $i$ (với MSE: $\mathcal{L}_i = \frac{1}{2}(\mathbf{x}_i^T\mathbf{w} - y_i)^2$, $\nabla\mathcal{L}_i = (\mathbf{x}_i^T\mathbf{w} - y_i)\,\mathbf{x}_i$). Ba biến thể của GD khác nhau ở chỗ **dùng bao nhiêu mẫu để tính gradient cho mỗi lần cập nhật**.
+với $\ell_i$ là mất mát trên mẫu thứ $i$ (với MSE: $\ell_i = \frac{1}{2}(\mathbf{x}_i^T\mathbf{w} - y_i)^2$, $\nabla\ell_i = (\mathbf{x}_i^T\mathbf{w} - y_i)\,\mathbf{x}_i$). Ba biến thể của GD khác nhau ở chỗ **dùng bao nhiêu mẫu để tính gradient cho mỗi lần cập nhật**.
 
 **Thuật ngữ:**
 - **Lần cập nhật** (iteration, step): một lần thực hiện $\mathbf{w} \leftarrow \mathbf{w} - \eta\,\mathbf{g}$.
@@ -368,7 +368,7 @@ với $\mathcal{L}_i$ là mất mát trên mẫu thứ $i$ (với MSE: $\mathcal
 **Batch GD** (GD chuẩn) dùng **toàn bộ** $N$ mẫu để tính gradient ở mỗi lần cập nhật:
 
 $$
-\mathbf{w} \leftarrow \mathbf{w} - \eta\,\frac{1}{N}\sum_{i=1}^{N}\nabla\mathcal{L}_i(\mathbf{w})
+\mathbf{w} \leftarrow \mathbf{w} - \eta\,\frac{1}{N}\sum_{i=1}^{N}\nabla\ell_i(\mathbf{w})
 $$
 
 Mỗi epoch chỉ có **một** lần cập nhật.
@@ -387,7 +387,7 @@ for epoch in range(n_epochs):
 **Stochastic GD** (SGD, GD ngẫu nhiên) dùng **một mẫu** chọn ngẫu nhiên cho mỗi lần cập nhật:
 
 $$
-\mathbf{w} \leftarrow \mathbf{w} - \eta\,\nabla\mathcal{L}_i(\mathbf{w})
+\mathbf{w} \leftarrow \mathbf{w} - \eta\,\nabla\ell_i(\mathbf{w})
 $$
 
 Mỗi epoch có $N$ lần cập nhật. Trước mỗi epoch, **xáo trộn** thứ tự dữ liệu để các mẫu được chọn ngẫu nhiên và không lặp lại theo một trật tự cố định.
@@ -412,7 +412,7 @@ Hồi quy Logistic trong giáo trình (Bài 4) và thuật toán PLA (mỗi lầ
 **Mini-batch GD** dùng một nhóm nhỏ $m$ mẫu (**mini-batch** $\mathcal{B}$) cho mỗi lần cập nhật, là phương án trung gian giữa hai cách trên:
 
 $$
-\mathbf{w} \leftarrow \mathbf{w} - \eta\,\frac{1}{m}\sum_{i \in \mathcal{B}}\nabla\mathcal{L}_i(\mathbf{w})
+\mathbf{w} \leftarrow \mathbf{w} - \eta\,\frac{1}{m}\sum_{i \in \mathcal{B}}\nabla\ell_i(\mathbf{w})
 $$
 
 Mỗi epoch: xáo trộn dữ liệu, chia thành $\lceil N/m \rceil$ mini-batch rồi cập nhật lần lượt trên từng mini-batch.
@@ -435,7 +435,7 @@ Batch GD và SGD là hai trường hợp đặc biệt của Mini-batch GD với
 
 ![So sánh ba biến thể của GD](images/gd_variants.png)
 
-*Hình 5.5: Ba biến thể GD trên dữ liệu 1000 điểm ở mục 5.3.1, cùng khởi tạo $\mathbf{w} = (2, 1)$. (a) Quỹ đạo của 60 lần cập nhật đầu tiên: Batch GD (60 lần cập nhật = 60 epoch) đi những bước lớn và mượt; SGD (60 lần cập nhật = 60 mẫu, chưa hết 1 epoch) đi những bước nhỏ, zig-zag; mini-batch nằm giữa. (b) Mất mát sau mỗi epoch: tính theo epoch, SGD và mini-batch giảm nhanh hơn Batch GD rất nhiều nhưng dao động quanh cực tiểu. Mã nguồn vẽ hình: [images/plot_gd_variants.py](images/plot_gd_variants.py).*
+*Hình 5.5: Ba biến thể GD trên dữ liệu 1000 điểm ở mục 5.3.1, cùng khởi tạo $\mathbf{w} = (2, 1)$. (a) Quỹ đạo của 60 lần cập nhật đầu tiên: Batch GD (60 lần cập nhật = 60 epoch) đi những bước lớn và mượt; SGD (60 lần cập nhật = 60 mẫu, chưa hết 1 epoch) đi những bước nhỏ, zig-zag; mini-batch nằm giữa. (b) Mất mát sau mỗi epoch: tính theo epoch, SGD và mini-batch giảm nhanh hơn Batch GD rất nhiều nhưng dao động quanh cực tiểu. Mã nguồn vẽ hình: [images/plot_gd_variants.ipynb](images/plot_gd_variants.ipynb).*
 
 | | Batch GD | Stochastic GD | Mini-batch GD |
 |---|---|---|---|
@@ -615,7 +615,7 @@ for name, batch_size, eta, n_epochs in [('Batch', len(y_train), 0.5, 100),
 
 ![Ảnh hưởng của chuẩn hóa đến GD](images/feature_scaling.png)
 
-*Hình 5.6: Hàm mất mát của Batch GD trên dữ liệu giá nhà. Dữ liệu gốc với $\eta = 10^{-4}$ (lớn hơn sẽ phân kỳ) giảm rất chậm; dữ liệu đã chuẩn hóa với $\eta = 0.5$ đạt giá trị nhỏ nhất sau khoảng 30 vòng lặp. Mã nguồn vẽ hình: [images/plot_feature_scaling.py](images/plot_feature_scaling.py).*
+*Hình 5.6: Hàm mất mát của Batch GD trên dữ liệu giá nhà. Dữ liệu gốc với $\eta = 10^{-4}$ (lớn hơn sẽ phân kỳ) giảm rất chậm; dữ liệu đã chuẩn hóa với $\eta = 0.5$ đạt giá trị nhỏ nhất sau khoảng 30 vòng lặp. Mã nguồn vẽ hình: [images/plot_feature_scaling.ipynb](images/plot_feature_scaling.ipynb).*
 
 **Nhận xét:**
 - Sau khi chuẩn hóa, Batch GD hội tụ về đúng nghiệm OLS chỉ sau 100 vòng lặp với $\eta = 0.5$, gấp 5000 lần tốc độ học $10^{-4}$ phải dùng trên dữ liệu gốc (dữ liệu gốc phân kỳ ngay khi $\eta$ vượt khoảng $1.3 \times 10^{-4}$). **Luôn chuẩn hóa đặc trưng trước khi dùng GD.**
@@ -655,7 +655,7 @@ Tương tự, `SGDClassifier(loss='log_loss')` huấn luyện hồi quy Logistic
 $$
 \mathbf{w} \leftarrow \mathbf{w} - \eta\,\nabla_{\mathbf{w}}\mathcal{L}(\mathbf{w})
 $$
-- Với MSE: $\nabla\mathcal{L} = \frac{1}{N}\mathbf{X}^T(\mathbf{X}\mathbf{w} - \mathbf{y})$; với cross-entropy của hồi quy Logistic: $\nabla J = \frac{1}{N}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y})$.
+- Với MSE: $\nabla\mathcal{L} = \frac{1}{N}\mathbf{X}^T(\mathbf{X}\mathbf{w} - \mathbf{y})$; với cross-entropy của hồi quy Logistic: $\nabla\mathcal{L} = \frac{1}{N}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y})$.
 - **Tốc độ học** $\eta$: quá nhỏ thì hội tụ chậm, quá lớn thì dao động hoặc phân kỳ. Chọn bằng thực nghiệm, theo dõi đồ thị hàm mất mát; có thể giảm dần theo thời gian.
 - GD hội tụ chậm khi đặc trưng khác thang đo (cần **chuẩn hóa**) và có thể mắc kẹt tại **cực tiểu địa phương** với hàm không lồi.
 - Ba biến thể khác nhau ở số mẫu dùng cho mỗi lần cập nhật: **Batch GD** ($N$ mẫu, ổn định nhưng chậm với dữ liệu lớn), **SGD** (1 mẫu, nhanh nhưng nhiễu), **Mini-batch GD** ($m$ mẫu, cân bằng, phổ biến nhất).

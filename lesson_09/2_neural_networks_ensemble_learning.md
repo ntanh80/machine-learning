@@ -81,7 +81,7 @@ $z$ là tổng có trọng số (net input), $a$ là đầu ra (activation) củ
 
 ![Nơ-ron nhân tạo và mạng nơ-ron nhiều lớp](images/neural_network.png)
 
-*Hình 9.1: (a) Mô hình một nơ-ron nhân tạo. (b) Mạng nơ-ron truyền thẳng gồm lớp vào 3 nút, hai lớp ẩn 5 và 4 nơ-ron, lớp ra 2 nơ-ron; mỗi nơ-ron nối với mọi nơ-ron của lớp kế tiếp. Mã nguồn vẽ hình: [images/plot_neural_network.py](images/plot_neural_network.py).*
+*Hình 9.1: (a) Mô hình một nơ-ron nhân tạo. (b) Mạng nơ-ron truyền thẳng gồm lớp vào 3 nút, hai lớp ẩn 5 và 4 nơ-ron, lớp ra 2 nơ-ron; mỗi nơ-ron nối với mọi nơ-ron của lớp kế tiếp. Mã nguồn vẽ hình: [images/plot_neural_network.ipynb](images/plot_neural_network.ipynb).*
 
 #### b) Kiến trúc mạng: lớp vào, lớp ẩn, lớp ra
 
@@ -112,7 +112,7 @@ Các nơ-ron được xếp thành các **lớp** (layer). Trong **mạng truy�
 
 ![Các hàm kích hoạt](images/activation_functions.png)
 
-*Hình 9.2: Các hàm kích hoạt (nét liền) và đạo hàm (nét đứt). Mã nguồn vẽ hình: [images/plot_activation_functions.py](images/plot_activation_functions.py).*
+*Hình 9.2: Các hàm kích hoạt (nét liền) và đạo hàm (nét đứt). Mã nguồn vẽ hình: [images/plot_activation_functions.ipynb](images/plot_activation_functions.ipynb).*
 
 *Ví dụ softmax:* điểm số $\mathbf{z} = (2, 1, 0.1)$ cho xác suất $(0.659, 0.242, 0.099)$; lớp có điểm cao nhất có xác suất lớn nhất, các xác suất cộng lại bằng 1. Khi cài đặt, trừ $\max_j z_j$ trước khi lấy mũ để tránh tràn số (kết quả không đổi).
 
@@ -146,7 +146,7 @@ Tức $\mathbf{W}^{(1)} = \begin{bmatrix}1 & 1\\ 1 & 1\end{bmatrix}$, $\mathbf{b
 
 ![Bài toán XOR](images/xor.png)
 
-*Hình 9.3: (a) XOR không tách được tuyến tính trong không gian vào. (b) Lớp ẩn ánh xạ bốn điểm sang không gian $(h_1, h_2)$, ở đó một đường thẳng tách được hai lớp. (c) Ranh giới quyết định của cả mạng trong không gian vào là một dải. Mã nguồn vẽ hình: [images/plot_xor.py](images/plot_xor.py).*
+*Hình 9.3: (a) XOR không tách được tuyến tính trong không gian vào. (b) Lớp ẩn ánh xạ bốn điểm sang không gian $(h_1, h_2)$, ở đó một đường thẳng tách được hai lớp. (c) Ranh giới quyết định của cả mạng trong không gian vào là một dải. Mã nguồn vẽ hình: [images/plot_xor.ipynb](images/plot_xor.ipynb).*
 
 Đây là ý nghĩa của lớp ẩn: **biến đổi dữ liệu sang một biểu diễn mới**, nơi bài toán trở nên đơn giản (tách được tuyến tính) với lớp sau. Trong thực tế ta không chọn trọng số bằng tay mà học chúng từ dữ liệu bằng lan truyền ngược.
 
@@ -171,13 +171,13 @@ $$
 Huấn luyện là tìm tham số $\boldsymbol{\theta} = \{\mathbf{W}^{(l)}, \mathbf{b}^{(l)}\}$ cực tiểu hàm mất mát trung bình trên tập huấn luyện:
 
 $$
-J(\boldsymbol{\theta}) = \frac{1}{N}\sum_{i=1}^{N}\mathcal{L}(\mathbf{y}_i, \hat{\mathbf{y}}_i)
+\mathcal{L}(\boldsymbol{\theta}) = \frac{1}{N}\sum_{i=1}^{N}\ell(\mathbf{y}_i, \hat{\mathbf{y}}_i)
 $$
 
-với MSE $\mathcal{L} = \frac{1}{2}(y - \hat{y})^2$ cho hồi quy, cross-entropy $\mathcal{L} = -[y\ln\hat{y} + (1 - y)\ln(1 - \hat{y})]$ cho phân loại nhị phân, $\mathcal{L} = -\sum_k y_k\ln\hat{y}_k$ cho phân loại nhiều lớp (Bài 4). Khác với hồi quy tuyến tính hay Logistic, hàm mất mát của mạng nơ-ron **không lồi**, không có nghiệm giải tích; ta dùng Gradient Descent (Bài 5):
+với MSE $\ell = \frac{1}{2}(y - \hat{y})^2$ cho hồi quy, cross-entropy $\ell = -[y\ln\hat{y} + (1 - y)\ln(1 - \hat{y})]$ cho phân loại nhị phân, $\ell = -\sum_k y_k\ln\hat{y}_k$ cho phân loại nhiều lớp (Bài 4). Khác với hồi quy tuyến tính hay Logistic, hàm mất mát của mạng nơ-ron **không lồi**, không có nghiệm giải tích; ta dùng Gradient Descent (Bài 5):
 
 $$
-\mathbf{W}^{(l)} \leftarrow \mathbf{W}^{(l)} - \eta\,\frac{\partial J}{\partial \mathbf{W}^{(l)}}, \qquad \mathbf{b}^{(l)} \leftarrow \mathbf{b}^{(l)} - \eta\,\frac{\partial J}{\partial \mathbf{b}^{(l)}}
+\mathbf{W}^{(l)} \leftarrow \mathbf{W}^{(l)} - \eta\,\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}}, \qquad \mathbf{b}^{(l)} \leftarrow \mathbf{b}^{(l)} - \eta\,\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(l)}}
 $$
 
 Vấn đề là tính các đạo hàm riêng theo **hàng nghìn đến hàng tỉ** tham số nằm ở các lớp khác nhau. **Lan truyền ngược** giải quyết việc này một cách hiệu quả.
@@ -187,7 +187,7 @@ Vấn đề là tính các đạo hàm riêng theo **hàng nghìn đến hàng t
 Ý tưởng: áp dụng **quy tắc đạo hàm hàm hợp** (chain rule) từ lớp ra ngược về lớp vào, tái sử dụng các kết quả trung gian. Định nghĩa **sai số** (error) tại lớp $l$ là đạo hàm của hàm mất mát theo $\mathbf{z}^{(l)}$:
 
 $$
-\boldsymbol{\delta}^{(l)} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(l)}}
+\boldsymbol{\delta}^{(l)} = \frac{\partial \ell}{\partial \mathbf{z}^{(l)}}
 $$
 
 **Bước 1 – sai số ở lớp ra.** Với lớp ra sigmoid và cross-entropy (hoặc softmax và cross-entropy, hoặc lớp ra tuyến tính và MSE), công thức rất gọn:
@@ -196,7 +196,7 @@ $$
 \boldsymbol{\delta}^{(L)} = \mathbf{a}^{(L)} - \mathbf{y} = \hat{\mathbf{y}} - \mathbf{y}
 $$
 
-(chứng minh như gradient của hồi quy Logistic ở Bài 4: $\frac{\partial \mathcal{L}}{\partial \hat{y}} = \frac{\hat{y} - y}{\hat{y}(1 - \hat{y})}$ và $\frac{\partial \hat{y}}{\partial z} = \hat{y}(1 - \hat{y})$).
+(chứng minh như gradient của hồi quy Logistic ở Bài 4: $\frac{\partial \ell}{\partial \hat{y}} = \frac{\hat{y} - y}{\hat{y}(1 - \hat{y})}$ và $\frac{\partial \hat{y}}{\partial z} = \hat{y}(1 - \hat{y})$).
 
 **Bước 2 – lan truyền sai số ngược về các lớp trước.** Vì $\mathbf{z}^{(l+1)} = \mathbf{W}^{(l+1)}f(\mathbf{z}^{(l)}) + \mathbf{b}^{(l+1)}$, theo quy tắc hàm hợp:
 
@@ -209,10 +209,10 @@ trong đó $\odot$ là phép nhân từng phần tử. Mỗi nơ-ron ở lớp $
 **Bước 3 – gradient theo tham số.** Vì $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$:
 
 $$
-\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)}\big(\mathbf{a}^{(l-1)}\big)^T, \qquad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}
+\frac{\partial \ell}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)}\big(\mathbf{a}^{(l-1)}\big)^T, \qquad \frac{\partial \ell}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}
 $$
 
-tức $\frac{\partial \mathcal{L}}{\partial w^{(l)}_{ji}} = \delta^{(l)}_j\,a^{(l-1)}_i$: gradient của một trọng số bằng sai số ở đầu ra của cạnh nhân với tín hiệu ở đầu vào của cạnh.
+tức $\frac{\partial \ell}{\partial w^{(l)}_{ji}} = \delta^{(l)}_j\,a^{(l-1)}_i$: gradient của một trọng số bằng sai số ở đầu ra của cạnh nhân với tín hiệu ở đầu vào của cạnh.
 
 > **Thuật toán huấn luyện mạng nơ-ron**
 > 1. Khởi tạo các trọng số bằng giá trị ngẫu nhiên nhỏ (không khởi tạo tất cả bằng 0, vì khi đó mọi nơ-ron trong một lớp học giống hệt nhau), bias bằng 0.
@@ -240,7 +240,7 @@ $$
 $$
 
 $$
-z^{(2)} = 0.5 \times 0.6225 - 0.6 \times 0.6457 + 0.2 = 0.1238, \qquad \hat{y} = \sigma(0.1238) = 0.5309, \qquad \mathcal{L} = -\ln 0.5309 = 0.6331
+z^{(2)} = 0.5 \times 0.6225 - 0.6 \times 0.6457 + 0.2 = 0.1238, \qquad \hat{y} = \sigma(0.1238) = 0.5309, \qquad \ell = -\ln 0.5309 = 0.6331
 $$
 
 **Lan truyền ngược:**
@@ -250,7 +250,7 @@ $$
 $$
 
 $$
-\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(2)}} = \delta^{(2)}(\mathbf{a}^{(1)})^T = \begin{bmatrix}-0.2920 & -0.3029\end{bmatrix}, \qquad \frac{\partial \mathcal{L}}{\partial b^{(2)}} = -0.4691
+\frac{\partial \ell}{\partial \mathbf{W}^{(2)}} = \delta^{(2)}(\mathbf{a}^{(1)})^T = \begin{bmatrix}-0.2920 & -0.3029\end{bmatrix}, \qquad \frac{\partial \ell}{\partial b^{(2)}} = -0.4691
 $$
 
 Sai số lớp ẩn, với $\sigma'(z) = a(1 - a)$, $a^{(1)}_1(1 - a^{(1)}_1) = 0.2350$, $a^{(1)}_2(1 - a^{(1)}_2) = 0.2288$:
@@ -260,7 +260,7 @@ $$
 $$
 
 $$
-\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \boldsymbol{\delta}^{(1)}\mathbf{x}^T = \begin{bmatrix}-0.0551 & -0.1102\\ 0.0644 & 0.1288\end{bmatrix}, \qquad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(1)}} = \begin{bmatrix}-0.0551\\ 0.0644\end{bmatrix}
+\frac{\partial \ell}{\partial \mathbf{W}^{(1)}} = \boldsymbol{\delta}^{(1)}\mathbf{x}^T = \begin{bmatrix}-0.0551 & -0.1102\\ 0.0644 & 0.1288\end{bmatrix}, \qquad \frac{\partial \ell}{\partial \mathbf{b}^{(1)}} = \begin{bmatrix}-0.0551\\ 0.0644\end{bmatrix}
 $$
 
 **Cập nhật** ($\mathbf{W} \leftarrow \mathbf{W} - 0.5 \times$ gradient):
@@ -317,7 +317,7 @@ Với 10 nơ-ron ẩn, cross-entropy giảm từ 0.613 (epoch 1) xuống 0.264 (
 
 ![Ranh giới quyết định của mạng nơ-ron](images/mlp_moons.png)
 
-*Hình 9.4: Ranh giới quyết định (đường đen) và xác suất dự đoán của hồi quy Logistic và các mạng có số nơ-ron ẩn khác nhau (hàm kích hoạt tanh, huấn luyện bằng scikit-learn). Càng nhiều nơ-ron, ranh giới càng linh hoạt; mạng quá lớn có thể quá khớp. Mã nguồn vẽ hình: [images/plot_mlp_moons.py](images/plot_mlp_moons.py).*
+*Hình 9.4: Ranh giới quyết định (đường đen) và xác suất dự đoán của hồi quy Logistic và các mạng có số nơ-ron ẩn khác nhau (hàm kích hoạt tanh, huấn luyện bằng scikit-learn). Càng nhiều nơ-ron, ranh giới càng linh hoạt; mạng quá lớn có thể quá khớp. Mã nguồn vẽ hình: [images/plot_mlp_moons.ipynb](images/plot_mlp_moons.ipynb).*
 
 *Mã nguồn: [codes/03_backpropagation_numpy.ipynb](codes/03_backpropagation_numpy.ipynb).*
 
@@ -419,7 +419,7 @@ $$
 
 ![Sức mạnh của bỏ phiếu đa số](images/majority_vote.png)
 
-*Hình 9.5: Độ chính xác của bỏ phiếu đa số theo số bộ phân loại độc lập. Nếu mỗi bộ tốt hơn đoán ngẫu nhiên ($p > 0.5$), độ chính xác tăng dần tới 1; nếu $p < 0.5$, bỏ phiếu còn tệ hơn. Mã nguồn vẽ hình: [images/plot_majority_vote.py](images/plot_majority_vote.py).*
+*Hình 9.5: Độ chính xác của bỏ phiếu đa số theo số bộ phân loại độc lập. Nếu mỗi bộ tốt hơn đoán ngẫu nhiên ($p > 0.5$), độ chính xác tăng dần tới 1; nếu $p < 0.5$, bỏ phiếu còn tệ hơn. Mã nguồn vẽ hình: [images/plot_majority_vote.ipynb](images/plot_majority_vote.ipynb).*
 
 Hai điều kiện để học tổ hợp hiệu quả:
 1. Mỗi mô hình cơ sở phải **tốt hơn đoán ngẫu nhiên**.
@@ -429,7 +429,7 @@ Ba chiến lược tạo sự đa dạng và kết hợp: **Bagging**, **Boostin
 
 ![Ba phương pháp học tổ hợp](images/ensemble_methods.png)
 
-*Hình 9.6: Sơ đồ ba phương pháp học tổ hợp. Mã nguồn vẽ hình: [images/plot_ensemble_methods.py](images/plot_ensemble_methods.py).*
+*Hình 9.6: Sơ đồ ba phương pháp học tổ hợp. Mã nguồn vẽ hình: [images/plot_ensemble_methods.ipynb](images/plot_ensemble_methods.ipynb).*
 
 #### b) Bagging và Random Forest
 
@@ -589,13 +589,13 @@ Với dữ liệu hai nửa vầng trăng có nhiễu (500 điểm, kiểm đị
 
 ![Ranh giới quyết định của mô hình đơn lẻ và tổ hợp](images/ensemble_boundaries.png)
 
-*Hình 9.7: Ranh giới quyết định trên dữ liệu hai nửa vầng trăng (70% huấn luyện, 30% kiểm tra). Cây đơn lẻ tạo nhiều vùng nhỏ quanh điểm nhiễu; cây một tầng chỉ có một ngưỡng; Random Forest cho ranh giới mượt hơn nhờ lấy trung bình 100 cây; AdaBoost và Gradient Boosting ghép nhiều cây nhỏ thành ranh giới phức tạp. Mã nguồn vẽ hình: [images/plot_ensemble_boundaries.py](images/plot_ensemble_boundaries.py).*
+*Hình 9.7: Ranh giới quyết định trên dữ liệu hai nửa vầng trăng (70% huấn luyện, 30% kiểm tra). Cây đơn lẻ tạo nhiều vùng nhỏ quanh điểm nhiễu; cây một tầng chỉ có một ngưỡng; Random Forest cho ranh giới mượt hơn nhờ lấy trung bình 100 cây; AdaBoost và Gradient Boosting ghép nhiều cây nhỏ thành ranh giới phức tạp. Mã nguồn vẽ hình: [images/plot_ensemble_boundaries.ipynb](images/plot_ensemble_boundaries.ipynb).*
 
 #### c) Ảnh hưởng của số mô hình thành phần
 
 ![Độ chính xác theo số mô hình](images/n_estimators.png)
 
-*Hình 9.8: Độ chính xác kiểm tra trên dữ liệu ung thư vú theo số mô hình thành phần. Mã nguồn vẽ hình: [images/plot_n_estimators.py](images/plot_n_estimators.py).*
+*Hình 9.8: Độ chính xác kiểm tra trên dữ liệu ung thư vú theo số mô hình thành phần. Mã nguồn vẽ hình: [images/plot_n_estimators.ipynb](images/plot_n_estimators.ipynb).*
 
 | Số mô hình | 1 | 5 | 10 | 50 | 100 | 200 |
 |---|---|---|---|---|---|---|
@@ -631,7 +631,7 @@ Trong thí nghiệm này, độ chính xác nhìn chung tăng rồi ổn định
 
 - **Mạng nơ-ron nhân tạo** ghép các nơ-ron $a = f(\mathbf{w}^T\mathbf{x} + b)$ thành các lớp: lớp vào, các lớp ẩn, lớp ra. Mạng có nhiều lớp ẩn là nền tảng của **học sâu**, tự học biểu diễn đặc trưng từ dữ liệu thô và là cốt lõi của thị giác máy tính, xử lý ngôn ngữ tự nhiên hiện đại.
 - **Hàm kích hoạt** phi tuyến (sigmoid, tanh, ReLU, softmax ở lớp ra) giúp mạng biểu diễn quan hệ phi tuyến; không có nó, mạng nhiều lớp chỉ tương đương một mô hình tuyến tính. Lớp ẩn biến đổi dữ liệu sang biểu diễn mới, như ở bài toán XOR.
-- **Lan truyền xuôi** tính $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$, $\mathbf{a}^{(l)} = f(\mathbf{z}^{(l)})$. **Lan truyền ngược** dùng quy tắc hàm hợp tính sai số $\boldsymbol{\delta}^{(L)} = \hat{\mathbf{y}} - \mathbf{y}$, $\boldsymbol{\delta}^{(l)} = (\mathbf{W}^{(l+1)})^T\boldsymbol{\delta}^{(l+1)} \odot f'(\mathbf{z}^{(l)})$ và gradient $\partial\mathcal{L}/\partial\mathbf{W}^{(l)} = \boldsymbol{\delta}^{(l)}(\mathbf{a}^{(l-1)})^T$; trọng số được cập nhật bằng Gradient Descent.
+- **Lan truyền xuôi** tính $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$, $\mathbf{a}^{(l)} = f(\mathbf{z}^{(l)})$. **Lan truyền ngược** dùng quy tắc hàm hợp tính sai số $\boldsymbol{\delta}^{(L)} = \hat{\mathbf{y}} - \mathbf{y}$, $\boldsymbol{\delta}^{(l)} = (\mathbf{W}^{(l+1)})^T\boldsymbol{\delta}^{(l+1)} \odot f'(\mathbf{z}^{(l)})$ và gradient $\partial\ell/\partial\mathbf{W}^{(l)} = \boldsymbol{\delta}^{(l)}(\mathbf{a}^{(l-1)})^T$; trọng số được cập nhật bằng Gradient Descent.
 - **Học tổ hợp** kết hợp nhiều mô hình đa dạng để dự đoán tốt và ổn định hơn. **Bagging** (Random Forest) huấn luyện song song trên các mẫu bootstrap, giảm phương sai; **Boosting** (AdaBoost, Gradient Boosting) huấn luyện tuần tự, mô hình sau sửa lỗi mô hình trước, giảm thiên lệch; **Stacking** dùng mô hình meta học cách kết hợp các mô hình khác loại.
 - Mô hình tổ hợp thường tổng quát hóa tốt và ổn định hơn mô hình cơ sở, nhưng tốn tài nguyên hơn, khó giải thích hơn, và không phải lúc nào cũng thắng một mô hình đơn phù hợp với dữ liệu.
 
@@ -647,7 +647,7 @@ Trong thí nghiệm này, độ chính xác nhìn chung tăng rồi ổn định
 4. Vì sao mạng nơ-ron cần hàm kích hoạt phi tuyến? So sánh sigmoid, tanh và ReLU.
 5. Vì sao Perceptron một lớp không giải được bài toán XOR? Mạng có một lớp ẩn giải quyết bằng cách nào?
 6. Trình bày quá trình lan truyền xuôi. Viết công thức cho lớp $l$.
-7. Trình bày thuật toán lan truyền ngược. Vì sao cần quy tắc đạo hàm hàm hợp? Viết công thức tính $\boldsymbol{\delta}^{(l)}$ và $\partial\mathcal{L}/\partial\mathbf{W}^{(l)}$.
+7. Trình bày thuật toán lan truyền ngược. Vì sao cần quy tắc đạo hàm hàm hợp? Viết công thức tính $\boldsymbol{\delta}^{(l)}$ và $\partial\ell/\partial\mathbf{W}^{(l)}$.
 8. Hiện tượng vanishing gradient và exploding gradient là gì? Nêu các cách khắc phục.
 9. Học tổ hợp là gì? Vì sao kết hợp nhiều mô hình có thể tốt hơn một mô hình? Điều kiện để học tổ hợp hiệu quả?
 10. Trình bày Bagging và Random Forest. Mẫu bootstrap, mẫu out-of-bag là gì? Random Forest khác Bagging thuần ở điểm nào?

@@ -33,7 +33,7 @@ Mô hình phải tự khám phá **cấu trúc ẩn** trong dữ liệu: các nh
 
 ![Học có giám sát và học không giám sát](images/supervised_unsupervised.png)
 
-*Hình 8.1: (a) Học có giám sát: mỗi điểm có nhãn. (b) Học không giám sát: chỉ có tọa độ các điểm. (c) Thuật toán phân cụm tự tìm ra ba nhóm. Mã nguồn vẽ hình: [images/plot_supervised_unsupervised.py](images/plot_supervised_unsupervised.py).*
+*Hình 8.1: (a) Học có giám sát: mỗi điểm có nhãn. (b) Học không giám sát: chỉ có tọa độ các điểm. (c) Thuật toán phân cụm tự tìm ra ba nhóm. Mã nguồn vẽ hình: [images/plot_supervised_unsupervised.ipynb](images/plot_supervised_unsupervised.ipynb).*
 
 *Ví dụ* (giáo trình): thu thập dữ liệu sinh viên ICTU gồm số giờ tự học mỗi tuần, số buổi đi học và số lần truy cập hệ thống học trực tuyến, mỗi sinh viên là một vector $\mathbf{x} = (x_1, x_2, x_3)$. Không ai gán sẵn nhãn "chăm học" hay "ít tham gia". Thuật toán học không giám sát tự chia sinh viên thành các nhóm, chẳng hạn một nhóm tự học nhiều và đi học đầy đủ, một nhóm tham gia trung bình, một nhóm ít tham gia. Ý nghĩa của mỗi nhóm do con người diễn giải sau.
 
@@ -107,12 +107,12 @@ Ngoài ra có khoảng cách Manhattan $\sum_j |x_j - z_j|$, khoảng cách cosi
 **K-means** biểu diễn mỗi cụm bằng một điểm **tâm cụm** (centroid) $\boldsymbol{\mu}_k \in \mathbb{R}^d$, $k = 1, \dots, K$. Mỗi điểm thuộc cụm có tâm gần nó nhất. Chất lượng phân cụm đo bằng tổng bình phương khoảng cách từ mỗi điểm tới tâm cụm của nó:
 
 $$
-J(\mathbf{c}, \boldsymbol{\mu}) = \sum_{i=1}^{N}\|\mathbf{x}_i - \boldsymbol{\mu}_{c_i}\|_2^2
+\mathcal{L}(\mathbf{c}, \boldsymbol{\mu}) = \sum_{i=1}^{N}\|\mathbf{x}_i - \boldsymbol{\mu}_{c_i}\|_2^2
 $$
 
-$J$ còn gọi là **inertia** hay **WSS** (within-cluster sum of squares). Bài toán K-means: tìm cách gán $\mathbf{c}$ và các tâm $\boldsymbol{\mu}$ làm $J$ nhỏ nhất. Đây là bài toán khó (biến $c_i$ rời rạc, số cách chia cực lớn), nên không tìm nghiệm tối ưu toàn cục mà dùng chiến lược **tối ưu xen kẽ** hai nhóm biến.
+$\mathcal{L}$ còn gọi là **inertia** hay **WSS** (within-cluster sum of squares). Bài toán K-means: tìm cách gán $\mathbf{c}$ và các tâm $\boldsymbol{\mu}$ làm $\mathcal{L}$ nhỏ nhất. Đây là bài toán khó (biến $c_i$ rời rạc, số cách chia cực lớn), nên không tìm nghiệm tối ưu toàn cục mà dùng chiến lược **tối ưu xen kẽ** hai nhóm biến.
 
-**Cố định tâm, tối ưu cách gán.** $J$ là tổng các số hạng độc lập theo từng điểm, nên mỗi điểm chọn tâm gần nhất:
+**Cố định tâm, tối ưu cách gán.** $\mathcal{L}$ là tổng các số hạng độc lập theo từng điểm, nên mỗi điểm chọn tâm gần nhất:
 
 $$
 c_i = \arg\min_{k}\|\mathbf{x}_i - \boldsymbol{\mu}_k\|_2^2
@@ -160,11 +160,11 @@ def kmeans(X, K, max_iter=100, seed=0):
     return assign(X, centers), centers
 ```
 
-**Tính hội tụ.** Mỗi bước gán và mỗi bước cập nhật đều không làm tăng $J$ (mỗi bước là nghiệm tối ưu của một bài toán con), và số cách gán là hữu hạn, nên thuật toán luôn **dừng sau hữu hạn bước**. Tuy nhiên kết quả chỉ là một **cực tiểu địa phương**.
+**Tính hội tụ.** Mỗi bước gán và mỗi bước cập nhật đều không làm tăng $\mathcal{L}$ (mỗi bước là nghiệm tối ưu của một bài toán con), và số cách gán là hữu hạn, nên thuật toán luôn **dừng sau hữu hạn bước**. Tuy nhiên kết quả chỉ là một **cực tiểu địa phương**.
 
 ![Các bước lặp của K-means](images/kmeans_steps.png)
 
-*Hình 8.2: Sáu vòng lặp K-means với khởi tạo kém (ba tâm lấy từ cùng một cụm thật). Dấu X là tâm hiện tại, màu điểm là cụm được gán, mũi tên chỉ vị trí tâm sau bước cập nhật. $J$ giảm dần từ 34 318 xuống 464.5. Mã nguồn vẽ hình: [images/plot_kmeans_steps.py](images/plot_kmeans_steps.py).*
+*Hình 8.2: Sáu vòng lặp K-means với khởi tạo kém (ba tâm lấy từ cùng một cụm thật). Dấu X là tâm hiện tại, màu điểm là cụm được gán, mũi tên chỉ vị trí tâm sau bước cập nhật. $\mathcal{L}$ giảm dần từ 34 318 xuống 464.5. Mã nguồn vẽ hình: [images/plot_kmeans_steps.ipynb](images/plot_kmeans_steps.ipynb).*
 
 #### c) Ví dụ tính tay
 
@@ -178,9 +178,9 @@ Bảy điểm A(1, 1), B(1.5, 2), C(3, 4), D(5, 7), E(3.5, 5), F(4.5, 5), G(3.5,
 | Khoảng cách tới $\boldsymbol{\mu}_2 = (5, 7)$ | 7.211 | 6.103 | 3.606 | 0 | **2.500** | 2.062 | 2.915 |
 | Cụm | 1 | 1 | 1 | 2 | 2 | 2 | 2 |
 
-**Bước cập nhật:** $\boldsymbol{\mu}_1 = \frac{1}{3}[(1, 1) + (1.5, 2) + (3, 4)] = (1.833, 2.333)$; $\boldsymbol{\mu}_2 = \frac{1}{4}[(5, 7) + (3.5, 5) + (4.5, 5) + (3.5, 4.5)] = (4.125, 5.375)$. $J = 12.208$.
+**Bước cập nhật:** $\boldsymbol{\mu}_1 = \frac{1}{3}[(1, 1) + (1.5, 2) + (3, 4)] = (1.833, 2.333)$; $\boldsymbol{\mu}_2 = \frac{1}{4}[(5, 7) + (3.5, 5) + (4.5, 5) + (3.5, 4.5)] = (4.125, 5.375)$. $\mathcal{L} = 12.208$.
 
-**Vòng lặp 2:** điểm C có khoảng cách tới $\boldsymbol{\mu}_1$ là 2.034, tới $\boldsymbol{\mu}_2$ là 1.777, nên **chuyển sang cụm 2**; các điểm khác giữ nguyên. Cập nhật: $\boldsymbol{\mu}_1 = (1.25, 1.5)$, $\boldsymbol{\mu}_2 = (3.9, 5.1)$, $J = 8.525$.
+**Vòng lặp 2:** điểm C có khoảng cách tới $\boldsymbol{\mu}_1$ là 2.034, tới $\boldsymbol{\mu}_2$ là 1.777, nên **chuyển sang cụm 2**; các điểm khác giữ nguyên. Cập nhật: $\boldsymbol{\mu}_1 = (1.25, 1.5)$, $\boldsymbol{\mu}_2 = (3.9, 5.1)$, $\mathcal{L} = 8.525$.
 
 **Vòng lặp 3:** cách gán không đổi, tâm không đổi: **hội tụ**. Kết quả: cụm 1 = {A, B}, cụm 2 = {C, D, E, F, G}.
 
@@ -190,10 +190,10 @@ Vì chỉ tìm được cực tiểu địa phương, kết quả K-means phụ 
 
 | seed | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 |---|---|---|---|---|---|---|---|---|
-| $J$ | 394.87 | 722.88 | 394.87 | 394.87 | 394.87 | 723.88 | 394.87 | 723.50 |
+| $\mathcal{L}$ | 394.87 | 722.88 | 394.87 | 394.87 | 394.87 | 723.88 | 394.87 | 723.50 |
 
-Ba lần cho $J$ gần gấp đôi: hai tâm rơi vào cùng một cụm thật, một tâm phải "gánh" hai cụm (như Hình 8.2 nếu dừng sớm). Cách khắc phục:
-- **Chạy nhiều lần** với khởi tạo khác nhau, giữ kết quả có $J$ nhỏ nhất (tham số `n_init` của scikit-learn).
+Ba lần cho $\mathcal{L}$ gần gấp đôi: hai tâm rơi vào cùng một cụm thật, một tâm phải "gánh" hai cụm (như Hình 8.2 nếu dừng sớm). Cách khắc phục:
+- **Chạy nhiều lần** với khởi tạo khác nhau, giữ kết quả có $\mathcal{L}$ nhỏ nhất (tham số `n_init` của scikit-learn).
 - **k-means++**: chọn tâm đầu tiên ngẫu nhiên; mỗi tâm tiếp theo chọn ngẫu nhiên với xác suất tỉ lệ với bình phương khoảng cách từ điểm đó tới tâm gần nhất đã chọn. Các tâm ban đầu vì vậy nằm rải rác, ít khi trùng cụm. Đây là mặc định của scikit-learn.
 
 ```python
@@ -202,7 +202,7 @@ from sklearn.cluster import KMeans
 model = KMeans(n_clusters=4, init='k-means++', n_init=10, random_state=0)
 labels = model.fit_predict(X)
 print(model.cluster_centers_)      # tọa độ các tâm cụm
-print(model.inertia_)              # J = 394.87
+print(model.inertia_)              # L = 394.87
 print(model.predict([[0, 0]]))     # cụm của điểm mới
 ```
 
@@ -210,9 +210,9 @@ print(model.predict([[0, 0]]))     # cụm của điểm mới
 
 #### e) Chọn số cụm K
 
-$K$ phải chọn trước. $K$ quá nhỏ gộp các nhóm khác biệt; $K$ quá lớn chia vụn dữ liệu thành các nhóm không có ý nghĩa. Giá trị **tối ưu toàn cục** $J^*(K)$ **không tăng** khi tăng $K$ (bằng 0 khi $K = N$, mỗi điểm một cụm), nên không thể chọn $K$ chỉ bằng cách cực tiểu inertia. Kết quả thực nghiệm của các lần chạy Lloyd hữu hạn có thể không giảm đều do khởi tạo và nghiệm cục bộ khác nhau; cần chạy nhiều khởi tạo trước khi so sánh.
+$K$ phải chọn trước. $K$ quá nhỏ gộp các nhóm khác biệt; $K$ quá lớn chia vụn dữ liệu thành các nhóm không có ý nghĩa. Giá trị **tối ưu toàn cục** $\mathcal{L}^*(K)$ **không tăng** khi tăng $K$ (bằng 0 khi $K = N$, mỗi điểm một cụm), nên không thể chọn $K$ chỉ bằng cách cực tiểu inertia. Kết quả thực nghiệm của các lần chạy Lloyd hữu hạn có thể không giảm đều do khởi tạo và nghiệm cục bộ khác nhau; cần chạy nhiều khởi tạo trước khi so sánh.
 
-**Phương pháp Elbow (khuỷu tay).** Chạy K-means với $K = 1, 2, \dots$, vẽ $J(K)$ theo $K$. Ban đầu $J$ giảm nhanh (tách được các nhóm thật), sau một giá trị $K$ thì giảm chậm hẳn (chỉ còn chia nhỏ các nhóm thật). Điểm gãy trên đồ thị, giống khuỷu tay, là $K$ hợp lý.
+**Phương pháp Elbow (khuỷu tay).** Chạy K-means với $K = 1, 2, \dots$, vẽ $\mathcal{L}(K)$ theo $K$. Ban đầu $\mathcal{L}$ giảm nhanh (tách được các nhóm thật), sau một giá trị $K$ thì giảm chậm hẳn (chỉ còn chia nhỏ các nhóm thật). Điểm gãy trên đồ thị, giống khuỷu tay, là $K$ hợp lý.
 
 **Chỉ số Silhouette.** Với mỗi điểm $\mathbf{x}_i$:
 - $a(i)$: khoảng cách trung bình từ $\mathbf{x}_i$ tới các điểm **khác** trong cùng cụm (độ gắn kết);
@@ -237,13 +237,13 @@ for k in range(1, 10):
 
 | $K$ | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
 |---|---|---|---|---|---|---|---|---|
-| Inertia $J(K)$ | 312.95 | 108.07 | 39.52 | **17.98** | 14.45 | 11.52 | 9.08 | 6.83 |
+| Inertia $\mathcal{L}(K)$ | 312.95 | 108.07 | 39.52 | **17.98** | 14.45 | 11.52 | 9.08 | 6.83 |
 | Mức giảm so với $K - 1$ | – | 204.88 | 68.55 | 21.54 | 3.53 | 2.93 | 2.43 | 2.25 |
 | Silhouette | – | 0.592 | 0.652 | **0.675** | 0.625 | 0.463 | 0.430 | 0.433 |
 
 ![Chọn K bằng Elbow và Silhouette](images/elbow_silhouette.png)
 
-*Hình 8.3: (a) Kết quả K-means với $K = 4$ trên dữ liệu 21 điểm của giáo trình. (b) Đồ thị Elbow: từ $K = 4$ trở đi $J$ gần như không giảm. (c) Silhouette lớn nhất tại $K = 4$. Mã nguồn vẽ hình: [images/plot_elbow_silhouette.py](images/plot_elbow_silhouette.py).*
+*Hình 8.3: (a) Kết quả K-means với $K = 4$ trên dữ liệu 21 điểm của giáo trình. (b) Đồ thị Elbow: từ $K = 4$ trở đi $\mathcal{L}$ gần như không giảm. (c) Silhouette lớn nhất tại $K = 4$. Mã nguồn vẽ hình: [images/plot_elbow_silhouette.ipynb](images/plot_elbow_silhouette.ipynb).*
 
 Cả hai phương pháp đều chọn $K = 4$. **Tính tay** Silhouette cho điểm $(3, 5)$ với $K = 4$: $a = 1.913$ (trung bình khoảng cách tới 4 điểm cùng cụm), $b = 3.370$, $s = (3.370 - 1.913)/3.370 = 0.433$.
 
@@ -255,7 +255,7 @@ Trong thực tế, điểm khuỷu tay không phải lúc nào cũng rõ, Silhou
 
 ![Hạn chế của K-means](images/kmeans_limitations.png)
 
-*Hình 8.4: (a) K-means cắt ngang hai cụm hình vầng trăng. (b) Phân cụm phân cấp single linkage (mục 8.1.4) tách đúng. (c) Với một cụm lớn, phân tán và hai cụm nhỏ, K-means chia cụm lớn để cân bằng. Mã nguồn vẽ hình: [images/plot_kmeans_limitations.py](images/plot_kmeans_limitations.py).*
+*Hình 8.4: (a) K-means cắt ngang hai cụm hình vầng trăng. (b) Phân cụm phân cấp single linkage (mục 8.1.4) tách đúng. (c) Với một cụm lớn, phân tán và hai cụm nhỏ, K-means chia cụm lớn để cân bằng. Mã nguồn vẽ hình: [images/plot_kmeans_limitations.ipynb](images/plot_kmeans_limitations.ipynb).*
 
 | Ưu điểm | Hạn chế |
 |---|---|
@@ -342,7 +342,7 @@ dendrogram(Z, labels=['A', 'B', 'C', 'D', 'E', 'F'])
 
 ![Dendrogram của 6 điểm](images/dendrogram.png)
 
-*Hình 8.5: (a) Dữ liệu 6 điểm. (b), (c) Dendrogram theo single linkage và complete linkage; đường nét đứt là vị trí cắt cây cho 2 cụm. Mã nguồn vẽ hình: [images/plot_dendrogram.py](images/plot_dendrogram.py).*
+*Hình 8.5: (a) Dữ liệu 6 điểm. (b), (c) Dendrogram theo single linkage và complete linkage; đường nét đứt là vị trí cắt cây cho 2 cụm. Mã nguồn vẽ hình: [images/plot_dendrogram.ipynb](images/plot_dendrogram.ipynb).*
 
 Cách đọc dendrogram:
 - Mỗi **lá** (dưới cùng) là một điểm dữ liệu.
@@ -361,7 +361,7 @@ print(fcluster(Z, t=3, criterion='maxclust'))     # lấy đúng 3 cụm:   [1 1
 
 ![So sánh các tiêu chí liên kết](images/linkage_comparison.png)
 
-*Hình 8.6: Bốn tiêu chí liên kết trên dữ liệu hai vầng trăng (hàng trên) và ba cụm có độ phân tán khác nhau (hàng dưới). Mã nguồn vẽ hình: [images/plot_linkage_comparison.py](images/plot_linkage_comparison.py).*
+*Hình 8.6: Bốn tiêu chí liên kết trên dữ liệu hai vầng trăng (hàng trên) và ba cụm có độ phân tán khác nhau (hàng dưới). Mã nguồn vẽ hình: [images/plot_linkage_comparison.ipynb](images/plot_linkage_comparison.ipynb).*
 
 Single linkage tách đúng hai vầng trăng nhờ "đi theo" các điểm liền kề, nhưng với ba cụm chồng lấn nó bị hiệu ứng chuỗi. Complete, average và Ward cho cụm gọn, phù hợp hơn với cụm dạng tròn.
 
@@ -514,7 +514,7 @@ Lưu ý: trong bài toán thực tế không có nhãn để tính các chỉ s�
 
 ![Phân cụm Iris bằng K-means](images/iris_kmeans.png)
 
-*Hình 8.7: (a) Inertia và Silhouette theo $K$. (b) Kết quả K-means với $K = 3$ và (c) loài thật, chiếu xuống 2 chiều bằng PCA (giữ 95.8% phương sai). Mã nguồn vẽ hình: [images/plot_iris_kmeans.py](images/plot_iris_kmeans.py).*
+*Hình 8.7: (a) Inertia và Silhouette theo $K$. (b) Kết quả K-means với $K = 3$ và (c) loài thật, chiếu xuống 2 chiều bằng PCA (giữ 95.8% phương sai). Mã nguồn vẽ hình: [images/plot_iris_kmeans.ipynb](images/plot_iris_kmeans.ipynb).*
 
 #### Bước 4: Ảnh hưởng của chuẩn hóa và so sánh với phân cụm phân cấp
 
@@ -537,7 +537,7 @@ Với Iris, dữ liệu **chưa chuẩn hóa** lại khớp nhãn tốt hơn: `p
 
 - **Học không giám sát** làm việc với dữ liệu không nhãn $\{\mathbf{x}_i\}$, nhằm khám phá cấu trúc ẩn. Các bài toán chính: phân cụm, giảm số chiều, phát hiện bất thường. Đánh giá khó hơn học có giám sát vì không có đáp án.
 - **Phân cụm** chia dữ liệu thành các nhóm sao cho điểm trong nhóm giống nhau, khác nhóm khác nhau; độ giống nhau đo bằng khoảng cách (thường là Euclid), nên cần chú ý thang đo đặc trưng.
-- **K-means** cực tiểu $J = \sum_i\|\mathbf{x}_i - \boldsymbol{\mu}_{c_i}\|^2$ bằng cách lặp hai bước: gán điểm vào tâm gần nhất và cập nhật tâm bằng trung bình cụm. Thuật toán luôn hội tụ nhưng chỉ tới cực tiểu địa phương; dùng k-means++ và nhiều lần khởi tạo. Chọn $K$ bằng phương pháp Elbow, chỉ số Silhouette $s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$ và hiểu biết về bài toán.
+- **K-means** cực tiểu $\mathcal{L} = \sum_i\|\mathbf{x}_i - \boldsymbol{\mu}_{c_i}\|^2$ bằng cách lặp hai bước: gán điểm vào tâm gần nhất và cập nhật tâm bằng trung bình cụm. Thuật toán luôn hội tụ nhưng chỉ tới cực tiểu địa phương; dùng k-means++ và nhiều lần khởi tạo. Chọn $K$ bằng phương pháp Elbow, chỉ số Silhouette $s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$ và hiểu biết về bài toán.
 - **Phân cụm phân cấp gộp dần** bắt đầu từ $N$ cụm đơn điểm, mỗi bước gộp hai cụm gần nhất theo một tiêu chí liên kết (single, complete, average, centroid, Ward), kết quả là **dendrogram**; cắt cây ở độ cao phù hợp để lấy số cụm mong muốn.
 - K-means nhanh, hợp với dữ liệu lớn và cụm tròn; phân cụm phân cấp không cần chọn trước $K$, cho thấy cấu trúc phân cấp nhưng tốn bộ nhớ $O(N^2)$.
 
@@ -561,7 +561,7 @@ Với Iris, dữ liệu **chưa chuẩn hóa** lại khớp nhãn tốt hơn: `p
 
 ### Bài tập
 
-12. Cho 6 điểm một chiều: 1, 2, 3, 8, 9, 12. Chạy tay K-means với $K = 2$, khởi tạo tâm là 1 và 2. Ghi rõ cách gán, tâm và $J$ sau mỗi vòng lặp. Lặp lại với khởi tạo 8 và 12. *(Đáp số: hội tụ tới tâm 2 và 9.67, $J = 2 + 8.67 = 10.67$.)*
+12. Cho 6 điểm một chiều: 1, 2, 3, 8, 9, 12. Chạy tay K-means với $K = 2$, khởi tạo tâm là 1 và 2. Ghi rõ cách gán, tâm và $\mathcal{L}$ sau mỗi vòng lặp. Lặp lại với khởi tạo 8 và 12. *(Đáp số: hội tụ tới tâm 2 và 9.67, $\mathcal{L} = 2 + 8.67 = 10.67$.)*
 13. Với 7 điểm A – G ở mục 8.1.3 c), chạy tay K-means với $K = 2$, khởi tạo $\boldsymbol{\mu}_1 = A$, $\boldsymbol{\mu}_2 = C$. Kết quả có giống ví dụ trong bài không?
 14. Với kết quả phân cụm {A, B}, {C, D, E, F, G} ở mục 8.1.3 c), tính chỉ số Silhouette của điểm C.
 15. Với 6 điểm A – F ở mục 8.1.4 d), thực hiện tay phân cụm phân cấp với average linkage, vẽ dendrogram. So sánh với single và complete linkage.

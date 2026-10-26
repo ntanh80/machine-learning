@@ -552,7 +552,7 @@ Mô hình bậc 12 có hệ số lớn gấp hàng nghìn lần, trái dấu nha
 
 ![Chưa khớp, vừa khớp và quá khớp](images/underfitting_overfitting.png)
 
-*Hình 2.1: Hồi quy đa thức trên 15 điểm huấn luyện (đỏ) sinh từ hàm $\sin(2\pi x)$ (xanh lá, nét đứt) cộng nhiễu. Bậc 1 là đường thẳng, không biểu diễn được hình sin. Bậc 4 bám sát hàm thật. Bậc 12 đi gần sát mọi điểm huấn luyện nhưng dao động dữ dội giữa các điểm, sai số kiểm tra lớn gấp hàng trăm lần. Mã nguồn vẽ hình: [images/plot_underfitting_overfitting.py](images/plot_underfitting_overfitting.py).*
+*Hình 2.1: Hồi quy đa thức trên 15 điểm huấn luyện (đỏ) sinh từ hàm $\sin(2\pi x)$ (xanh lá, nét đứt) cộng nhiễu. Bậc 1 là đường thẳng, không biểu diễn được hình sin. Bậc 4 bám sát hàm thật. Bậc 12 đi gần sát mọi điểm huấn luyện nhưng dao động dữ dội giữa các điểm, sai số kiểm tra lớn gấp hàng trăm lần. Mã nguồn vẽ hình: [images/plot_underfitting_overfitting.ipynb](images/plot_underfitting_overfitting.ipynb).*
 
 #### b) Nguyên nhân và cách khắc phục
 
@@ -601,7 +601,7 @@ Có thể ước lượng hai thành phần bằng mô phỏng: sinh 200 tập h
 
 ![Đánh đổi thiên lệch – phương sai](images/bias_variance.png)
 
-*Hình 2.2: (a) Thiên lệch giảm mạnh khi đủ độ phức tạp (từ bậc 3), phương sai tăng nhanh khi mô hình phức tạp hơn; tổng sai số có dạng chữ U và nhỏ nhất ở bậc 3. (b) Trên một tập dữ liệu cụ thể: sai số huấn luyện giảm liên tục theo độ phức tạp, sai số kiểm tra giảm rồi tăng. Mã nguồn vẽ hình: [images/plot_bias_variance.py](images/plot_bias_variance.py).*
+*Hình 2.2: (a) Thiên lệch giảm mạnh khi đủ độ phức tạp (từ bậc 3), phương sai tăng nhanh khi mô hình phức tạp hơn; tổng sai số có dạng chữ U và nhỏ nhất ở bậc 3. (b) Trên một tập dữ liệu cụ thể: sai số huấn luyện giảm liên tục theo độ phức tạp, sai số kiểm tra giảm rồi tăng. Mã nguồn vẽ hình: [images/plot_bias_variance.ipynb](images/plot_bias_variance.ipynb).*
 
 Nhiều kỹ thuật trong các bài sau đều nhằm kiểm soát sự cân bằng này: điều chuẩn (Bài 3), cắt tỉa cây quyết định (Bài 6), học tổ hợp (Bài 9).
 

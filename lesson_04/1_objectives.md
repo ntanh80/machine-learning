@@ -2,7 +2,9 @@
 
 ## 1. Mục tiêu bài học
 
-Bài học giới thiệu một mô hình và một thuật toán phân loại quan trọng trong học máy có giám sát: **mô hình hồi quy Logistic** và **thuật toán PLA** (Perceptron Learning Algorithm). Cụ thể, bài học giúp sinh viên:
+Bài học giới thiệu một mô hình và một thuật toán phân loại quan trọng trong học máy có giám sát: **mô hình hồi quy Logistic** và **thuật toán PLA** (Perceptron Learning Algorithm). 
+
+Cụ thể, bài học giúp sinh viên:
 
 - Nắm được nguyên lý hoạt động của mô hình hồi quy Logistic và vai trò của hàm sigmoid trong bài toán phân loại nhị phân.
 - Phân biệt hồi quy tuyến tính và hồi quy Logistic về mục tiêu dự đoán và dạng đầu ra.

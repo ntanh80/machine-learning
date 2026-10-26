@@ -80,7 +80,7 @@ Khi dữ liệu tách được tuyến tính, thường có **vô số** siêu p
 
 ![Siêu phẳng có lề lớn nhất](images/max_margin.png)
 
-*Hình 7.1: (a) Nhiều đường thẳng cùng phân chia đúng hai lớp. (b) Siêu phẳng của SVM $x_1 = 2$ có lề lớn nhất; vùng tô màu giữa hai biên $\mathbf{w}^T\mathbf{x} + b = \pm 1$ không chứa điểm nào; các điểm được khoanh tròn là vector hỗ trợ. Mã nguồn vẽ hình: [images/plot_max_margin.py](images/plot_max_margin.py).*
+*Hình 7.1: (a) Nhiều đường thẳng cùng phân chia đúng hai lớp. (b) Siêu phẳng của SVM $x_1 = 2$ có lề lớn nhất; vùng tô màu giữa hai biên $\mathbf{w}^T\mathbf{x} + b = \pm 1$ không chứa điểm nào; các điểm được khoanh tròn là vector hỗ trợ. Mã nguồn vẽ hình: [images/plot_max_margin.ipynb](images/plot_max_margin.ipynb).*
 
 ```python
 import numpy as np
@@ -275,7 +275,7 @@ for C in [0.01, 0.1, 1, 10, 100]:
 
 ![SVM lề mềm với các giá trị C](images/soft_margin.png)
 
-*Hình 7.2: SVM lề mềm với $C = 0.01$, $1$, $100$. Nét liền: siêu phẳng phân chia; nét đứt và vùng tô màu: lề; vòng tròn: vector hỗ trợ. Mã nguồn vẽ hình: [images/plot_soft_margin.py](images/plot_soft_margin.py).*
+*Hình 7.2: SVM lề mềm với $C = 0.01$, $1$, $100$. Nét liền: siêu phẳng phân chia; nét đứt và vùng tô màu: lề; vòng tròn: vector hỗ trợ. Mã nguồn vẽ hình: [images/plot_soft_margin.ipynb](images/plot_soft_margin.ipynb).*
 
 $C$ tăng thì lề hẹp lại và số vector hỗ trợ giảm. Trên dữ liệu này hai lớp gần như tách được tuyến tính nên độ chính xác hầu như không đổi; với dữ liệu nhiễu hoặc kernel phi tuyến (mục 7.1.3), $C$ ảnh hưởng rõ tới quá khớp. $C$ là siêu tham số, chọn bằng kiểm định chéo.
 
@@ -312,7 +312,7 @@ print(svm_3d.coef_, svm_3d.intercept_)       # w ~ (-0.06, 0.18, -4.06), b = 2.1
 
 ![Ánh xạ dữ liệu sang không gian 3 chiều](images/kernel_mapping.png)
 
-*Hình 7.3: (a) Hai lớp vành khuyên không tách được bằng đường thẳng. (b) Sau ánh xạ $\phi$, một mặt phẳng tách được hai lớp. (c) Mặt phẳng đó ứng với một đường tròn trong không gian gốc. Mã nguồn vẽ hình: [images/plot_kernel_mapping.py](images/plot_kernel_mapping.py).*
+*Hình 7.3: (a) Hai lớp vành khuyên không tách được bằng đường thẳng. (b) Sau ánh xạ $\phi$, một mặt phẳng tách được hai lớp. (c) Mặt phẳng đó ứng với một đường tròn trong không gian gốc. Mã nguồn vẽ hình: [images/plot_kernel_mapping.ipynb](images/plot_kernel_mapping.ipynb).*
 
 Thành phần thứ ba của $\mathbf{w}$ áp đảo, siêu phẳng gần như là $-4.06(x_1^2 + x_2^2) + 2.10 = 0$, tức đường tròn $x_1^2 + x_2^2 \approx 0.52$ (bán kính khoảng 0.72) trong không gian gốc: **ranh giới tuyến tính trong không gian mới là ranh giới phi tuyến trong không gian gốc**.
 
@@ -386,7 +386,7 @@ for kernel, params in [('linear', {}), ('poly', {'degree': 3, 'coef0': 1}), ('rb
 
 ![So sánh các kernel](images/svm_kernels.png)
 
-*Hình 7.4: (a) Ranh giới quyết định của ba kernel. (b) Kernel RBF với $\gamma = 0.1$, $1$, $50$. Mã nguồn vẽ hình: [images/plot_svm_kernels.py](images/plot_svm_kernels.py).*
+*Hình 7.4: (a) Ranh giới quyết định của ba kernel. (b) Kernel RBF với $\gamma = 0.1$, $1$, $50$. Mã nguồn vẽ hình: [images/plot_svm_kernels.ipynb](images/plot_svm_kernels.ipynb).*
 
 | Mô hình ($C = 1$) | Độ chính xác huấn luyện | Độ chính xác kiểm tra | Số vector hỗ trợ |
 |---|---|---|---|
@@ -462,7 +462,7 @@ print(model.score(X2, y))                                      # 0.889
 
 ![SVM trên dữ liệu Breast Cancer với hai đặc trưng](images/breast_cancer_svm.png)
 
-*Hình 7.5: Ranh giới của SVM kernel tuyến tính và kernel RBF trên hai đặc trưng `mean radius`, `mean texture`; vòng tròn đánh dấu vector hỗ trợ. Mã nguồn vẽ hình: [images/plot_breast_cancer_svm.py](images/plot_breast_cancer_svm.py).*
+*Hình 7.5: Ranh giới của SVM kernel tuyến tính và kernel RBF trên hai đặc trưng `mean radius`, `mean texture`; vòng tròn đánh dấu vector hỗ trợ. Mã nguồn vẽ hình: [images/plot_breast_cancer_svm.ipynb](images/plot_breast_cancer_svm.ipynb).*
 
 Hai lớp chồng lấn nhiều trong không gian hai chiều này nên có tới 152 vector hỗ trợ: với SVM lề mềm, mọi điểm nằm trong lề hoặc bị phân loại sai đều là vector hỗ trợ. Hai đặc trưng chưa đủ thông tin; ta dùng đủ 30 đặc trưng.
 

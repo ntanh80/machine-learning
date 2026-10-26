@@ -12,7 +12,7 @@ Tài liệu này áp dụng khi viết hoặc sửa bất kỳ nội dung nào c
 ## 1. Nguyên tắc nội dung: mục tiêu là chuẩn, giáo trình để tham khảo
 
 1. **`1_objectives.md` của bài là chuẩn.** Cấu trúc, phạm vi, thứ tự mục và mức độ (Hiểu/Vận dụng) của nội dung bám theo các mục CĐR (ví dụ 3.1.1, 3.1.2, …) trong file này. Không thêm, bớt hay đổi thứ tự mục.
-2. **Giáo trình chỉ để tham khảo**: `textbook/Machine_Learning_Textbook_2026.pdf` (275 trang). Với mỗi mục CĐR, tra phần tương ứng trong giáo trình (mục 4) để lấy kiến thức, ví dụ, công thức; ưu tiên dùng thuật ngữ, ký hiệu giống giáo trình cho thống nhất.
+2. **Giáo trình chỉ để tham khảo**: `textbook/Machine_Learning_Textbook_2026.pdf` (275 trang). Với mỗi mục CĐR, tra phần tương ứng trong giáo trình (mục 4) để lấy kiến thức, ví dụ, công thức; ưu tiên dùng thuật ngữ, ký hiệu giống giáo trình cho thống nhất, trừ các ký hiệu đã quy định ở mục 3.4.
 3. **Khi giáo trình không khớp mục tiêu** (chương không trùng một-một với bài, hoặc thiếu mục CĐR):
    - Mục tiêu có, giáo trình không có → vẫn viết đủ, dùng nguồn chuẩn khác (sách, tài liệu scikit-learn, …). Không cắt mục tiêu cho vừa giáo trình.
    - Giáo trình có, mục tiêu không yêu cầu → không đưa vào.
@@ -28,7 +28,7 @@ lesson_XX/
 ├── 1_objectives.md     # mục tiêu, chuẩn đầu ra, phân bổ nội dung (chuẩn của bài)
 ├── 2_<topic>.md        # nội dung lý thuyết chính, đề mục theo các mục CĐR
 ├── codes/              # notebook demo: 01_<name>.ipynb, 02_<name>.ipynb, …
-├── images/             # hình minh họa + script plot_<name>.py sinh hình
+├── images/             # hình minh họa + notebook plot_<name>.ipynb sinh hình
 └── data/               # dữ liệu
 ```
 
@@ -46,7 +46,7 @@ lesson_XX/
 
 ### 2.3. Hình trong `images/`
 
-- Mỗi hình có script sinh hình đi kèm, tên bắt đầu bằng `plot_` và trùng tên với hình: `plot_overfitting.py` → `overfitting.png`.
+- Mỗi hình có notebook sinh hình đi kèm (dạng `.ipynb`, chạy với thư mục hiện hành là `images/`), tên bắt đầu bằng `plot_` và trùng tên với hình: `plot_overfitting.ipynb` → `overfitting.png`.
 
 ---
 
@@ -54,7 +54,7 @@ lesson_XX/
 
 ### 3.1. Tên file và dữ liệu – tiếng Anh
 
-- Tên mọi file (`.md`, và trong `codes/`, `images/`, `data/`) bằng **tiếng Anh, theo chủ đề**, `snake_case`. Ví dụ: `2_supervised_learning_linear_regression.md`, `2_gradient_descent.md`, `05_house_price_regression.ipynb`, `plot_overfitting.py`, `house_prices.csv`.
+- Tên mọi file (`.md`, và trong `codes/`, `images/`, `data/`) bằng **tiếng Anh, theo chủ đề**, `snake_case`. Ví dụ: `2_supervised_learning_linear_regression.md`, `2_gradient_descent.md`, `05_house_price_regression.ipynb`, `plot_overfitting.ipynb`, `house_prices.csv`.
 - Tên cột dữ liệu tự tạo bằng tiếng Anh (`area`, `bedrooms`, `distance`, `price`). Dữ liệu tải về (ví dụ Kaggle) giữ nguyên tên gốc.
 
 ### 3.2. Tên trong code – tiếng Anh, dễ hiểu, đơn giản
@@ -77,6 +77,34 @@ lesson_XX/
   ```
 
 - Chuỗi hiển thị (`print`, nhãn trục, tiêu đề hình) viết tiếng Việt có dấu.
+
+### 3.4. Ký hiệu toán học – thống nhất giữa các bài
+
+Mọi bài, mọi notebook và hình dùng chung bảng ký hiệu dưới đây. Giáo trình không thống nhất ở một số chỗ (ví dụ hàm mất mát: `L(w)` ở Ch.4, `J(w)` ở Ch.3, Ch.9, Ch.11, Ch.13), nên khi giáo trình khác bảng này thì **theo bảng này** (mục 1, nguyên tắc 2 áp dụng cho các ký hiệu bảng chưa quy định).
+
+| Đối tượng | Ký hiệu (LaTeX) | Ghi chú |
+| --- | --- | --- |
+| Số mẫu, số đặc trưng | $N$, $d$ | mẫu thứ $i$: $(\mathbf{x}_i, y_i)$, $i = 1, \dots, N$ |
+| Vector đặc trưng, ma trận dữ liệu | $\mathbf{x} \in \mathbb{R}^d$, $\mathbf{X}$ | mỗi hàng của $\mathbf{X}$ là một mẫu |
+| Nhãn thật, nhãn dự đoán | $y$, $\hat{y}$ (vector: $\mathbf{y}$, $\hat{\mathbf{y}}$) | |
+| Trọng số | $\mathbf{w} = [w_0, w_1, \dots, w_d]^T$ | hồi quy tuyến tính, Logistic, PLA: gộp hệ số chệch $w_0$, mô hình viết $\mathbf{x}^T\mathbf{w}$ |
+| Hệ số chệch tách riêng | $b$ | SVM, mạng nơ-ron: $\mathbf{w}^T\mathbf{x} + b$ |
+| Tham số mạng nơ-ron | $\boldsymbol{\theta} = \{\mathbf{W}^{(l)}, \mathbf{b}^{(l)}\}$ | lớp $l$: $\mathbf{z}^{(l)}$, $\mathbf{a}^{(l)}$, $\boldsymbol{\delta}^{(l)}$ |
+| **Hàm mất mát trên toàn tập** | $\mathcal{L}(\mathbf{w})$, $\mathcal{L}(\boldsymbol{\theta})$ | hàm cần tối thiểu, gồm cả phần điều chuẩn nếu có; biến thể ghi chỉ số dưới: $\mathcal{L}_{\text{Ridge}}$. **Không dùng $J$** |
+| **Mất mát của một mẫu** | $\ell_i$, $\ell(y, \hat{y})$ | $\mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_i \ell_i(\mathbf{w})$; lan truyền ngược trên một mẫu dùng $\partial \ell / \partial \mathbf{W}^{(l)}$ |
+| Gradient | $\nabla_{\mathbf{w}}\mathcal{L}(\mathbf{w})$, $\nabla\ell_i$ | |
+| Tốc độ học | $\eta$ | |
+| Hệ số điều chuẩn | $\lambda$ | scikit-learn: `alpha` (Ridge/Lasso), `C` $= 1/\lambda$ (Logistic, SVM) |
+| Hàm sigmoid, hàm kích hoạt | $\sigma(\cdot)$, $f(\cdot)$ | |
+| K-means | $K$ cụm, tâm $\boldsymbol{\mu}_k$, nhãn cụm $c_i$, hàm mất mát $\mathcal{L}$ (inertia) | |
+
+Ngoại lệ: hàm Lagrange trong SVM (Bài 7) giữ ký hiệu chuẩn $\mathcal{L}(\mathbf{w}, b, \boldsymbol{\lambda})$.
+
+Ký hiệu trong code và hình:
+
+- Nhãn trục, tiêu đề hình (mathtext của Matplotlib) dùng đúng ký hiệu LaTeX trong bảng: `r'$\mathcal{L}(\mathbf{w})$'`.
+- Chuỗi `print`, comment, docstring dùng chữ thường: `L` cho hàm mất mát toàn tập, `ℓ` cho mất mát một mẫu, đạo hàm viết `dL/dw0`. Ví dụ: `print('L(w) = %.4f' % loss)`.
+- Tên biến theo mục 3.2: dùng tên có nghĩa (`loss`, `history`) hoặc ký hiệu ngắn trong bảng (`L` cho lưới giá trị mất mát khi vẽ đường đồng mức).
 
 ---
 

@@ -4,11 +4,8 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 # Bài 4. Hồi quy Logistic và thuật toán PLA
 
-> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 7 – Mô hình nơ-ron Perceptron; Chương 9 – Hồi quy logistic. Ma trận nhầm lẫn và độ chính xác chỉ xuất hiện trong phần thực hành (Chương 8, Chương 14); Precision, Recall, F1, ROC-AUC không có trong giáo trình, tham khảo tài liệu scikit-learn (*Model evaluation*) và T. Fawcett, *An introduction to ROC analysis*, Pattern Recognition Letters, 2006. Bộ dữ liệu ung thư phổi lấy từ Kaggle.
+> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 7 – Mô hình nơ-ron Perceptron; Chương 9 – Hồi quy logistic; Bộ dữ liệu ung thư phổi lấy từ Kaggle. Mã nguồn demo: thư mục [codes/](codes/).
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài (mở bằng Jupyter, thư mục hiện hành là `codes/`).
->
-> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [4.1. Mô hình hồi quy Logistic](#41-mô-hình-hồi-quy-logistic)
 - [4.2. Thuật toán PLA](#42-thuật-toán-pla)
@@ -24,7 +21,9 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 #### a) Bài toán phân loại
 
-Ở Bài 3, nhãn $y$ là một số thực (giá nhà, cân nặng), ta gọi đó là bài toán **hồi quy**. Khi nhãn $y$ chỉ nhận một số hữu hạn giá trị rời rạc, mỗi giá trị là một **lớp** (class), ta có bài toán **phân loại** (classification).
+Ở Bài 3, nhãn $y$ là một số thực (giá nhà, cân nặng), ta gọi đó là bài toán **hồi quy**. 
+
+Khi nhãn $y$ chỉ nhận một số hữu hạn giá trị rời rạc, mỗi giá trị là một **lớp** (class), ta có bài toán **phân loại** (classification).
 
 Cho tập huấn luyện gồm $N$ mẫu đã gán nhãn:
 
@@ -45,11 +44,19 @@ Bài này tập trung vào **phân loại nhị phân**. Hai lớp thường đ�
 
 Bảng sau ghi lại số giờ ôn tập và kết quả thi của 20 sinh viên ($y = 1$: đỗ, $y = 0$: trượt):
 
-| Số giờ | 0.50 | 0.75 | 1.00 | 1.25 | 1.50 | 1.75 | 1.75 | 2.00 | 2.25 | 2.50 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| **Đỗ?** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 |
-| **Số giờ** | **2.75** | **3.00** | **3.25** | **3.50** | **4.00** | **4.25** | **4.50** | **4.75** | **5.00** | **5.50** |
-| **Đỗ?** | 1 | 0 | 1 | 0 | 1 | 1 | 1 | 1 | 1 | 1 |
+<table style="border-collapse: collapse; margin: 0 auto;">
+  <thead>
+    <tr><th style="border: 2px solid; text-align: center;">STT</th><th style="border: 2px solid; text-align: center;">Số giờ</th><th style="border: 2px solid; text-align: center;">Đỗ?</th><th style="border: none; width: 1.5em;"></th><th style="border: 2px solid; text-align: center;">STT</th><th style="border: 2px solid; text-align: center;">Số giờ</th><th style="border: 2px solid; text-align: center;">Đỗ?</th><th style="border: none; width: 1.5em;"></th><th style="border: 2px solid; text-align: center;">STT</th><th style="border: 2px solid; text-align: center;">Số giờ</th><th style="border: 2px solid; text-align: center;">Đỗ?</th><th style="border: none; width: 1.5em;"></th><th style="border: 2px solid; text-align: center;">STT</th><th style="border: 2px solid; text-align: center;">Số giờ</th><th style="border: 2px solid; text-align: center;">Đỗ?</th></tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 2px solid; text-align: center;">1</td><td style="border: 2px solid; text-align: center;">0.50</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">6</td><td style="border: 2px solid; text-align: center;">1.75</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">11</td><td style="border: 2px solid; text-align: center;">2.75</td><td style="border: 2px solid; text-align: center;">1</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">16</td><td style="border: 2px solid; text-align: center;">4.25</td><td style="border: 2px solid; text-align: center;">1</td></tr>
+    <tr><td style="border: 2px solid; text-align: center;">2</td><td style="border: 2px solid; text-align: center;">0.75</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">7</td><td style="border: 2px solid; text-align: center;">1.75</td><td style="border: 2px solid; text-align: center;">1</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">12</td><td style="border: 2px solid; text-align: center;">3.00</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">17</td><td style="border: 2px solid; text-align: center;">4.50</td><td style="border: 2px solid; text-align: center;">1</td></tr>
+    <tr><td style="border: 2px solid; text-align: center;">3</td><td style="border: 2px solid; text-align: center;">1.00</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">8</td><td style="border: 2px solid; text-align: center;">2.00</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">13</td><td style="border: 2px solid; text-align: center;">3.25</td><td style="border: 2px solid; text-align: center;">1</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">18</td><td style="border: 2px solid; text-align: center;">4.75</td><td style="border: 2px solid; text-align: center;">1</td></tr>
+    <tr><td style="border: 2px solid; text-align: center;">4</td><td style="border: 2px solid; text-align: center;">1.25</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">9</td><td style="border: 2px solid; text-align: center;">2.25</td><td style="border: 2px solid; text-align: center;">1</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">14</td><td style="border: 2px solid; text-align: center;">3.50</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">19</td><td style="border: 2px solid; text-align: center;">5.00</td><td style="border: 2px solid; text-align: center;">1</td></tr>
+    <tr><td style="border: 2px solid; text-align: center;">5</td><td style="border: 2px solid; text-align: center;">1.50</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">10</td><td style="border: 2px solid; text-align: center;">2.50</td><td style="border: 2px solid; text-align: center;">0</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">15</td><td style="border: 2px solid; text-align: center;">4.00</td><td style="border: 2px solid; text-align: center;">1</td><td style="border: none; width: 1.5em;"></td><td style="border: 2px solid; text-align: center;">20</td><td style="border: 2px solid; text-align: center;">5.50</td><td style="border: 2px solid; text-align: center;">1</td></tr>
+  </tbody>
+</table>
+
 
 Học càng nhiều thì càng dễ đỗ, nhưng **không có ngưỡng giờ nào tách hoàn toàn** hai nhóm: có người học 1.75 giờ vẫn đỗ, có người học 3.5 giờ vẫn trượt. Vì vậy, thay vì cố đưa ra quyết định cứng "đỗ/trượt", hợp lý hơn là ước lượng **xác suất thi đỗ** theo số giờ ôn tập:
 
@@ -58,6 +65,10 @@ P(y = 1 \mid \mathbf{x}) \in (0, 1)
 $$
 
 rồi mới so sánh xác suất này với một ngưỡng để ra quyết định. Đây chính là ý tưởng của **hồi quy Logistic**.
+
+Ở đây $P(y = 1 \mid \mathbf{x})$ đọc là "xác suất thi đỗ khi biết số giờ ôn tập $\mathbf{x}$". 
+
+Ví dụ, $P(y = 1 \mid x = 3) = 0.6$ nghĩa là sinh viên ôn 3 giờ có khoảng 60% khả năng đỗ. Giá trị này luôn nằm giữa 0 và 1: càng gần 1 càng chắc đỗ, càng gần 0 càng chắc trượt.
 
 #### c) Vì sao không dùng hồi quy tuyến tính cho phân loại?
 
@@ -82,7 +93,7 @@ $$
 
 ![Hàm sigmoid](images/sigmoid.png)
 
-*Hình 4.1: (a) So sánh hàm tuyến tính bị chặn, hàm ngưỡng cứng và hàm sigmoid. (b) Hàm sigmoid và đạo hàm của nó. Mã nguồn vẽ hình: [images/plot_sigmoid.py](images/plot_sigmoid.py).*
+*Hình 4.1: (a) So sánh hàm tuyến tính bị chặn, hàm ngưỡng cứng và hàm sigmoid. (b) Hàm sigmoid và đạo hàm của nó. Mã nguồn vẽ hình: [images/plot_sigmoid.ipynb](images/plot_sigmoid.ipynb).*
 
 #### b) Tính chất
 
@@ -144,15 +155,14 @@ $$
 \hat{y} = P(y = 1 \mid \mathbf{x}; \mathbf{w}) = \sigma(\mathbf{x}^T\mathbf{w}) = \frac{1}{1 + e^{-\mathbf{x}^T\mathbf{w}}}
 $$
 
-Từ đây trở đi, giống giáo trình, $\mathbf{x}$ và $\mathbf{w}$ được hiểu là **vector mở rộng** (Bài 3): $\mathbf{x} = [1, x_1, \dots, x_d]^T$, $\mathbf{w} = [w_0, w_1, \dots, w_d]^T$, nên $w_0$ đã nằm trong $\mathbf{x}^T\mathbf{w}$.
+Từ đây trở đi, $\mathbf{x}$ và $\mathbf{w}$ được hiểu là **vector mở rộng** (Bài 3): $\mathbf{x} = [1, x_1, \dots, x_d]^T$, $\mathbf{w} = [w_0, w_1, \dots, w_d]^T$, nên $w_0$ đã nằm trong $\mathbf{x}^T\mathbf{w}$.
 
 Xác suất thuộc lớp 0 là phần bù:
 
 $$
 P(y = 0 \mid \mathbf{x}; \mathbf{w}) = 1 - \sigma(\mathbf{x}^T\mathbf{w})
 $$
-
-Dù tên có chữ "hồi quy", đây là **mô hình phân loại**: đầu ra xác suất được dùng để gán nhãn.
+ 
 
 #### b) Quy tắc phân loại và ranh giới quyết định
 
@@ -175,6 +185,10 @@ $$
 $$
 
 Đây là một **siêu phẳng**: với 1 đặc trưng là một điểm trên trục số, với 2 đặc trưng là một đường thẳng, với 3 đặc trưng là một mặt phẳng. Vì vậy hồi quy Logistic là một **bộ phân loại tuyến tính**: dù đầu ra (xác suất) là hàm phi tuyến, ranh giới giữa hai lớp vẫn là tuyến tính.
+
+![Ranh giới quyết định là siêu phẳng](images/hyperplane.png)
+
+*Hình 4.2: Ranh giới quyết định $\mathbf{x}^T\mathbf{w} = 0$ của hồi quy Logistic. (a) Với 1 đặc trưng, ranh giới là một điểm chia trục số thành hai nửa $\hat{y} = 0$ và $\hat{y} = 1$. (b) Với 2 đặc trưng, ranh giới là đường thẳng chia mặt phẳng thành hai vùng. (c) Với 3 đặc trưng, ranh giới là mặt phẳng, lớp 1 nằm phía trên và lớp 0 nằm phía dưới. Mã nguồn vẽ hình: [images/plot_hyperplane.ipynb](images/plot_hyperplane.ipynb).*
 
 > **Ngưỡng không nhất thiết là 0.5.** Ta có thể chọn ngưỡng $\tau \in (0, 1)$ bất kỳ: $\hat{y} = 1$ nếu $\sigma(\mathbf{x}^T\mathbf{w}) \ge \tau$. Ví dụ, trong phát hiện gian lận hay sàng lọc bệnh, bỏ sót một ca dương tính nguy hiểm hơn báo nhầm, nên thường **hạ ngưỡng** (ví dụ $\tau = 0.3$) để bắt được nhiều ca hơn, chấp nhận nhiều cảnh báo nhầm hơn. Ảnh hưởng của ngưỡng được phân tích ở mục 4.1.6 và 4.3.4.
 
@@ -228,7 +242,7 @@ $$
 
 (thay $y_i = 1$ được $a_i$; thay $y_i = 0$ được $1 - a_i$).
 
-**Bước 2 – Hàm hợp lý (likelihood) của cả tập dữ liệu.** Giả sử các mẫu độc lập với nhau:
+**Bước 2 – Giả sử các mẫu độc lập với nhau**:
 
 $$
 L(\mathbf{w}) = P(\mathbf{y} \mid \mathbf{X}; \mathbf{w}) = \prod_{i=1}^{N} a_i^{\,y_i} (1 - a_i)^{1 - y_i}
@@ -239,36 +253,36 @@ Bài toán MLE: $\mathbf{w}^* = \arg\max_{\mathbf{w}} L(\mathbf{w})$.
 **Bước 3 – Lấy logarit, đổi dấu.** Tích của nhiều số nhỏ hơn 1 rất dễ tràn số dưới, và khó lấy đạo hàm. Vì $\ln$ là hàm đồng biến, cực đại $L$ tương đương cực đại $\ln L$, và tương đương cực tiểu $-\frac{1}{N}\ln L$. Ta được **hàm mất mát cross-entropy** (log loss):
 
 $$
-\boxed{J(\mathbf{w}) = -\frac{1}{N}\sum_{i=1}^{N} \Big[ y_i \ln a_i + (1 - y_i) \ln(1 - a_i) \Big], \qquad a_i = \sigma(\mathbf{x}_i^T\mathbf{w})}
+\boxed{\mathcal{L}(\mathbf{w}) = -\frac{1}{N}\sum_{i=1}^{N} \Big[ y_i \ln a_i + (1 - y_i) \ln(1 - a_i) \Big], \qquad a_i = \sigma(\mathbf{x}_i^T\mathbf{w})}
 $$
 
 **Ý nghĩa trực quan.** Với một mẫu:
 - Nếu $y_i = 1$: mất mát là $-\ln a_i$. Mô hình dự đoán $a_i \to 1$ (đúng) thì mất mát $\to 0$; dự đoán $a_i \to 0$ (sai) thì mất mát $\to +\infty$.
 - Nếu $y_i = 0$: mất mát là $-\ln(1 - a_i)$, tương tự theo chiều ngược lại.
 
-Như vậy cross-entropy **phạt rất nặng** những dự đoán sai mà lại tự tin. $J(\mathbf{w})$ là hàm **lồi** theo $\mathbf{w}$, nên mọi cực tiểu địa phương đều là cực tiểu toàn cục. Khi nghiệm hữu hạn tồn tại và chọn tốc độ học phù hợp với độ trơn của hàm, GD có thể tìm nghiệm tối ưu. Tính lồi riêng nó không bảo đảm nghiệm hữu hạn tồn tại: với dữ liệu tách biệt tuyến tính và không điều chuẩn, loss tiến về 0 trong khi chuẩn trọng số có thể tăng không bị chặn; vector tham số không hội tụ tới một nghiệm MLE hữu hạn.
+Như vậy cross-entropy **phạt rất nặng** những dự đoán sai mà lại tự tin. $\mathcal{L}(\mathbf{w})$ là hàm **lồi** theo $\mathbf{w}$, nên mọi cực tiểu địa phương đều là cực tiểu toàn cục. Khi nghiệm hữu hạn tồn tại và chọn tốc độ học phù hợp với độ trơn của hàm, GD có thể tìm nghiệm tối ưu. Tính lồi riêng nó không bảo đảm nghiệm hữu hạn tồn tại: với dữ liệu tách biệt tuyến tính và không điều chuẩn, loss tiến về 0 trong khi chuẩn trọng số có thể tăng không bị chặn; vector tham số không hội tụ tới một nghiệm MLE hữu hạn.
 
 #### b) Gradient của hàm mất mát
 
-Xét mất mát của một mẫu $J_i = -[y_i \ln a_i + (1 - y_i)\ln(1 - a_i)]$ với $a_i = \sigma(z_i)$, $z_i = \mathbf{x}_i^T\mathbf{w}$. Theo quy tắc đạo hàm hàm hợp:
+Xét mất mát của một mẫu $\ell_i = -[y_i \ln a_i + (1 - y_i)\ln(1 - a_i)]$ với $a_i = \sigma(z_i)$, $z_i = \mathbf{x}_i^T\mathbf{w}$. Theo quy tắc đạo hàm hàm hợp:
 
 $$
-\frac{\partial J_i}{\partial a_i} = -\frac{y_i}{a_i} + \frac{1 - y_i}{1 - a_i} = \frac{a_i - y_i}{a_i(1 - a_i)}, \qquad \frac{\partial a_i}{\partial z_i} = a_i(1 - a_i), \qquad \frac{\partial z_i}{\partial \mathbf{w}} = \mathbf{x}_i
+\frac{\partial \ell_i}{\partial a_i} = -\frac{y_i}{a_i} + \frac{1 - y_i}{1 - a_i} = \frac{a_i - y_i}{a_i(1 - a_i)}, \qquad \frac{\partial a_i}{\partial z_i} = a_i(1 - a_i), \qquad \frac{\partial z_i}{\partial \mathbf{w}} = \mathbf{x}_i
 $$
 
 Nhân lại, nhờ đạo hàm đẹp của sigmoid mà mẫu số triệt tiêu:
 
 $$
-\nabla_{\mathbf{w}} J_i = \frac{a_i - y_i}{a_i(1 - a_i)} \cdot a_i(1 - a_i) \cdot \mathbf{x}_i = (a_i - y_i)\,\mathbf{x}_i
+\nabla_{\mathbf{w}} \ell_i = \frac{a_i - y_i}{a_i(1 - a_i)} \cdot a_i(1 - a_i) \cdot \mathbf{x}_i = (a_i - y_i)\,\mathbf{x}_i
 $$
 
 Lấy trung bình trên $N$ mẫu, dạng ma trận ($\mathbf{X}$ kích thước $N \times (d+1)$, mỗi hàng là một $\mathbf{x}_i^T$):
 
 $$
-\boxed{\nabla_{\mathbf{w}} J(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N} (a_i - y_i)\,\mathbf{x}_i = \frac{1}{N}\mathbf{X}^T\big(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y}\big)}
+\boxed{\nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N} (a_i - y_i)\,\mathbf{x}_i = \frac{1}{N}\mathbf{X}^T\big(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y}\big)}
 $$
 
-Gradient này có dạng **giống hệt** gradient của MSE trong hồi quy tuyến tính, $\frac{1}{N}\mathbf{X}^T(\mathbf{X}\mathbf{w} - \mathbf{y})$, chỉ thay dự đoán $\mathbf{X}\mathbf{w}$ bằng $\sigma(\mathbf{X}\mathbf{w})$. Phương trình $\nabla J = \mathbf{0}$ không giải được dạng công thức (vì có hàm sigmoid), nên phải dùng phương pháp lặp.
+Gradient này có dạng **giống hệt** gradient của MSE trong hồi quy tuyến tính, $\frac{1}{N}\mathbf{X}^T(\mathbf{X}\mathbf{w} - \mathbf{y})$, chỉ thay dự đoán $\mathbf{X}\mathbf{w}$ bằng $\sigma(\mathbf{X}\mathbf{w})$. Phương trình $\nabla\mathcal{L} = \mathbf{0}$ không giải được dạng công thức (vì có hàm sigmoid), nên phải dùng phương pháp lặp.
 
 #### c) Tối ưu bằng Gradient Descent
 
@@ -291,21 +305,21 @@ Các biến thể Batch / Stochastic / Mini-batch và cách chọn $\eta$ đư�
 - Mẫu có $y_i = 0$ nhưng $a_i$ lớn: $\mathbf{w}$ bị trừ đi một phần $\mathbf{x}_i$, làm $a_i$ giảm.
 - Mẫu đã dự đoán đúng và tự tin ($a_i \approx y_i$): gần như không cập nhật.
 
-> **Điều chuẩn (weight decay).** Giống Ridge ở Bài 3, có thể thêm thành phần phạt L2 để giảm quá khớp: $J(\mathbf{w}) + \frac{\lambda}{2N}\|\mathbf{w}\|_2^2$. Khi dữ liệu tách biệt tuyến tính hoàn toàn, nếu không điều chuẩn thì $\|\mathbf{w}\|$ tăng vô hạn (sigmoid càng ngày càng giống hàm ngưỡng cứng). Lớp `LogisticRegression` của scikit-learn **mặc định có điều chuẩn L2** với tham số `C` $= 1/\lambda$ (mặc định `C=1.0`).
+> **Điều chuẩn (weight decay).** Giống Ridge ở Bài 3, có thể thêm thành phần phạt L2 để giảm quá khớp: $\mathcal{L}(\mathbf{w}) + \frac{\lambda}{2N}\|\mathbf{w}\|_2^2$. Khi dữ liệu tách biệt tuyến tính hoàn toàn, nếu không điều chuẩn thì $\|\mathbf{w}\|$ tăng vô hạn (sigmoid càng ngày càng giống hàm ngưỡng cứng). Lớp `LogisticRegression` của scikit-learn **mặc định có điều chuẩn L2** với tham số `C` $= 1/\lambda$ (mặc định `C=1.0`).
 
 #### d) Ví dụ: dự đoán khả năng thi đỗ
 
 **Tính tay một bước lặp.** Khởi tạo $\mathbf{w} = [w_0, w_1]^T = [0, 0]^T$, $\eta = 0.5$. Khi đó mọi $a_i = \sigma(0) = 0.5$ và
 
 $$
-J(\mathbf{0}) = -\frac{1}{20}\sum_{i=1}^{20} \ln 0.5 = \ln 2 \approx 0.6931
+\mathcal{L}(\mathbf{0}) = -\frac{1}{20}\sum_{i=1}^{20} \ln 0.5 = \ln 2 \approx 0.6931
 $$
 
 Gradient:
 - Thành phần $w_0$: $\frac{1}{20}\sum (0.5 - y_i) \cdot 1 = \frac{1}{20}(20 \times 0.5 - 10) = 0$ (vì có 10 người đỗ).
 - Thành phần $w_1$: $\frac{1}{20}\sum (0.5 - y_i)\, x_i = \frac{1}{20}\big(0.5 \times 55.75 - 38\big) = \frac{-10.125}{20} = -0.50625$, trong đó $55.75$ là tổng số giờ của 20 người, $38$ là tổng số giờ của 10 người đỗ.
 
-Cập nhật: $w_0 = 0 - 0.5 \times 0 = 0$, $\; w_1 = 0 - 0.5 \times (-0.50625) = 0.2531$. Mất mát giảm từ $0.6931$ xuống $J = 0.6410$. Mô hình đã "học" được rằng số giờ càng lớn thì xác suất đỗ càng cao.
+Cập nhật: $w_0 = 0 - 0.5 \times 0 = 0$, $\; w_1 = 0 - 0.5 \times (-0.50625) = 0.2531$. Mất mát giảm từ $0.6931$ xuống $\mathcal{L} = 0.6410$. Mô hình đã "học" được rằng số giờ càng lớn thì xác suất đỗ càng cao.
 
 **Cài đặt Gradient Descent bằng NumPy:**
 
@@ -339,14 +353,14 @@ def logistic_gd(Xbar, y, eta=0.5, n_iters=2000):
 
 w, history = logistic_gd(Xbar, y)
 print('w0 = %.4f, w1 = %.4f' % (w[0], w[1]))
-print('J(w) = %.4f' % history[-1])
+print('L(w) = %.4f' % history[-1])
 ```
 
 **Kết quả:**
 
 ```
 w0 = -4.0777, w1 = 1.5046
-J(w) = 0.4015
+L(w) = 0.4015
 ```
 
 Mô hình thu được:
@@ -370,26 +384,55 @@ for hours in [1, 2, 3, 4, 5]:
 
 ![Hồi quy Logistic cho bài toán ôn thi](images/logistic_study_hours.png)
 
-*Hình 4.2: (a) Đường cong xác suất thi đỗ theo số giờ ôn tập và ranh giới quyết định $x \approx 2.71$. (b) Hàm mất mát giảm nhanh trong khoảng 200 vòng lặp đầu rồi hội tụ về $0.4015$. Mã nguồn vẽ hình: [images/plot_logistic_study_hours.py](images/plot_logistic_study_hours.py).*
+*Hình 4.3: (a) Đường cong xác suất thi đỗ theo số giờ ôn tập và ranh giới quyết định $x \approx 2.71$. (b) Hàm mất mát giảm nhanh trong khoảng 200 vòng lặp đầu rồi hội tụ về $0.4015$. Mã nguồn vẽ hình: [images/plot_logistic_study_hours.ipynb](images/plot_logistic_study_hours.ipynb).*
 
 **Sử dụng thư viện scikit-learn:**
+
+Trong thực tế không cần tự cài đặt Gradient Descent: lớp `LogisticRegression` của scikit-learn làm sẵn toàn bộ. Cách dùng gồm ba bước như mọi mô hình của scikit-learn: **tạo mô hình** → **huấn luyện** bằng `fit` → **dự đoán** bằng `predict_proba`/`predict`.
 
 ```python
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-# C = 1/λ; C=np.inf nghĩa là λ = 0: không điều chuẩn, để so sánh với nghiệm MLE ở trên
+# Bước 1. Tạo mô hình.
+# Tham số C = 1/λ điều khiển mức điều chuẩn L2 (λ là hệ số phạt như Ridge ở Bài 3).
+# C=np.inf tương ứng λ = 0: không điều chuẩn, để so sánh với nghiệm Gradient Descent ở trên
 model = LogisticRegression(C=np.inf)
-model.fit(X.reshape(-1, 1), y)          # scikit-learn cần X dạng ma trận (N, d)
-print(model.intercept_, model.coef_)    # [-4.0787] [[1.5050]]
 
-print(model.predict_proba([[2], [4]]))  # cột 0: P(y=0), cột 1: P(y=1)
-print(model.predict([[2], [4]]))        # [0 1]
+# Bước 2. Huấn luyện: tìm w làm hàm mất mát cross-entropy nhỏ nhất.
+# scikit-learn yêu cầu X là ma trận (N, d): N mẫu, d đặc trưng.
+# Ở đây có 1 đặc trưng (số giờ ôn tập) nên đổi vector (20,) thành ma trận (20, 1).
+# Không cần thêm cột 1: hệ số chệch w0 được mô hình tự học (fit_intercept=True)
+model.fit(X.reshape(-1, 1), y)
+print('w0 =', model.intercept_)                   # hệ số chệch w0
+print('w1 =', model.coef_)                        # trọng số của đặc trưng, dạng (1, d)
+
+# Bước 3. Dự đoán cho hai sinh viên ôn 2 giờ và 4 giờ (mỗi hàng là một mẫu)
+X_new = np.array([[2], [4]])
+print(model.predict_proba(X_new))   # xác suất từng lớp: cột 0 là P(trượt), cột 1 là P(đỗ)
+print(model.predict(X_new))         # nhãn dự đoán: lớp có xác suất lớn hơn (ngưỡng 0.5)
 ```
 
-Nghiệm của scikit-learn khớp với nghiệm Gradient Descent tự cài đặt (sai khác ở chữ số thập phân thứ ba do điều kiện dừng của bộ tối ưu). Nếu để mặc định (`C=1.0`, có điều chuẩn L2), các hệ số sẽ nhỏ hơn về độ lớn ($w_0 \approx -3.14$, $w_1 \approx 1.15$) do bị phạt.
+**Kết quả:**
+
+```
+w0 = [-4.07874704]
+w1 = [[1.50504657]]
+[[0.74434084 0.25565916]
+ [0.12548983 0.87451017]]
+[0 1]
+```
 
 *Mã nguồn: [codes/03_logistic_sklearn_study_hours.ipynb](codes/03_logistic_sklearn_study_hours.ipynb).*
+
+Giải thích kết quả:
+
+- **Hệ số.** `intercept_` là $w_0$, `coef_` là $w_1$. Nghiệm $w_0 \approx -4.0787$, $w_1 \approx 1.5050$ khớp với nghiệm Gradient Descent tự cài đặt ($-4.0777$, $1.5046$). Sai khác rất nhỏ là vì Gradient Descent dừng sau 2000 vòng lặp, chưa tới đúng điểm cực tiểu; còn scikit-learn dùng thuật toán tối ưu bậc cao hơn (mặc định `lbfgs`) nên hội tụ sát hơn.
+- **`predict_proba`** trả về ma trận $(N, 2)$, mỗi hàng là một mẫu, mỗi cột là một lớp theo thứ tự `model.classes_` $= [0, 1]$. Cột 1 chính là $\sigma(\mathbf{x}^T\mathbf{w})$. Hai cột cộng lại bằng 1:
+  - ôn 2 giờ: $P(\text{đỗ}) = \sigma(-4.0787 + 1.5050 \times 2) = \sigma(-1.069) \approx 0.256$;
+  - ôn 4 giờ: $P(\text{đỗ}) = \sigma(-4.0787 + 1.5050 \times 4) = \sigma(1.941) \approx 0.875$.
+- **`predict`** trả về nhãn: lớp 1 khi $P(\text{đỗ}) \ge 0.5$, tương đương $x$ nằm bên phải ranh giới $x \approx 2.71$ giờ. Sinh viên ôn 2 giờ được dự đoán trượt (0), ôn 4 giờ được dự đoán đỗ (1).
+- **Vai trò của `C`.** Nếu để mặc định (`C=1.0`, tức có điều chuẩn L2), hàm mất mát được cộng thêm mức phạt cho trọng số lớn. Các hệ số khi đó nhỏ hơn về độ lớn ($w_0 \approx -3.14$, $w_1 \approx 1.15$), đường cong sigmoid thoải hơn và xác suất dự đoán bớt "tự tin". `C` càng nhỏ thì phạt càng mạnh.
 
 ---
 
@@ -410,44 +453,84 @@ Chữ đầu (True/False) cho biết dự đoán **đúng hay sai**; chữ sau (
 
 #### b) Ma trận nhầm lẫn
 
-**Ma trận nhầm lẫn** xếp bốn số trên thành bảng 2 × 2. Trong bài này dùng cùng quy ước với scikit-learn: **hàng là nhãn thật, cột là nhãn dự đoán**, lớp 0 đứng trước:
+**Ma trận nhầm lẫn** xếp bốn số trên thành bảng 2 × 2. Trong bài này dùng cùng quy ước với scikit-learn: **hàng là nhãn thật, cột là nhãn dự đoán**, lớp 0 đứng trước (Hình 4.4).
 
-| | Dự đoán 0 | Dự đoán 1 |
-|---|---|---|
-| **Thật 0** | TN | FP |
-| **Thật 1** | FN | TP |
+<img src="images/confusion_matrix.png" alt="Ma trận nhầm lẫn 2 × 2" width="50%">
+
+*Hình 4.4: Ma trận nhầm lẫn của bài toán phân loại nhị phân. Hàng là nhãn thật $y$, cột là nhãn dự đoán $\hat{y}$. Hai ô xanh trên đường chéo chính là dự đoán đúng, hai ô đỏ ngoài đường chéo là dự đoán sai. Mã nguồn vẽ hình: [images/plot_confusion_matrix.ipynb](images/plot_confusion_matrix.ipynb).*
 
 Đường chéo chính (TN, TP) là các dự đoán đúng; ngoài đường chéo (FP, FN) là các dự đoán sai. Ma trận nhầm lẫn cho biết **mô hình nhầm theo kiểu nào**, điều mà một con số độ chính xác không thể hiện được.
 
-> **Lưu ý:** một số sách đặt lớp dương lên trước (TP ở góc trên bên trái). Khi đọc ma trận nhầm lẫn luôn cần xác định hàng là gì, cột là gì.
-
 Với $C$ lớp, ma trận nhầm lẫn có kích thước $C \times C$, phần tử hàng $i$ cột $j$ là số mẫu thuộc lớp $i$ bị dự đoán thành lớp $j$.
+
+*Ví dụ thực tế: xét nghiệm sàng lọc bệnh.* Xem một bộ xét nghiệm nhanh như một mô hình phân loại: lớp dương (1) là "mắc bệnh", lớp âm (0) là "không bệnh". Giả sử có 1000 người đi xét nghiệm, trong đó 100 người thực sự mắc bệnh. Kết quả được xếp vào ma trận nhầm lẫn ở Hình 4.5.
+
+<img src="images/confusion_matrix_screening.png" alt="Ma trận nhầm lẫn của xét nghiệm sàng lọc" width="50%">
+
+*Hình 4.5: Ma trận nhầm lẫn của xét nghiệm sàng lọc trên 1000 người (số liệu giả định). Mỗi hàng cộng lại bằng số người thật thuộc lớp đó: 900 người không bệnh, 100 người mắc bệnh. Mã nguồn vẽ hình: [images/plot_confusion_matrix_screening.ipynb](images/plot_confusion_matrix_screening.ipynb).*
+
+Đọc từng ô:
+
+- **TN = 855**: người khỏe, xét nghiệm âm tính. Đúng.
+- **TP = 90**: người bệnh được phát hiện. Đúng, đây là mục đích chính của xét nghiệm.
+- **FP = 45** (sai lầm loại I): người khỏe bị báo nhầm là mắc bệnh. Hậu quả là lo lắng, tốn thêm chi phí cho một xét nghiệm khẳng định, nhưng thường sửa được.
+- **FN = 10** (sai lầm loại II): người bệnh bị bỏ sót. Họ ra về với kết quả "âm tính" và không được điều trị kịp thời, nên đây là lỗi **nguy hiểm hơn** trong bài toán y tế.
+
+Xét nghiệm đúng $855 + 90 = 945$ trên 1000 người (94.5%). Nhưng con số 94.5% không cho biết **10 trong 100 người bệnh đã bị bỏ sót**; chỉ khi nhìn vào ma trận nhầm lẫn mới thấy được điều này. Hai loại sai cũng có cái giá khác nhau tùy bài toán: với sàng lọc bệnh, FN đắt hơn FP; với bộ lọc thư rác, FP (thư quan trọng bị chuyển vào thư rác) lại đắt hơn FN. Các chỉ số ở mục 4.1.6 lượng hóa từng loại sai này.
 
 #### c) Ví dụ
 
-Dùng mô hình ở mục 4.1.4 với ngưỡng 0.5 (dự đoán đỗ khi số giờ $\ge 2.75$) trên 20 sinh viên:
+Dùng mô hình ở mục 4.1.4 với ngưỡng $\tau = 0.3$ (dự đoán đỗ khi số giờ $\ge 2.25$) trên 20 sinh viên. Ở đây chọn ngưỡng 0.3 thay cho 0.5 vì với ngưỡng 0.5, ma trận đối xứng (TN = TP = 8, FP = FN = 2) nên mọi chỉ số ở mục 4.1.6 đều bằng 0.8, khó thấy sự khác nhau giữa chúng.
 
 | Số giờ | 0.50 – 1.50 | 1.75 | 1.75 | 2.00 | 2.25 | 2.50 | 2.75 | 3.00 | 3.25 | 3.50 | 4.00 – 5.50 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Thật | 0 (5 người) | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 (6 người) |
-| Dự đoán | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |
-| Kết quả | TN | TN | **FN** | TN | **FN** | TN | TP | **FP** | TP | **FP** | TP |
+| Dự đoán | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| Kết quả | TN | TN | **FN** | TN | TP | **FP** | TP | **FP** | TP | **FP** | TP |
 
-Đếm được TN = 8, FP = 2 (học 3.00 và 3.50 giờ nhưng trượt), FN = 2 (học 1.75 và 2.25 giờ nhưng đỗ), TP = 8.
+Đếm được TN = 7, FP = 3 (học 2.50, 3.00 và 3.50 giờ nhưng trượt), FN = 1 (học 1.75 giờ nhưng đỗ), TP = 9.
 
 | | Dự đoán trượt (0) | Dự đoán đỗ (1) |
 |---|---|---|
-| **Thật trượt (0)** | TN = 8 | FP = 2 |
-| **Thật đỗ (1)** | FN = 2 | TP = 8 |
+| **Thật trượt (0)** | TN = 7 | FP = 3 |
+| **Thật đỗ (1)** | FN = 1 | TP = 9 |
 
 ```python
 from sklearn.metrics import confusion_matrix
 
-y_pred = (sigmoid(Xbar @ w) >= 0.5).astype(int)
+threshold = 0.3                                        # ngưỡng phân loại τ
+y_pred = (sigmoid(Xbar @ w) >= threshold).astype(int)
 print(confusion_matrix(y, y_pred))
-# [[8 2]
-#  [2 8]]
+# [[7 3]
+#  [1 9]]
 tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
+```
+
+**Ma trận nhầm lẫn chuẩn hóa.** Khi hai lớp có số mẫu khác nhau, nên đổi số đếm thành tỉ lệ bằng tham số `normalize`:
+
+| `normalize` | Chia cho | Kết quả với ví dụ trên | Ý nghĩa ô dưới phải |
+|---|---|---|---|
+| `'true'` | tổng hàng (số mẫu thật mỗi lớp) | $\begin{bmatrix} 0.7 & 0.3 \\ 0.1 & 0.9 \end{bmatrix}$ | Recall $= 9/10$ |
+| `'pred'` | tổng cột (số mẫu dự đoán mỗi lớp) | $\begin{bmatrix} 0.875 & 0.25 \\ 0.125 & 0.75 \end{bmatrix}$ | Precision $= 9/12$ |
+| `'all'` | tổng số mẫu | $\begin{bmatrix} 0.35 & 0.15 \\ 0.05 & 0.45 \end{bmatrix}$ | tổng đường chéo là Accuracy $= 0.8$ |
+
+```python
+print(confusion_matrix(y, y_pred, normalize='true'))
+# [[0.7 0.3]
+#  [0.1 0.9]]
+```
+
+Để biểu diễn ma trận nhầm lẫn bằng đồ họa, dùng `ConfusionMatrixDisplay`: mỗi ô được tô màu theo số mẫu, ô càng đậm thì càng nhiều mẫu. Tham số `normalize='true'` chia mỗi hàng cho tổng của hàng, khi đó ô dưới phải chính là Recall (mục 4.1.6), thuận tiện khi hai lớp chênh lệch số mẫu.
+
+```python
+import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
+
+class_names = ['Trượt (0)', 'Đỗ (1)']  # tên hiển thị của lớp 0 và lớp 1
+ConfusionMatrixDisplay.from_predictions(y, y_pred, display_labels=class_names,
+                                        cmap='Blues', colorbar=False)
+plt.show()
+# Tỉ lệ theo từng nhãn thật: thêm normalize='true', values_format='.0%'
 ```
 
 *Mã nguồn: [codes/04_confusion_matrix.ipynb](codes/04_confusion_matrix.ipynb).*
@@ -462,7 +545,7 @@ $$
 \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
 $$
 
-Tỉ lệ mẫu được dự đoán đúng trên tổng số mẫu. Ví dụ trên: $\frac{8 + 8}{20} = 0.80$.
+Tỉ lệ mẫu được dự đoán đúng trên tổng số mẫu. Ví dụ trên: $\frac{9 + 7}{20} = 0.80$.
 
 **Hạn chế với dữ liệu mất cân bằng.** Giả sử 1.000 người đi khám có 10 người mắc bệnh. Một "mô hình" luôn trả lời *không bệnh* đạt Accuracy $= 990/1000 = 99\%$ nhưng **bỏ sót toàn bộ** người bệnh, hoàn toàn vô dụng. Khi các lớp chênh lệch nhiều, cần thêm các chỉ số sau.
 
@@ -472,7 +555,7 @@ $$
 \text{Precision} = \frac{TP}{TP + FP}
 $$
 
-*Trong số các mẫu mô hình **dự đoán là dương**, bao nhiêu phần trăm thật sự dương?* Precision cao nghĩa là ít báo nhầm. Quan trọng khi **FP gây tốn kém**, ví dụ lọc thư rác (đưa nhầm thư quan trọng vào thư mục rác), gợi ý sản phẩm. Ví dụ trên: $\frac{8}{8 + 2} = 0.80$.
+*Trong số các mẫu mô hình **dự đoán là dương**, bao nhiêu phần trăm thật sự dương?* Precision cao nghĩa là ít báo nhầm. Quan trọng khi **FP gây tốn kém**, ví dụ lọc thư rác (đưa nhầm thư quan trọng vào thư mục rác), gợi ý sản phẩm. Ví dụ trên: $\frac{9}{9 + 3} = 0.75$.
 
 #### c) Recall (độ nhạy, độ phủ)
 
@@ -480,11 +563,11 @@ $$
 \text{Recall} = \frac{TP}{TP + FN}
 $$
 
-*Trong số các mẫu **thật sự dương**, mô hình tìm ra được bao nhiêu phần trăm?* Recall còn gọi là **độ nhạy** (sensitivity) hay **TPR** (True Positive Rate). Recall cao nghĩa là ít bỏ sót. Quan trọng khi **FN gây hậu quả nghiêm trọng**, ví dụ sàng lọc ung thư, phát hiện gian lận. Ví dụ trên: $\frac{8}{8 + 2} = 0.80$.
+*Trong số các mẫu **thật sự dương**, mô hình tìm ra được bao nhiêu phần trăm?* Recall còn gọi là **độ nhạy** (sensitivity) hay **TPR** (True Positive Rate). Recall cao nghĩa là ít bỏ sót. Quan trọng khi **FN gây hậu quả nghiêm trọng**, ví dụ sàng lọc ung thư, phát hiện gian lận. Ví dụ trên: $\frac{9}{9 + 1} = 0.90$.
 
-Tương tự, với lớp âm có **độ đặc hiệu** (specificity) $= \frac{TN}{TN + FP}$: tỉ lệ mẫu âm được nhận ra đúng.
+Tương tự, với lớp âm có **độ đặc hiệu** (specificity) $= \frac{TN}{TN + FP}$: tỉ lệ mẫu âm được nhận ra đúng. Ví dụ trên: $\frac{7}{7 + 3} = 0.70$.
 
-**Đánh đổi Precision – Recall.** Hạ ngưỡng $\tau$ thì mô hình dự đoán "dương" nhiều hơn: Recall tăng nhưng Precision thường giảm (báo nhầm nhiều hơn). Nâng ngưỡng thì ngược lại. Không thể chỉ tối ưu một chỉ số.
+**Đánh đổi Precision – Recall.** Hạ ngưỡng $\tau$ thì mô hình dự đoán "dương" nhiều hơn: Recall tăng nhưng Precision thường giảm (báo nhầm nhiều hơn). Nâng ngưỡng thì ngược lại. Không thể chỉ tối ưu một chỉ số. Ví dụ ôn thi: với ngưỡng 0.5 thì Precision = Recall = 0.80; hạ xuống 0.3 thì Recall tăng lên 0.90 (chỉ bỏ sót 1 người đỗ) nhưng Precision giảm còn 0.75 (báo nhầm 3 người trượt).
 
 #### d) F1-Score
 
@@ -492,7 +575,7 @@ $$
 F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} = \frac{2\,TP}{2\,TP + FP + FN}
 $$
 
-F1 là **trung bình điều hòa** của Precision và Recall. Trung bình điều hòa nhỏ khi một trong hai số nhỏ, nên F1 chỉ cao khi **cả hai đều cao**. Ví dụ: Precision $= 1$, Recall $= 0.1$ thì trung bình cộng là $0.55$ nhưng $F_1 \approx 0.18$. Ví dụ ôn thi: $F_1 = \frac{2 \times 8}{2 \times 8 + 2 + 2} = 0.80$.
+F1 là **trung bình điều hòa** của Precision và Recall. Trung bình điều hòa nhỏ khi một trong hai số nhỏ, nên F1 chỉ cao khi **cả hai đều cao**. Ví dụ: Precision $= 1$, Recall $= 0.1$ thì trung bình cộng là $0.55$ nhưng $F_1 \approx 0.18$. Ví dụ ôn thi: $F_1 = \frac{2 \times 9}{2 \times 9 + 3 + 1} \approx 0.82$.
 
 | Chỉ số | Câu hỏi trả lời | Dùng khi |
 |---|---|---|
@@ -506,9 +589,9 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.metrics import classification_report
 
 print('Accuracy :', accuracy_score(y, y_pred))    # 0.8
-print('Precision:', precision_score(y, y_pred))   # 0.8
-print('Recall   :', recall_score(y, y_pred))      # 0.8
-print('F1       :', f1_score(y, y_pred))          # 0.8
+print('Precision:', precision_score(y, y_pred))   # 0.75
+print('Recall   :', recall_score(y, y_pred))      # 0.9
+print('F1       :', f1_score(y, y_pred))          # 0.818...
 print(classification_report(y, y_pred))           # báo cáo cho từng lớp
 ```
 
@@ -526,7 +609,7 @@ rồi vẽ điểm (FPR, TPR). Ngưỡng $\tau = 1$ cho điểm $(0, 0)$ (không
 
 ![Đường cong ROC cho bài toán ôn thi](images/roc_study_hours.png)
 
-*Hình 4.3: Đường cong ROC của mô hình ôn thi. Điểm đỏ ứng với ngưỡng 0.5 (FPR = 2/10, TPR = 8/10). Mã nguồn vẽ hình: [images/plot_roc_study_hours.py](images/plot_roc_study_hours.py).*
+*Hình 4.6: Đường cong ROC của mô hình ôn thi. Điểm đỏ ứng với ngưỡng 0.3 (FPR = 3/10, TPR = 9/10). Mã nguồn vẽ hình: [images/plot_roc_study_hours.ipynb](images/plot_roc_study_hours.ipynb).*
 
 **AUC** (Area Under the Curve) là diện tích dưới đường cong ROC, $0 \le \text{AUC} \le 1$:
 
@@ -642,26 +725,26 @@ Cả hồi quy Logistic và Perceptron đều có ranh giới là siêu phẳng 
 Gọi $\mathcal{M}$ là tập các điểm bị phân loại sai với $\mathbf{w}$ hiện tại. Cách tự nhiên nhất là đếm số điểm sai:
 
 $$
-J_1(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} \big(-y_i\, \text{sgn}(\mathbf{x}_i^T\mathbf{w})\big)
+\mathcal{L}_1(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} \big(-y_i\, \text{sgn}(\mathbf{x}_i^T\mathbf{w})\big)
 $$
 
 (mỗi điểm sai có $y_i\,\text{sgn}(\mathbf{x}_i^T\mathbf{w}) = -1$, đóng góp $+1$). Nhưng hàm $\text{sgn}$ rời rạc, không khả vi, không dùng được Gradient Descent. Bỏ hàm $\text{sgn}$ đi, ta được **hàm mất mát Perceptron**:
 
 $$
-\boxed{J(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} \big(-y_i\, \mathbf{x}_i^T\mathbf{w}\big)}
+\boxed{\mathcal{L}(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} \big(-y_i\, \mathbf{x}_i^T\mathbf{w}\big)}
 $$
 
 Tính chất:
-- $J(\mathbf{w}) \ge 0$, vì mỗi điểm sai có $y_i\,\mathbf{x}_i^T\mathbf{w} \le 0$.
-- $J(\mathbf{w}) = 0$ khi không còn điểm nào sai.
-- Điểm sai nằm **càng sâu** trong vùng của lớp kia (càng xa siêu phẳng) thì đóng góp càng lớn. $J$ không chỉ đếm lỗi mà còn đo **mức độ sai**.
+- $\mathcal{L}(\mathbf{w}) \ge 0$, vì mỗi điểm sai có $y_i\,\mathbf{x}_i^T\mathbf{w} \le 0$.
+- $\mathcal{L}(\mathbf{w}) = 0$ khi không còn điểm nào sai.
+- Điểm sai nằm **càng sâu** trong vùng của lớp kia (càng xa siêu phẳng) thì đóng góp càng lớn. $\mathcal{L}$ không chỉ đếm lỗi mà còn đo **mức độ sai**.
 
 #### b) Quy tắc cập nhật trọng số
 
 Xét một điểm bị phân loại sai $(\mathbf{x}_i, y_i)$. Mất mát và gradient tại điểm đó:
 
 $$
-J(\mathbf{w}; \mathbf{x}_i, y_i) = -y_i\,\mathbf{x}_i^T\mathbf{w}, \qquad \nabla_{\mathbf{w}} J = -y_i\,\mathbf{x}_i
+\ell_i(\mathbf{w}) = -y_i\,\mathbf{x}_i^T\mathbf{w}, \qquad \nabla_{\mathbf{w}} \ell_i = -y_i\,\mathbf{x}_i
 $$
 
 Áp dụng SGD với tốc độ học $\eta$: $\mathbf{w} \leftarrow \mathbf{w} - \eta(-y_i\,\mathbf{x}_i) = \mathbf{w} + \eta\, y_i\,\mathbf{x}_i$. Với PLA thường chọn $\eta = 1$:
@@ -759,7 +842,7 @@ print('Số điểm sai:', np.sum(predict(w, Xbar) != y))   # 0
 
 ![Minh họa thuật toán PLA](images/pla.png)
 
-*Hình 4.4: Các lần cập nhật của PLA trên 20 điểm hai chiều (hình vuông: lớp $+1$, hình tròn: lớp $-1$). Đường liền là ranh giới hiện tại, điểm khoanh tròn là điểm bị phân loại sai được chọn, đường nét đứt là ranh giới sau khi cập nhật $\mathbf{w} \leftarrow \mathbf{w} + y_i\mathbf{x}_i$. Thuật toán dừng sau 4 lần cập nhật. Mã nguồn vẽ hình: [images/plot_pla.py](images/plot_pla.py).*
+*Hình 4.7: Các lần cập nhật của PLA trên 20 điểm hai chiều (hình vuông: lớp $+1$, hình tròn: lớp $-1$). Đường liền là ranh giới hiện tại, điểm khoanh tròn là điểm bị phân loại sai được chọn, đường nét đứt là ranh giới sau khi cập nhật $\mathbf{w} \leftarrow \mathbf{w} + y_i\mathbf{x}_i$. Thuật toán dừng sau 4 lần cập nhật. Mã nguồn vẽ hình: [images/plot_pla.ipynb](images/plot_pla.ipynb).*
 
 scikit-learn có sẵn lớp `sklearn.linear_model.Perceptron`:
 
@@ -981,7 +1064,7 @@ model_balanced.fit(X_train, y_train)
 
 ![Đánh giá mô hình dự đoán ung thư phổi](images/lung_cancer.png)
 
-*Hình 4.5: Ma trận nhầm lẫn của (a) mô hình mặc định, (b) mô hình `class_weight='balanced'`, và (c) đường cong ROC của hai mô hình trên tập kiểm tra. Mã nguồn vẽ hình: [images/plot_lung_cancer.py](images/plot_lung_cancer.py).*
+*Hình 4.8: Ma trận nhầm lẫn của (a) mô hình mặc định, (b) mô hình `class_weight='balanced'`, và (c) đường cong ROC của hai mô hình trên tập kiểm tra. Mã nguồn vẽ hình: [images/plot_lung_cancer.ipynb](images/plot_lung_cancer.ipynb).*
 
 Hai mô hình có cùng Accuracy nhưng nhầm theo hai kiểu khác nhau: mô hình mặc định ít bỏ sót người bệnh hơn (FN = 2) nhưng báo nhầm nhiều (FP = 4); mô hình `balanced` không báo nhầm ai (FP = 0) nhưng bỏ sót 6 người bệnh.
 
@@ -1058,6 +1141,72 @@ for metric in ['accuracy', 'f1', 'roc_auc']:
 
 ROC-AUC trung bình trên các fold của train khoảng 0.92: mô hình hồi quy Logistic phân biệt khá tốt hai nhóm trên bộ dữ liệu này.
 
+#### e) So sánh với thuật toán PLA (Perceptron)
+
+Giữ nguyên tập train/test và bước chuẩn hóa, thay hồi quy Logistic bằng Perceptron để so sánh hai phương pháp đã học ở mục 4.1 và 4.2.
+
+**Bước 1. Chạy PLA bằng NumPy để kiểm tra dữ liệu có tách biệt tuyến tính không.** Nhãn đổi sang $\{-1, +1\}$, thêm cột 1 vào $\mathbf{X}$; mỗi epoch duyệt lần lượt 220 mẫu train, cập nhật $\mathbf{w} \leftarrow \mathbf{w} + y_i\mathbf{x}_i$ khi mẫu $i$ bị sai, rồi đếm số điểm sai trên toàn tập train:
+
+```python
+scaler = StandardScaler().fit(X_train)                  # chuẩn hóa học trên train
+X_train_bar = np.hstack([np.ones((len(X_train), 1)),    # thêm cột 1 cho hệ số chệch w0
+                         scaler.transform(X_train)])
+y_train_pm = np.where(y_train.to_numpy() == 1, 1, -1)   # nhãn PLA: +1 có bệnh, -1 không bệnh
+
+n_epochs = 50                                  # số lần duyệt hết tập train
+w = np.zeros(X_train_bar.shape[1])             # trọng số w = [w0, w1, ..., wd], khởi tạo 0
+pla_errors = []                                # số điểm train bị sai sau mỗi epoch
+for epoch in range(n_epochs):
+    for i in range(len(y_train_pm)):
+        if y_train_pm[i] * (X_train_bar[i] @ w) <= 0:   # điểm i bị phân loại sai
+            w = w + y_train_pm[i] * X_train_bar[i]      # cập nhật w <- w + y_i x_i
+    y_hat = np.where(X_train_bar @ w >= 0, 1, -1)
+    pla_errors.append(int(np.sum(y_hat != y_train_pm)))
+```
+
+*Mã nguồn: [codes/10_lung_cancer_logistic_regression.ipynb](codes/10_lung_cancer_logistic_regression.ipynb).*
+
+Số điểm sai của PLA dao động trong khoảng 14 – 32 suốt 50 epoch, không bao giờ về 0 (Hình 4.9a): dữ liệu **không tách biệt tuyến tính**, nên PLA không dừng và $\mathbf{w}$ cuối cùng phụ thuộc vào thời điểm cắt vòng lặp. Hồi quy Logistic tối ưu hàm mất mát lồi, cho nghiệm ổn định với 15 điểm sai trên train.
+
+**Bước 2. Huấn luyện `Perceptron` của scikit-learn.** `Perceptron` tự dừng khi hàm mất mát không giảm thêm (tham số `tol`), nên vẫn kết thúc dù dữ liệu không tách biệt tuyến tính. Mô hình không có `predict_proba`; để tính ROC-AUC dùng `decision_function`, trả về điểm số $s = \mathbf{x}^T\mathbf{w}$:
+
+```python
+from sklearn.linear_model import Perceptron
+
+perceptron_model = make_pipeline(StandardScaler(), Perceptron(max_iter=1000, random_state=42))
+perceptron_model.fit(X_train, y_train)
+y_pred_perceptron = perceptron_model.predict(X_test)
+score_perceptron = perceptron_model.decision_function(X_test)   # điểm số s = x^T w, dùng cho ROC-AUC
+print(confusion_matrix(y_test, y_pred_perceptron))
+print('ROC-AUC:', roc_auc_score(y_test, score_perceptron))
+```
+
+*Mã nguồn: [codes/10_lung_cancer_logistic_regression.ipynb](codes/10_lung_cancer_logistic_regression.ipynb).*
+
+| Mô hình (tập kiểm tra) | TN | FP | FN | TP | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|---|---|---|---|---|
+| Hồi quy Logistic | 4 | 4 | 2 | 46 | 0.893 | 0.920 | 0.958 | 0.939 | 0.943 |
+| Perceptron (PLA) | 5 | 3 | 3 | 45 | 0.893 | 0.938 | 0.938 | 0.938 | 0.909 |
+
+![So sánh hồi quy Logistic và PLA trên dữ liệu ung thư phổi](images/lung_cancer_pla.png)
+
+*Hình 4.9: (a) Số điểm train bị phân loại sai sau mỗi epoch của PLA, so với hồi quy Logistic (đường nét đứt). (b) Ma trận nhầm lẫn của Perceptron trên tập kiểm tra. (c) Đường cong ROC của hai mô hình trên tập kiểm tra. Mã nguồn vẽ hình: [images/plot_lung_cancer_pla.ipynb](images/plot_lung_cancer_pla.ipynb).*
+
+**Bước 3. So sánh bằng kiểm định chéo trên train.** Test chỉ khác nhau một mẫu nên chưa đủ kết luận; dùng lại CV 5 phần ở mục d) cho cả hai mô hình:
+
+| CV 5 phần trên train | Accuracy | F1 | ROC-AUC |
+|---|---|---|---|
+| Hồi quy Logistic | 0.914 ± 0.036 | 0.951 ± 0.020 | 0.921 ± 0.033 |
+| Perceptron (PLA) | 0.891 ± 0.017 | 0.937 ± 0.010 | 0.871 ± 0.061 |
+
+Thay đổi thứ tự duyệt mẫu (`random_state` từ 0 đến 9) làm ROC-AUC CV của Perceptron dao động từ 0.858 đến 0.909, trong khi nghiệm của hồi quy Logistic không phụ thuộc thứ tự duyệt.
+
+**Nhận xét:**
+- Ở ngưỡng mặc định, hai mô hình có Accuracy và F1 gần như nhau: cả hai đều là bộ phân loại tuyến tính, ranh giới là siêu phẳng $\mathbf{x}^T\mathbf{w} = 0$.
+- Hồi quy Logistic tốt hơn rõ ở ROC-AUC (cả trên test lẫn CV). Điểm số $\mathbf{x}^T\mathbf{w}$ của Perceptron chỉ được huấn luyện để đặt điểm sai về đúng phía siêu phẳng, không được huấn luyện để xếp hạng mọi mẫu như cross-entropy.
+- Hồi quy Logistic cho **xác suất**, nên chọn được ngưỡng theo yêu cầu Recall như mục c). Perceptron chỉ cho nhãn cứng; điểm số $\mathbf{x}^T\mathbf{w}$ không có ý nghĩa xác suất.
+- Với dữ liệu không tách biệt tuyến tính và bài toán y khoa cần xác suất, cần chọn ngưỡng, hồi quy Logistic phù hợp hơn PLA.
+
 ---
 
 ## 4.4. Kết luận
@@ -1068,7 +1217,7 @@ ROC-AUC trung bình trên các fold của train khoảng 0.92: mô hình hồi q
 - Hàm mất mát **cross-entropy** thu được từ **MLE**; gradient $\frac{1}{N}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y})$; tối ưu bằng **Gradient Descent** vì không có nghiệm giải tích.
 - **Ma trận nhầm lẫn** (TP, TN, FP, FN) cho biết mô hình nhầm theo kiểu nào. **Accuracy** dễ gây hiểu lầm với dữ liệu mất cân bằng; **Precision** đo độ tin cậy khi báo dương, **Recall** đo khả năng không bỏ sót, **F1** cân bằng cả hai; **ROC-AUC** đánh giá mô hình trên mọi ngưỡng.
 - **Perceptron** dùng hàm dấu, phân loại bằng siêu phẳng $\mathbf{x}^T\mathbf{w} = 0$. **PLA** cập nhật $\mathbf{w} \leftarrow \mathbf{w} + y_i\mathbf{x}_i$ tại điểm bị phân loại sai; hội tụ sau hữu hạn bước khi dữ liệu tách biệt tuyến tính, không hội tụ nếu ngược lại.
-- Thực hành với dữ liệu ung thư phổi cho thấy quy trình đầy đủ: làm sạch (xóa trùng, mã hóa), chia tập có `stratify`, chuẩn hóa trong `Pipeline`, đánh giá bằng nhiều chỉ số, xử lý mất cân bằng bằng `class_weight` hoặc chọn ngưỡng phù hợp với bài toán.
+- Thực hành với dữ liệu ung thư phổi cho thấy quy trình đầy đủ: làm sạch (xóa trùng, mã hóa), chia tập có `stratify`, chuẩn hóa trong `Pipeline`, đánh giá bằng nhiều chỉ số, xử lý mất cân bằng bằng `class_weight` hoặc chọn ngưỡng phù hợp với bài toán. Trên cùng dữ liệu, PLA không hội tụ vì dữ liệu không tách biệt tuyến tính và cho ROC-AUC thấp hơn hồi quy Logistic.
 
 ---
 
@@ -1105,5 +1254,5 @@ ROC-AUC trung bình trên các fold của train khoảng 0.92: mô hình hồi q
 17. Với dữ liệu ung thư phổi:
     - a. Không xóa dòng trùng lặp, huấn luyện lại và so sánh kết quả. Vì sao không xóa trùng có thể làm kết quả đánh giá "đẹp" hơn thực tế?
     - b. Vẽ đường cong Precision – Recall (`PrecisionRecallDisplay`) và chọn ngưỡng sao cho Recall lớp bệnh $\ge 0.95$ với Precision cao nhất có thể.
-    - c. Huấn luyện `Perceptron` của scikit-learn trên cùng dữ liệu, so sánh với hồi quy Logistic theo Accuracy, F1, ma trận nhầm lẫn. Có tính được ROC-AUC từ `predict_proba` cho Perceptron không? Dùng hàm nào thay thế?
+    - c. Ở mục 4.3.4 e), thay PLA thường bằng **PLA bỏ túi** (pocket): sau mỗi epoch, giữ lại $\mathbf{w}$ có ít điểm train sai nhất từ trước đến nay. So sánh $\mathbf{w}$ bỏ túi với hồi quy Logistic trên tập kiểm tra theo Accuracy, F1, ma trận nhầm lẫn và ROC-AUC (dùng điểm số $\mathbf{x}^T\mathbf{w}$).
     - d. Thử `LogisticRegression` với `C` $\in \{0.01, 0.1, 1, 10, 100\}$, chọn `C` tốt nhất bằng kiểm định chéo theo `roc_auc`.

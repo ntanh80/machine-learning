@@ -133,7 +133,7 @@ $$
 
 ![Vai trò của hệ số chệch w0](images/bias_term.png)
 
-*Hình 3.1: Mô phỏng 40 căn nhà với giá thực $y \approx 800 + 15x$. Đường **có** $w_0$ (xanh) bám sát dữ liệu. Đường **không có** $w_0$ (đỏ, nét đứt) bị buộc đi qua gốc tọa độ nên phải "dốc" hơn để bù: nó dự đoán thấp với nhà nhỏ và cao với nhà lớn. Mã nguồn vẽ hình: [images/plot_bias_term.py](images/plot_bias_term.py).*
+*Hình 3.1: Mô phỏng 40 căn nhà với giá thực $y \approx 800 + 15x$. Đường **có** $w_0$ (xanh) bám sát dữ liệu. Đường **không có** $w_0$ (đỏ, nét đứt) bị buộc đi qua gốc tọa độ nên phải "dốc" hơn để bù: nó dự đoán thấp với nhà nhỏ và cao với nhà lớn. Mã nguồn vẽ hình: [images/plot_bias_term.ipynb](images/plot_bias_term.ipynb).*
 
 ---
 
@@ -297,7 +297,7 @@ plt.show()
 
 ![Chiều cao và cân nặng của tập huấn luyện](images/height_weight.png)
 
-*Hình 3.2: Chiều cao và cân nặng của 13 người trong tập huấn luyện. Mã nguồn vẽ hình: [images/plot_height_weight.py](images/plot_height_weight.py).*
+*Hình 3.2: Chiều cao và cân nặng của 13 người trong tập huấn luyện. Mã nguồn vẽ hình: [images/plot_height_weight.ipynb](images/plot_height_weight.ipynb).*
 
 Các điểm dữ liệu nằm **gần như trên một đường thẳng**, vì vậy hồi quy tuyến tính có khả năng cho kết quả tốt.
 
@@ -466,7 +466,7 @@ Chiều cao 160 cm, cân nặng thực tế 56 kg, dự đoán 55.74 kg
 
 ![Đường hồi quy theo nghiệm công thức](images/normal_equation_fit.png)
 
-*Hình 3.3: Đường hồi quy $\hat{y} = 0.5592x - 33.7354$ tìm được bằng công thức (xanh dương) đi sát 13 điểm huấn luyện (đỏ). Với tập kiểm tra, ô vuông xanh lá là cân nặng thực tế, dấu × là giá trị dự đoán; đường chấm nối hai giá trị cho thấy sai số. Mã nguồn vẽ hình: [images/plot_normal_equation_fit.py](images/plot_normal_equation_fit.py).*
+*Hình 3.3: Đường hồi quy $\hat{y} = 0.5592x - 33.7354$ tìm được bằng công thức (xanh dương) đi sát 13 điểm huấn luyện (đỏ). Với tập kiểm tra, ô vuông xanh lá là cân nặng thực tế, dấu × là giá trị dự đoán; đường chấm nối hai giá trị cho thấy sai số. Mã nguồn vẽ hình: [images/plot_normal_equation_fit.ipynb](images/plot_normal_equation_fit.ipynb).*
 
 Kết quả dự đoán khá sát với giá trị thực tế.
 
@@ -591,7 +591,7 @@ Chia dữ liệu giá nhà thành train/test trước, rồi lấy ngẫu nhiên
 
 ![Quá khớp với đa thức bậc cao](images/overfitting.png)
 
-*Hình 3.4: Đa thức bậc 1 (xanh dương) nắm được xu hướng chung. Đa thức bậc 10 (đỏ, nét đứt) uốn lượn để đi qua các điểm huấn luyện: sai số huấn luyện giảm (RMSE 309) nhưng sai số kiểm tra tăng khoảng 1.7 lần (RMSE 944 so với 555 của bậc 1). Cùng đa thức bậc 10 nhưng có điều chuẩn Ridge (xanh lá) trở lại mượt và có RMSE kiểm tra 596. Mã nguồn vẽ hình: [images/plot_overfitting.py](images/plot_overfitting.py); tính lại trong [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 9).*
+*Hình 3.4: Đa thức bậc 1 (xanh dương) nắm được xu hướng chung. Đa thức bậc 10 (đỏ, nét đứt) uốn lượn để đi qua các điểm huấn luyện: sai số huấn luyện giảm (RMSE 309) nhưng sai số kiểm tra tăng khoảng 1.7 lần (RMSE 944 so với 555 của bậc 1). Cùng đa thức bậc 10 nhưng có điều chuẩn Ridge (xanh lá) trở lại mượt và có RMSE kiểm tra 596. Mã nguồn vẽ hình: [images/plot_overfitting.ipynb](images/plot_overfitting.ipynb); tính lại trong [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 9).*
 
 | Mô hình | RMSE huấn luyện | RMSE kiểm tra |
 |---|---|---|
@@ -616,7 +616,7 @@ Cách khắc phục: thu thập thêm dữ liệu, giảm số đặc trưng, ch
 **Điều chuẩn** là kỹ thuật bổ sung một **thành phần phạt** vào hàm mất mát để hạn chế độ lớn của các tham số:
 
 $$
-J(\mathbf{w}) = \underbrace{\sum_{i=1}^{N} (y_i - \hat{y}_i)^2}_{\text{khớp dữ liệu}} + \underbrace{\lambda \, R(\mathbf{w})}_{\text{phạt độ phức tạp}}
+\mathcal{L}(\mathbf{w}) = \underbrace{\sum_{i=1}^{N} (y_i - \hat{y}_i)^2}_{\text{khớp dữ liệu}} + \underbrace{\lambda \, R(\mathbf{w})}_{\text{phạt độ phức tạp}}
 $$
 
 - $R(\mathbf{w})$: **hàm phạt**, đo độ lớn của vector trọng số (L1 hoặc L2, mục 3.2.3).
@@ -658,7 +658,7 @@ Bài toán điều chuẩn tương đương với bài toán: **cực tiểu MSE
 
 ![Minh họa hình học điều chuẩn L1 và L2](images/l1_l2.png)
 
-*Hình 3.5: Các elip xanh là đường đồng mức của hàm MSE, tâm là nghiệm OLS. Trái: miền ràng buộc L1 là hình thoi, có các **đỉnh nằm trên trục tọa độ**, nên elip thường chạm vào đỉnh, cho nghiệm có $w_2 = 0$. Phải: miền ràng buộc L2 là hình tròn, không có đỉnh, elip chạm tại điểm có cả $w_1, w_2 \neq 0$. Mã nguồn vẽ hình: [images/plot_l1_l2.py](images/plot_l1_l2.py).*
+*Hình 3.5: Các elip xanh là đường đồng mức của hàm MSE, tâm là nghiệm OLS. Trái: miền ràng buộc L1 là hình thoi, có các **đỉnh nằm trên trục tọa độ**, nên elip thường chạm vào đỉnh, cho nghiệm có $w_2 = 0$. Phải: miền ràng buộc L2 là hình tròn, không có đỉnh, elip chạm tại điểm có cả $w_1, w_2 \neq 0$. Mã nguồn vẽ hình: [images/plot_l1_l2.ipynb](images/plot_l1_l2.ipynb).*
 
 Trong không gian nhiều chiều, hình thoi L1 có rất nhiều đỉnh và cạnh nằm trên các mặt phẳng tọa độ, nên khả năng nghiệm có nhiều $w_j = 0$ càng cao.
 
@@ -669,7 +669,7 @@ Trong không gian nhiều chiều, hình thoi L1 có rất nhiều đỉnh và c
 #### a) Hồi quy Ridge (điều chuẩn L2)
 
 $$
-J_{\text{Ridge}}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} w_j^2
+\mathcal{L}_{\text{Ridge}}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} w_j^2
 $$
 
 Ridge có **nghiệm dạng đóng**:
@@ -685,7 +685,7 @@ với $\mathbf{I}$ là ma trận đơn vị. Công thức này phạt **mọi** 
 **Lasso** = *Least Absolute Shrinkage and Selection Operator*.
 
 $$
-J_{\text{Lasso}}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} |w_j|
+\mathcal{L}_{\text{Lasso}}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} |w_j|
 $$
 
 Hàm $|w_j|$ không khả vi tại $0$ nên Lasso **không có nghiệm dạng đóng**, phải giải bằng phương pháp lặp (ví dụ *coordinate descent*). Đổi lại, Lasso có thể đưa **một số hệ số về đúng bằng 0**, tức là tự động **lựa chọn đặc trưng** (feature selection).
@@ -697,7 +697,7 @@ Hạn chế của Lasso: khi có một nhóm đặc trưng tương quan mạnh, 
 **Elastic Net** kết hợp cả hai thành phần phạt để tận dụng ưu điểm của cả Ridge và Lasso:
 
 $$
-J_{\text{EN}}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda_1 \sum_{j=1}^{d} |w_j| + \lambda_2 \sum_{j=1}^{d} w_j^2
+\mathcal{L}_{\text{EN}}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda_1 \sum_{j=1}^{d} |w_j| + \lambda_2 \sum_{j=1}^{d} w_j^2
 $$
 
 - Thành phần **L1** giúp lựa chọn đặc trưng (nghiệm thưa).
@@ -707,7 +707,7 @@ $$
 Trong scikit-learn, Elastic Net được tham số hóa bằng **cường độ** `alpha` và **tỉ lệ L1** `l1_ratio` $= \rho \in [0, 1]$:
 
 $$
-J(\mathbf{w}) = \frac{1}{2N}\lVert \mathbf{y} - \mathbf{X}\mathbf{w} \rVert_2^2 + \alpha\rho \lVert \mathbf{w} \rVert_1 + \frac{\alpha(1-\rho)}{2} \lVert \mathbf{w} \rVert_2^2
+\mathcal{L}(\mathbf{w}) = \frac{1}{2N}\lVert \mathbf{y} - \mathbf{X}\mathbf{w} \rVert_2^2 + \alpha\rho \lVert \mathbf{w} \rVert_1 + \frac{\alpha(1-\rho)}{2} \lVert \mathbf{w} \rVert_2^2
 $$
 
 `l1_ratio = 1` là Lasso, `l1_ratio` gần 0 là gần với Ridge.
@@ -1042,13 +1042,13 @@ CV 5 fold xáo trộn với `random_state=42` chọn cường độ điều chu�
     - c. Tính MSE và $R^2$ của mô hình trên chính tập dữ liệu này.
 
 11. Cho hàm mất mát của Ridge Regression:
-    $J(\mathbf{w}) = \sum_{i=1}^{N}(y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} w_j^2$
+    $\mathcal{L}(\mathbf{w}) = \sum_{i=1}^{N}(y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} w_j^2$
     - a. Giải thích ý nghĩa của tham số $\lambda$.
     - b. Điều gì xảy ra khi $\lambda$ rất lớn hoặc rất nhỏ?
     - c. Ridge Regression giúp giảm quá khớp như thế nào?
 
 12. Cho hàm mất mát của Lasso Regression:
-    $J(\mathbf{w}) = \sum_{i=1}^{N}(y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} |w_j|$
+    $\mathcal{L}(\mathbf{w}) = \sum_{i=1}^{N}(y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{d} |w_j|$
     - a. So sánh thành phần điều chuẩn của Lasso với Ridge.
     - b. Giải thích tại sao Lasso có khả năng lựa chọn đặc trưng.
     - c. Trong trường hợp nào nên dùng Lasso thay vì Ridge? Khi nào nên dùng Elastic Net?

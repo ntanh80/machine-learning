@@ -29,7 +29,7 @@ Cây quyết định là mô hình có cấu trúc cây phân cấp, dùng đư�
 
 ![Cây quyết định cho dữ liệu thời tiết](images/weather_tree.png)
 
-*Hình 6.1: Cây quyết định dự đoán có chơi thể thao hay không (`play`) từ dữ liệu thời tiết ở mục 6.1.2. Mã nguồn vẽ hình: [images/plot_weather_tree.py](images/plot_weather_tree.py).*
+*Hình 6.1: Cây quyết định dự đoán có chơi thể thao hay không (`play`) từ dữ liệu thời tiết ở mục 6.1.2. Mã nguồn vẽ hình: [images/plot_weather_tree.ipynb](images/plot_weather_tree.ipynb).*
 
 | Thành phần | Ý nghĩa | Trong Hình 6.1 |
 |---|---|---|
@@ -77,7 +77,7 @@ Với thuộc tính số, mỗi nút kiểm tra dạng $x_j \le t$ (so sánh **m
 
 ![Cây quyết định chia không gian thành các hình chữ nhật](images/tree_regions.png)
 
-*Hình 6.2: Cây độ sâu 3 trên dữ liệu Iris với hai đặc trưng của cánh hoa. (a) Năm nút lá ứng với năm vùng hình chữ nhật; (b) cây tương ứng (`value` là số mẫu mỗi lớp trong nút). Mã nguồn vẽ hình: [images/plot_tree_regions.py](images/plot_tree_regions.py).*
+*Hình 6.2: Cây độ sâu 3 trên dữ liệu Iris với hai đặc trưng của cánh hoa. (a) Năm nút lá ứng với năm vùng hình chữ nhật; (b) cây tương ứng (`value` là số mẫu mỗi lớp trong nút). Mã nguồn vẽ hình: [images/plot_tree_regions.ipynb](images/plot_tree_regions.ipynb).*
 
 Nút gốc `petal width <= 0.8` tách riêng toàn bộ 50 bông setosa (vùng dưới cùng). Các nút tiếp theo tách versicolor và virginica, độ chính xác trên tập huấn luyện là 97.3%. Nhờ ghép nhiều vùng chữ nhật, cây biểu diễn được ranh giới quyết định **phi tuyến** mà các mô hình tuyến tính không làm được.
 
@@ -165,7 +165,7 @@ $$
 
 ![Entropy và Gini của nút hai lớp](images/entropy_gini.png)
 
-*Hình 6.3: Entropy, chỉ số Gini (mục 6.1.3) và tỉ lệ lỗi phân loại của một nút hai lớp theo tỉ lệ $p$ của một lớp. Cả ba bằng 0 khi nút tinh khiết và lớn nhất khi $p = 0.5$. Mã nguồn vẽ hình: [images/plot_entropy_gini.py](images/plot_entropy_gini.py).*
+*Hình 6.3: Entropy, chỉ số Gini (mục 6.1.3) và tỉ lệ lỗi phân loại của một nút hai lớp theo tỉ lệ $p$ của một lớp. Cả ba bằng 0 khi nút tinh khiết và lớn nhất khi $p = 0.5$. Mã nguồn vẽ hình: [images/plot_entropy_gini.ipynb](images/plot_entropy_gini.ipynb).*
 
 #### c) Information Gain
 
@@ -426,7 +426,7 @@ for d in range(1, 16):
 
 ![Quá khớp và cắt tỉa cây quyết định](images/tree_overfitting.png)
 
-*Hình 6.4: (a) Độ chính xác theo độ sâu tối đa của cây. (b) Cây đầy đủ 70 nút lá tạo nhiều vùng nhỏ bao quanh các điểm nhiễu. (c) Cây đã cắt tỉa còn 4 nút lá, ranh giới đơn giản và tổng quát tốt hơn. Mã nguồn vẽ hình: [images/plot_tree_overfitting.py](images/plot_tree_overfitting.py).*
+*Hình 6.4: (a) Độ chính xác theo độ sâu tối đa của cây. (b) Cây đầy đủ 70 nút lá tạo nhiều vùng nhỏ bao quanh các điểm nhiễu. (c) Cây đã cắt tỉa còn 4 nút lá, ranh giới đơn giản và tổng quát tốt hơn. Mã nguồn vẽ hình: [images/plot_tree_overfitting.ipynb](images/plot_tree_overfitting.ipynb).*
 
 | max_depth | 1 | 2 | 4 | 6 | 8 | 10 | 14 (đầy đủ) |
 |---|---|---|---|---|---|---|---|
@@ -580,7 +580,7 @@ Accuracy: 0.7234
 
 ![Cây quyết định trên dữ liệu Balance Scale](images/balance_scale_tree.png)
 
-*Hình 6.5: Cây quyết định (Gini, `max_depth=3`, `min_samples_leaf=5`) trên dữ liệu Balance Scale. Mã nguồn vẽ hình: [images/plot_balance_scale_tree.py](images/plot_balance_scale_tree.py).*
+*Hình 6.5: Cây quyết định (Gini, `max_depth=3`, `min_samples_leaf=5`) trên dữ liệu Balance Scale. Mã nguồn vẽ hình: [images/plot_balance_scale_tree.ipynb](images/plot_balance_scale_tree.ipynb).*
 
 Độ chính xác 72%, và cây **không dự đoán được lớp `B`** (Recall = 0): với độ sâu 3, mỗi nút lá vẫn chứa nhiều mẫu L, R lẫn lộn nên lớp thiểu số B không bao giờ chiếm đa số. Đây là ví dụ cho thấy chỉ nhìn Accuracy là chưa đủ.
 

@@ -271,7 +271,7 @@ Trường muốn tự động dịch thông báo từ tiếng Việt sang tiến
 
 ![Quan hệ giữa AI, Học máy và Học sâu](images/ai_ml_dl.png)
 
-*Hình 1.1: Học sâu là một nhánh của học máy, học máy là một nhánh của trí tuệ nhân tạo. Mã nguồn vẽ hình: [images/plot_ai_ml_dl.py](images/plot_ai_ml_dl.py).*
+*Hình 1.1: Học sâu là một nhánh của học máy, học máy là một nhánh của trí tuệ nhân tạo. Mã nguồn vẽ hình: [images/plot_ai_ml_dl.ipynb](images/plot_ai_ml_dl.ipynb).*
 
 | | Trí tuệ nhân tạo (AI) | Học máy (ML, gồm cả DL) | Học sâu (DL) |
 |---|---|---|---|
