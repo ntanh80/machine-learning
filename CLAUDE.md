@@ -1,6 +1,6 @@
 # Chỉ dẫn biên soạn bài giảng – Học máy K22 KHMT
 
-Tài liệu này áp dụng khi viết hoặc sửa bất kỳ nội dung nào của một bài (`Bai 01` … `Bai 09`): file lý thuyết `.md`, notebook, script vẽ hình, dữ liệu. Gồm bốn phần:
+Tài liệu này áp dụng khi viết hoặc sửa bất kỳ nội dung nào của một bài (`lesson_01` … `lesson_09`): file lý thuyết `.md`, notebook, script vẽ hình, dữ liệu. Gồm bốn phần:
 
 1. Nguyên tắc nội dung – viết *cái gì*.
 2. Cấu trúc thư mục – để *ở đâu*.
@@ -24,7 +24,7 @@ Tài liệu này áp dụng khi viết hoặc sửa bất kỳ nội dung nào c
 ## 2. Cấu trúc thư mục mỗi bài
 
 ```text
-Bai XX/
+lesson_XX/
 ├── 1_objectives.md     # mục tiêu, chuẩn đầu ra, phân bổ nội dung (chuẩn của bài)
 ├── 2_<topic>.md        # nội dung lý thuyết chính, đề mục theo các mục CĐR
 ├── codes/              # notebook demo: 01_<name>.ipynb, 02_<name>.ipynb, …

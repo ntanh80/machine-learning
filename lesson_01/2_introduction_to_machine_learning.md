@@ -610,7 +610,7 @@ Nhờ kết hợp code, kết quả và giải thích trong cùng một tài li�
 
 ```
 conda activate ml
-cd "D:\HocMay\Bai 01"
+cd "D:\HocMay\lesson_01"
 jupyter notebook
 ```
 
@@ -654,7 +654,7 @@ help(np.mean)                       # xem hướng dẫn của hàm
 Khi chạy, thư mục hiện hành của notebook là **thư mục chứa file notebook**. Mỗi bài học trong học phần có cấu trúc:
 
 ```
-Bai 01/
+lesson_01/
 ├── 2_introduction_to_machine_learning.md   # nội dung lý thuyết
 ├── codes/                                  # các notebook demo
 ├── data/                                   # dữ liệu

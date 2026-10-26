@@ -689,4 +689,4 @@ Cây học lại đúng định luật đòn bẩy. Bài học: hiểu bài toá
     - b. Dùng `cost_complexity_pruning_path` và kiểm định chéo để chọn `ccp_alpha`. Vẽ cây sau cắt tỉa và viết các luật if–then.
     - c. Đặc trưng nào quan trọng nhất theo `feature_importances_`?
 17. Với dữ liệu Balance Scale, thử thêm tham số `class_weight='balanced'` cho cây `max_depth=3`. Recall của lớp B thay đổi thế nào? Giải thích.
-18. Dùng `DecisionTreeRegressor` dự đoán giá nhà ở Bài 3 ([../Bai 03/data/house_prices.csv](../Bai%2003/data/house_prices.csv)). So sánh RMSE, $R^2$ trên tập kiểm tra với hồi quy tuyến tính khi `max_depth` thay đổi.
+18. Dùng `DecisionTreeRegressor` dự đoán giá nhà ở Bài 3 ([../lesson_03/data/house_prices.csv](../lesson_03/data/house_prices.csv)). So sánh RMSE, $R^2$ trên tập kiểm tra với hồi quy tuyến tính khi `max_depth` thay đổi.
