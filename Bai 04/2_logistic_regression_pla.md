@@ -4,9 +4,9 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 # Bài 4. Hồi quy Logistic và thuật toán PLA
 
-> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 9 – Hồi quy logistic; Chương 7 – Mô hình nơ-ron Perceptron. Phần ma trận nhầm lẫn, các chỉ số đánh giá và ROC-AUC tham khảo thêm tài liệu scikit-learn (*Model evaluation*) và T. Fawcett, *An introduction to ROC analysis*, Pattern Recognition Letters, 2006.
+> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 7 – Mô hình nơ-ron Perceptron; Chương 9 – Hồi quy logistic. Ma trận nhầm lẫn và độ chính xác chỉ xuất hiện trong phần thực hành (Chương 8, Chương 14); Precision, Recall, F1, ROC-AUC không có trong giáo trình, tham khảo tài liệu scikit-learn (*Model evaluation*) và T. Fawcett, *An introduction to ROC analysis*, Pattern Recognition Letters, 2006. Bộ dữ liệu ung thư phổi lấy từ Kaggle.
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+> Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài (mở bằng Jupyter, thư mục hiện hành là `codes/`).
 
 - [4.1. Mô hình hồi quy Logistic](#41-mô-hình-hồi-quy-logistic)
 - [4.2. Thuật toán PLA](#42-thuật-toán-pla)
@@ -142,7 +142,7 @@ $$
 \hat{y} = P(y = 1 \mid \mathbf{x}; \mathbf{w}) = \sigma(\mathbf{x}^T\mathbf{w}) = \frac{1}{1 + e^{-\mathbf{x}^T\mathbf{w}}}
 $$
 
-Từ đây trở đi, giống giáo trình, $\mathbf{x}$ và $\mathbf{w}$ được hiểu là **vector mở rộng** (Bài 3, mục 3.1.2): $\mathbf{x} = [1, x_1, \dots, x_d]^T$, $\mathbf{w} = [w_0, w_1, \dots, w_d]^T$, nên $w_0$ đã nằm trong $\mathbf{x}^T\mathbf{w}$.
+Từ đây trở đi, giống giáo trình, $\mathbf{x}$ và $\mathbf{w}$ được hiểu là **vector mở rộng** (Bài 3): $\mathbf{x} = [1, x_1, \dots, x_d]^T$, $\mathbf{w} = [w_0, w_1, \dots, w_d]^T$, nên $w_0$ đã nằm trong $\mathbf{x}^T\mathbf{w}$.
 
 Xác suất thuộc lớp 0 là phần bù:
 
@@ -276,7 +276,7 @@ $$
 \mathbf{w} \leftarrow \mathbf{w} - \eta\,\frac{1}{N}\mathbf{X}^T\big(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y}\big)
 $$
 
-với $\eta$ là **tốc độ học** (learning rate). Nếu mỗi lần chỉ dùng một mẫu $(\mathbf{x}_i, y_i)$ chọn ngẫu nhiên thì được **Stochastic Gradient Descent** (SGD), cách giáo trình sử dụng:
+với $\eta$ là **tốc độ học** (learning rate). Nếu mỗi lần chỉ dùng một mẫu $(\mathbf{x}_i, y_i)$ chọn ngẫu nhiên thì được **Stochastic Gradient Descent** (SGD), cách giáo trình sử dụng (Chương 9):
 
 $$
 \mathbf{w} \leftarrow \mathbf{w} - \eta\,\big(\sigma(\mathbf{x}_i^T\mathbf{w}) - y_i\big)\,\mathbf{x}_i
@@ -373,10 +373,11 @@ for hours in [1, 2, 3, 4, 5]:
 **Sử dụng thư viện scikit-learn:**
 
 ```python
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-# penalty=None: không điều chuẩn, để so sánh với nghiệm MLE ở trên
-model = LogisticRegression(penalty=None)
+# C = 1/λ; C=np.inf nghĩa là λ = 0: không điều chuẩn, để so sánh với nghiệm MLE ở trên
+model = LogisticRegression(C=np.inf)
 model.fit(X.reshape(-1, 1), y)          # scikit-learn cần X dạng ma trận (N, d)
 print(model.intercept_, model.coef_)    # [-4.0787] [[1.5050]]
 
@@ -673,7 +674,7 @@ $$
 
 Đại lượng $y_i\,\mathbf{x}_i^T\mathbf{w}$ tăng thêm $\|\mathbf{x}_i\|^2 \ge 1$ (vector mở rộng có thành phần đầu bằng 1), tức điểm $\mathbf{x}_i$ dịch về phía được phân loại đúng. Về hình học: điểm lớp $+1$ bị sai thì $\mathbf{w}$ được kéo về phía $\mathbf{x}_i$; điểm lớp $-1$ bị sai thì $\mathbf{w}$ bị đẩy ra xa $\mathbf{x}_i$.
 
-Lưu ý: một lần cập nhật có thể làm **điểm khác** đang đúng trở thành sai. Tuy vậy, người ta chứng minh được (định lý hội tụ Perceptron, giáo trình mục 7.2.4) rằng **nếu dữ liệu tách biệt tuyến tính thì PLA dừng sau hữu hạn bước**.
+Lưu ý: một lần cập nhật có thể làm **điểm khác** đang đúng trở thành sai. Tuy vậy, người ta chứng minh được (định lý hội tụ Perceptron, giáo trình Chương 7) rằng **nếu dữ liệu tách biệt tuyến tính thì PLA dừng sau hữu hạn bước**.
 
 #### c) Thuật toán
 
@@ -821,8 +822,10 @@ Bản sao của file đã để sẵn tại [data/survey lung cancer.csv](data/s
 ```python
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
-df = pd.read_csv('data/survey lung cancer.csv')
+DATA = Path('..') / 'data'   # notebook chạy trong codes/
+df = pd.read_csv(DATA / 'survey lung cancer.csv')
 print(df.shape)                          # (309, 16)
 print(df.head())
 df.info()
@@ -999,7 +1002,7 @@ Nâng ngưỡng làm giảm báo nhầm nhưng tăng bỏ sót. Với bài toán
 
 #### d) Đánh giá ổn định bằng kiểm định chéo
 
-Tập kiểm tra chỉ có 8 mẫu lớp 0, nên mỗi mẫu đoán sai làm độ đặc hiệu thay đổi 12.5%: kết quả phụ thuộc nhiều vào cách chia ngẫu nhiên. Kiểm định chéo 5 phần (Bài 3, mục 3.3.2) cho đánh giá ổn định hơn:
+Tập kiểm tra chỉ có 8 mẫu lớp 0, nên mỗi mẫu đoán sai làm độ đặc hiệu thay đổi 12.5%: kết quả phụ thuộc nhiều vào cách chia ngẫu nhiên. Kiểm định chéo 5 phần (Bài 3) cho đánh giá ổn định hơn:
 
 ```python
 from sklearn.model_selection import cross_val_score, StratifiedKFold

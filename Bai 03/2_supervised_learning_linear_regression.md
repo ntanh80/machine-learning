@@ -4,7 +4,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 # Bài 3. Học có giám sát và Hồi quy tuyến tính
 
-> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 4 – Hồi quy tuyến tính.
+> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 1 – Các khái niệm cơ bản; Chương 4 – Hồi quy tuyến tính. Elastic Net, các độ đo MAE, $R^2$ và kiểm định chéo không có trong giáo trình, tham khảo tài liệu scikit-learn.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các notebook đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
 
@@ -124,14 +124,14 @@ $$
 \hat{y} = \bar{\mathbf{x}}^T \bar{\mathbf{w}}
 $$
 
-*Vector cột và phép chuyển vị trong NumPy: [codes/01_vector_argmin.ipynb](codes/01_vector_argmin.ipynb) (Phần 1).*
+*Vector cột và phép chuyển vị trong NumPy: [codes/02_vector_transpose.ipynb](codes/02_vector_transpose.ipynb).*
 
 > **Vì sao cần hệ số chệch $w_0$?**
 > Nếu không có $w_0$, đường hồi quy buộc phải đi qua gốc tọa độ (khi $\mathbf{x} = \mathbf{0}$ thì $\hat{y} = 0$). Điều này thường không hợp lý trong thực tế. Hệ số chệch cho phép đường hồi quy dịch chuyển song song với trục tung, giúp mô tả dữ liệu tốt hơn.
 
 ![Vai trò của hệ số chệch w0](images/bias_term.png)
 
-*Hình: Mô phỏng 40 căn nhà với giá thực $y \approx 800 + 15x$. Đường **có** $w_0$ (xanh) bám sát dữ liệu. Đường **không có** $w_0$ (đỏ, nét đứt) bị buộc đi qua gốc tọa độ nên phải "dốc" hơn để bù: nó dự đoán thấp với nhà nhỏ và cao với nhà lớn. Mã nguồn vẽ hình: [images/plot_bias_term.py](images/plot_bias_term.py).*
+*Hình 3.1: Mô phỏng 40 căn nhà với giá thực $y \approx 800 + 15x$. Đường **có** $w_0$ (xanh) bám sát dữ liệu. Đường **không có** $w_0$ (đỏ, nét đứt) bị buộc đi qua gốc tọa độ nên phải "dốc" hơn để bù: nó dự đoán thấp với nhà nhỏ và cao với nhà lớn. Mã nguồn vẽ hình: [images/plot_bias_term.py](images/plot_bias_term.py).*
 
 ---
 
@@ -171,7 +171,7 @@ $$
 \mathbf{w}^* = \arg\min_{\mathbf{w}} \mathcal{L}(\mathbf{w})
 $$
 
-*Ví dụ về min, max, argmin, argmax: [codes/01_vector_argmin.ipynb](codes/01_vector_argmin.ipynb) (Phần 2, 3).*
+*Ví dụ về min, max, argmin, argmax: [codes/01_argmin_argmax.ipynb](codes/01_argmin_argmax.ipynb).*
 
 Phương pháp tìm $\mathbf{w}$ bằng cách cực tiểu tổng bình phương sai số được gọi là **phương pháp bình phương tối thiểu** (Ordinary Least Squares – **OLS**).
 
@@ -295,7 +295,7 @@ plt.show()
 
 ![Chiều cao và cân nặng của tập huấn luyện](images/height_weight.png)
 
-*Hình: Chiều cao và cân nặng của 13 người trong tập huấn luyện. Mã nguồn vẽ hình: [images/plot_height_weight.py](images/plot_height_weight.py).*
+*Hình 3.2: Chiều cao và cân nặng của 13 người trong tập huấn luyện. Mã nguồn vẽ hình: [images/plot_height_weight.py](images/plot_height_weight.py).*
 
 Các điểm dữ liệu nằm **gần như trên một đường thẳng**, vì vậy hồi quy tuyến tính có khả năng cho kết quả tốt.
 
@@ -341,7 +341,7 @@ print('Chiều cao 155 cm, cân nặng thực tế 52 kg, dự đoán %.2f kg' %
 print('Chiều cao 160 cm, cân nặng thực tế 56 kg, dự đoán %.2f kg' % pred_160)
 ```
 
-*Mã nguồn: [codes/02_height_weight_regression.ipynb](codes/02_height_weight_regression.ipynb).*
+*Mã nguồn: [codes/03_height_weight_regression.ipynb](codes/03_height_weight_regression.ipynb).*
 
 ##### Giải thích chi tiết phần tính nghiệm
 
@@ -365,8 +365,8 @@ ones = np.ones((X.shape[0], 1))
 Xbar = np.concatenate((ones, X), axis=1)
 ```
 
-- `X.shape[0]` là số mẫu (13), nên `one` là vector cột gồm 13 số 1, kích thước $13 \times 1$.
-- `np.concatenate(..., axis=1)` ghép **theo chiều ngang** (thêm cột): cột 1 là `one`, cột 2 là chiều cao. Nếu dùng `axis=0` thì hai mảng bị xếp chồng theo chiều dọc, sai ý đồ.
+- `X.shape[0]` là số mẫu (13), nên `ones` là vector cột gồm 13 số 1, kích thước $13 \times 1$.
+- `np.concatenate(..., axis=1)` ghép **theo chiều ngang** (thêm cột): cột 1 là `ones`, cột 2 là chiều cao. Nếu dùng `axis=0` thì hai mảng bị xếp chồng theo chiều dọc, sai ý đồ.
 
 $$
 \mathbf{X} = \begin{bmatrix} 147 \\ 150 \\ \vdots \\ 183 \end{bmatrix}
@@ -464,7 +464,7 @@ Chiều cao 160 cm, cân nặng thực tế 56 kg, dự đoán 55.74 kg
 
 ![Đường hồi quy theo nghiệm công thức](images/normal_equation_fit.png)
 
-*Hình: Đường hồi quy $\hat{y} = 0.5592x - 33.7354$ tìm được bằng công thức (xanh dương) đi sát 13 điểm huấn luyện (đỏ). Với tập kiểm tra, ô vuông xanh lá là cân nặng thực tế, dấu × là giá trị dự đoán; đường chấm nối hai giá trị cho thấy sai số. Mã nguồn vẽ hình: [images/plot_normal_equation_fit.py](images/plot_normal_equation_fit.py).*
+*Hình 3.3: Đường hồi quy $\hat{y} = 0.5592x - 33.7354$ tìm được bằng công thức (xanh dương) đi sát 13 điểm huấn luyện (đỏ). Với tập kiểm tra, ô vuông xanh lá là cân nặng thực tế, dấu × là giá trị dự đoán; đường chấm nối hai giá trị cho thấy sai số. Mã nguồn vẽ hình: [images/plot_normal_equation_fit.py](images/plot_normal_equation_fit.py).*
 
 Kết quả dự đoán khá sát với giá trị thực tế.
 
@@ -487,7 +487,7 @@ print("w0 =", w[0])
 
 Hai kết quả **trùng nhau**: $w_1 \approx 0.5592$, $w_0 \approx -33.7354$.
 
-*Mã nguồn: [codes/02_height_weight_regression.ipynb](codes/02_height_weight_regression.ipynb).*
+*Mã nguồn: [codes/03_height_weight_regression.ipynb](codes/03_height_weight_regression.ipynb).*
 
 ---
 
@@ -527,6 +527,10 @@ ransac = RANSACRegressor().fit(X, y)
 theil = TheilSenRegressor().fit(X, y)
 ```
 
+Với điểm ngoại lai (150 cm, 90 kg), hồi quy tuyến tính dự đoán người cao 155 cm nặng 59.07 kg (thực tế 52 kg), trong khi Huber, RANSAC, Theil–Sen dự đoán lần lượt 53.17, 52.94, 53.31 kg, gần với kết quả khi chưa có ngoại lai.
+
+*Mã nguồn: [codes/03_height_weight_regression.ipynb](codes/03_height_weight_regression.ipynb) (mục Ảnh hưởng của điểm ngoại lai).*
+
 **Chỉ biểu diễn được quan hệ tuyến tính.** Nhiều bài toán thực tế có quan hệ **phi tuyến**. Có thể khắc phục bằng cách thêm đặc trưng phi tuyến (mục 3.2.1), nhưng điều này dễ dẫn đến **quá khớp**.
 
 **Đa cộng tuyến (multicollinearity).** Khi các đặc trưng tương quan cao (ví dụ diện tích và số phòng ngủ), ma trận $\mathbf{X}^T\mathbf{X}$ gần suy biến, các hệ số ước lượng trở nên **không ổn định** (thay đổi mạnh khi dữ liệu thay đổi ít).
@@ -552,14 +556,19 @@ không tuyến tính theo $\mathbf{x}$ nhưng vẫn tuyến tính theo $\mathbf{
 Trường hợp hay dùng nhất là **hồi quy đa thức** bậc $p$, với vector đặc trưng $[x, x^2, \dots, x^p]^T$:
 
 ```python
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
 
-# Hồi quy đa thức bậc 3
-poly_model = make_pipeline(PolynomialFeatures(degree=3), LinearRegression())
+# Hồi quy đa thức bậc 3: chuẩn hóa x, tạo [x, x^2, x^3], chuẩn hóa lại, rồi hồi quy tuyến tính
+poly_model = make_pipeline(StandardScaler(), PolynomialFeatures(degree=3, include_bias=False),
+                           StandardScaler(), LinearRegression())
 poly_model.fit(X, y)
 ```
+
+Chuẩn hóa **trước khi lũy thừa** để tránh các giá trị quá lớn (diện tích 200 m² lũy thừa 10 là khoảng $10^{23}$): khi đó các cột đặc trưng gần như trùng nhau và nghiệm trở nên không ổn định về mặt số học.
+
+*Mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 9).*
 
 Bậc $p$ càng cao, mô hình càng **linh hoạt**, nhưng cũng càng dễ **quá khớp**.
 
@@ -580,15 +589,15 @@ Lấy ngẫu nhiên **20 căn nhà** từ bộ dữ liệu giá nhà làm tập 
 
 ![Quá khớp với đa thức bậc cao](images/overfitting.png)
 
-*Hình: Đa thức bậc 1 (xanh dương) nắm được xu hướng chung. Đa thức bậc 10 (đỏ, nét đứt) uốn lượn để đi qua các điểm huấn luyện: sai số huấn luyện giảm (RMSE 482) nhưng sai số kiểm tra tăng gấp 8 lần (RMSE 4351). Cùng đa thức bậc 10 nhưng có điều chuẩn Ridge (xanh lá) trở lại mượt và có RMSE kiểm tra 540. Mã nguồn vẽ hình: [images/plot_overfitting.py](images/plot_overfitting.py).*
+*Hình 3.4: Đa thức bậc 1 (xanh dương) nắm được xu hướng chung. Đa thức bậc 10 (đỏ, nét đứt) uốn lượn để đi qua các điểm huấn luyện: sai số huấn luyện giảm (RMSE 482) nhưng sai số kiểm tra tăng gấp 8 lần (RMSE 4351). Cùng đa thức bậc 10 nhưng có điều chuẩn Ridge (xanh lá) trở lại mượt và có RMSE kiểm tra 555. Mã nguồn vẽ hình: [images/plot_overfitting.py](images/plot_overfitting.py); tính lại trong [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 9).*
 
 | Mô hình | RMSE huấn luyện | RMSE kiểm tra |
 |---|---|---|
 | Đa thức bậc 1 | 577 | 533 |
 | Đa thức bậc 10 | **482** | **4351** |
-| Đa thức bậc 10 + Ridge ($\alpha = 1$) | 582 | 540 |
+| Đa thức bậc 10 + Ridge ($\alpha = 1$) | 577 | 555 |
 
-Một dấu hiệu quan trọng: ở mô hình bậc 10 không điều chuẩn, các hệ số $w_j$ có độ lớn **khổng lồ** (cỡ $10^{10}$) và trái dấu nhau để triệt tiêu, khiến mô hình thay đổi rất mạnh khi $x$ thay đổi ít.
+Một dấu hiệu quan trọng: ở mô hình bậc 10 không điều chuẩn, các hệ số $w_j$ có độ lớn **khổng lồ** (hàng trăm nghìn, trong khi mô hình bậc 1 và mô hình có Ridge chỉ cỡ $10^3$) và trái dấu nhau để triệt tiêu, khiến mô hình thay đổi rất mạnh khi $x$ thay đổi ít.
 
 #### d) Nguyên nhân gây quá khớp
 
@@ -647,7 +656,7 @@ Bài toán điều chuẩn tương đương với bài toán: **cực tiểu MSE
 
 ![Minh họa hình học điều chuẩn L1 và L2](images/l1_l2.png)
 
-*Hình: Các elip xanh là đường đồng mức của hàm MSE, tâm là nghiệm OLS. Trái: miền ràng buộc L1 là hình thoi, có các **đỉnh nằm trên trục tọa độ**, nên elip thường chạm vào đỉnh, cho nghiệm có $w_2 = 0$. Phải: miền ràng buộc L2 là hình tròn, không có đỉnh, elip chạm tại điểm có cả $w_1, w_2 \neq 0$. Mã nguồn vẽ hình: [images/plot_l1_l2.py](images/plot_l1_l2.py).*
+*Hình 3.5: Các elip xanh là đường đồng mức của hàm MSE, tâm là nghiệm OLS. Trái: miền ràng buộc L1 là hình thoi, có các **đỉnh nằm trên trục tọa độ**, nên elip thường chạm vào đỉnh, cho nghiệm có $w_2 = 0$. Phải: miền ràng buộc L2 là hình tròn, không có đỉnh, elip chạm tại điểm có cả $w_1, w_2 \neq 0$. Mã nguồn vẽ hình: [images/plot_l1_l2.py](images/plot_l1_l2.py).*
 
 Trong không gian nhiều chiều, hình thoi L1 có rất nhiều đỉnh và cạnh nằm trên các mặt phẳng tọa độ, nên khả năng nghiệm có nhiều $w_j = 0$ càng cao.
 
@@ -667,7 +676,7 @@ $$
 \mathbf{w} = (\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^T \mathbf{y}
 $$
 
-với $\mathbf{I}$ là ma trận đơn vị. Khi $\lambda > 0$, ma trận $\mathbf{X}^T\mathbf{X} + \lambda\mathbf{I}$ **luôn khả nghịch**, vì vậy Ridge giải quyết được trường hợp $\mathbf{X}^T\mathbf{X}$ suy biến và đa cộng tuyến.
+với $\mathbf{I}$ là ma trận đơn vị. Công thức này phạt **mọi** hệ số, nên để không phạt $w_0$ (mục 3.2.2), nó được áp dụng cho dữ liệu đã **trừ trung bình** (mỗi cột của $\mathbf{X}$ và $\mathbf{y}$ có trung bình 0, không cần cột 1); khi đó $w_0 = \bar{y} - \bar{\mathbf{x}}^T\mathbf{w}$. scikit-learn tự làm việc này khi `fit_intercept=True`. Khi $\lambda > 0$, ma trận $\mathbf{X}^T\mathbf{X} + \lambda\mathbf{I}$ **luôn khả nghịch**, vì vậy Ridge giải quyết được trường hợp $\mathbf{X}^T\mathbf{X}$ suy biến và đa cộng tuyến.
 
 #### b) Hồi quy Lasso (điều chuẩn L1)
 
@@ -715,8 +724,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.metrics import mean_squared_error
+from pathlib import Path
 
-df = pd.read_csv('data/house_prices.csv')
+DATA = Path('..') / 'data'   # notebook chạy trong codes/
+df = pd.read_csv(DATA / 'house_prices.csv')
 rng = np.random.RandomState(42)
 for k in range(1, 6):
     df[f'noise_{k}'] = rng.normal(size=len(df))   # đặc trưng nhiễu, không liên quan tới giá
@@ -729,8 +740,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=30, random_
 for name, model in [('OLS', LinearRegression()), ('Ridge', Ridge(alpha=1)), ('Lasso', Lasso(alpha=50))]:
     pipeline = make_pipeline(StandardScaler(), model).fit(X_train, y_train)   # chuẩn hóa rồi huấn luyện
     rmse = np.sqrt(mean_squared_error(y_test, pipeline.predict(X_test)))
-    print(name, np.round(pipeline[-1].coef_, 1), 'RMSE test = %.1f' % rmse)
+    print(name, np.round(pipeline[-1].coef_, 1), 'RMSE kiểm tra = %.1f' % rmse)
 ```
+
+*Mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 10).*
 
 **Kết quả** (hệ số trên dữ liệu đã chuẩn hóa):
 
@@ -791,8 +804,10 @@ Dữ liệu được sinh bởi [data/generate_house_prices.ipynb](data/generate
 ```python
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
-df = pd.read_csv('data/house_prices.csv')
+DATA = Path('..') / 'data'   # notebook chạy trong codes/
+df = pd.read_csv(DATA / 'house_prices.csv')
 print(df.shape)                 # (10000, 4)
 print(df.describe().round(2))
 print(df.corr().round(3))       # ma trận hệ số tương quan
@@ -857,9 +872,9 @@ print(model.predict(new_house))        # [3343.61]
 
 Căn nhà 100 m², 3 phòng ngủ, cách trung tâm 10 km có giá dự đoán khoảng **3.344 triệu VND**.
 
-> Ứng dụng web minh họa: chạy `streamlit run "codes/04_house_price_app.py"` để nhập thông số căn nhà và xem giá dự đoán trực tiếp.
+> Ứng dụng web minh họa: chạy `streamlit run "codes/06_house_price_app.py"` để nhập thông số căn nhà và xem giá dự đoán trực tiếp.
 
-*Notebook đầy đủ các bước khám phá dữ liệu, nghiệm công thức, Gradient Descent, Ridge và Lasso: [codes/03_house_price_regression.ipynb](codes/03_house_price_regression.ipynb).*
+*Notebook đầy đủ các bước khám phá dữ liệu, nghiệm công thức, Gradient Descent, Ridge và Lasso: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb).*
 
 #### Bước 5: Huấn luyện các mô hình có điều chuẩn
 
@@ -877,8 +892,10 @@ models = {
 for name, model_reg in models.items():
     # Chuẩn hóa dữ liệu trước khi điều chuẩn
     pipeline = make_pipeline(StandardScaler(), model_reg).fit(X_train, y_train)
-    print(name, np.round(pipeline[-1].coef_, 2), 'R2 test = %.4f' % pipeline.score(X_test, y_test))
+    print(name, np.round(pipeline[-1].coef_, 2), 'R2 kiểm tra = %.4f' % pipeline.score(X_test, y_test))
 ```
+
+*Mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 11).*
 
 Kết quả được phân tích ở mục 3.3.2.
 
@@ -895,7 +912,7 @@ Kết quả được phân tích ở mục 3.3.2.
 
 $R^2 = 1$: dự đoán hoàn hảo; $R^2 = 0$: mô hình không tốt hơn việc luôn dự đoán giá trị trung bình $\bar{y}$; $R^2 < 0$: mô hình còn tệ hơn thế.
 
-*Ví dụ tính tay các độ đo trên bài toán chiều cao – cân nặng: [codes/02_height_weight_regression.ipynb](codes/02_height_weight_regression.ipynb) (Phần 2).*
+*Ví dụ tính tay các độ đo trên bài toán chiều cao – cân nặng: [codes/04_model_evaluation.ipynb](codes/04_model_evaluation.ipynb).*
 
 #### b) Đánh giá mô hình OLS trên tập kiểm tra
 
@@ -910,6 +927,8 @@ print('R2   = %.4f' % r2_score(y_test, y_pred))
 print('R2 trên tập huấn luyện = %.4f' % model.score(X_train, y_train))
 ```
 
+*Mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 6).*
+
 **Kết quả:**
 
 ```
@@ -917,7 +936,7 @@ MAE  = 241.11
 MSE  = 91237.24
 RMSE = 302.06
 R2   = 0.9685
-R2 tren tap huan luyen = 0.9690
+R2 trên tập huấn luyện = 0.9690
 ```
 
 Diễn giải:
@@ -927,7 +946,7 @@ Diễn giải:
 
 #### c) So sánh các mô hình
 
-Kết quả của Bước 5 (hệ số trên dữ liệu đã chuẩn hóa, $\alpha = 1$):
+Kết quả của Bước 5 (hệ số trên dữ liệu đã chuẩn hóa, $\alpha = 1$; mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb), mục 11):
 
 | Mô hình | Hệ số (diện tích, số phòng, khoảng cách) | RMSE kiểm tra | $R^2$ kiểm tra |
 |---|---|---|---|
@@ -959,6 +978,8 @@ for name, model_cv in cv_models.items():
     print(name, 'alpha =', pipeline[-1].alpha_, 'R2 = %.4f' % r2_score(y_test, y_pred),
           'RMSE = %.2f' % np.sqrt(mean_squared_error(y_test, y_pred)))
 ```
+
+*Mã nguồn: [codes/05_house_price_regression.ipynb](codes/05_house_price_regression.ipynb) (mục 12).*
 
 **Kết quả:**
 

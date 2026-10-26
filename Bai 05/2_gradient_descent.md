@@ -4,7 +4,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 # Bài 5. Thuật toán Gradient Descent
 
-> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 3 – Tối ưu hóa bằng hạ dốc; Chương 4 – Hồi quy tuyến tính (mục Xây dựng và tối ưu hàm mất mát).
+> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 3 – Tối ưu hóa bằng hạ dốc; Chương 4 – Hồi quy tuyến tính.
 >
 > Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
 
@@ -258,8 +258,8 @@ for x0 in [-5, 5]:
 **Kết quả:**
 
 ```
-x0 = -5: x = -1.1106, f(x) = -3.2464, sau 12 vong lap
-x0 =  5: x = -1.1105, f(x) = -3.2464, sau 30 vong lap
+x0 = -5: x = -1.1106, f(x) = -3.2464, sau 12 vòng lặp
+x0 =  5: x = -1.1105, f(x) = -3.2464, sau 30 vòng lặp
 ```
 
 *Mã nguồn: [codes/02_gd_weight_update.ipynb](codes/02_gd_weight_update.ipynb).*
@@ -310,7 +310,7 @@ Như vậy tồn tại một **ngưỡng** tốc độ học: vượt ngưỡng 
 - Thử các giá trị theo thang log: $1, 0.3, 0.1, 0.03, 0.01, \dots$, vẽ đồ thị hàm mất mát theo vòng lặp và chọn giá trị lớn nhất mà mất mát vẫn giảm ổn định.
 - Nếu mất mát tăng hoặc dao động mạnh: giảm $\eta$. Nếu giảm quá chậm: tăng $\eta$.
 - **Giảm dần tốc độ học** (learning rate decay): bắt đầu với $\eta$ lớn để tiến nhanh, sau đó giảm dần để không dao động khi gần cực tiểu, ví dụ $\eta_t = \dfrac{\eta_0}{1 + k\,t}$.
-- Các thuật toán tối ưu hiện đại như Momentum, Adam tự điều chỉnh bước đi theo từng tham số (giới thiệu ở Bài 9).
+- Các thuật toán tối ưu hiện đại như Momentum, Adam tự điều chỉnh bước đi theo từng tham số (ngoài phạm vi học phần; giáo trình dùng Adam trong phần thực hành mạng nơ-ron, Chương 13).
 
 #### c) Đường đồng mức và ảnh hưởng của thang đo đặc trưng
 
@@ -372,8 +372,8 @@ $$
 Mỗi epoch chỉ có **một** lần cập nhật.
 
 ```
-for epoch in range(so_epoch):
-    g = gradient tren toan bo N mau
+for epoch in range(n_epochs):
+    g = gradient trên toàn bộ N mẫu
     w = w - eta * g
 ```
 
@@ -391,10 +391,10 @@ $$
 Mỗi epoch có $N$ lần cập nhật. Trước mỗi epoch, **xáo trộn** thứ tự dữ liệu để các mẫu được chọn ngẫu nhiên và không lặp lại theo một trật tự cố định.
 
 ```
-for epoch in range(so_epoch):
-    xao tron thu tu N mau
-    for i in thu_tu:
-        g = gradient tren mau i
+for epoch in range(n_epochs):
+    xáo trộn thứ tự N mẫu
+    for i in order:
+        g = gradient trên mẫu i
         w = w - eta * g
 ```
 
@@ -416,10 +416,10 @@ $$
 Mỗi epoch: xáo trộn dữ liệu, chia thành $\lceil N/m \rceil$ mini-batch rồi cập nhật lần lượt trên từng mini-batch.
 
 ```
-for epoch in range(so_epoch):
-    xao tron thu tu N mau
-    for B in chia thu tu thanh cac nhom m mau:
-        g = gradient trung binh tren nhom B
+for epoch in range(n_epochs):
+    xáo trộn thứ tự N mẫu
+    for B in (chia order thành các nhóm m mẫu):
+        g = gradient trung bình trên nhóm B
         w = w - eta * g
 ```
 
@@ -502,8 +502,8 @@ for eta in [1, 0.1]:
 
 ```
 OLS: w = [4.0072 2.9823]
-eta = 1    w = [4.0079 2.9809], sau 95 vong lap, loss = 0.018906
-eta = 0.1  w = [4.0079 2.9809], sau 975 vong lap, loss = 0.018906
+eta = 1    w = [4.0079 2.9809], sau 95 vòng lặp, loss = 0.018906
+eta = 0.1  w = [4.0079 2.9809], sau 975 vòng lặp, loss = 0.018906
 ```
 
 GD tìm được nghiệm rất gần nghiệm OLS (sai khác do điều kiện dừng $\|\nabla\mathcal{L}\| < 10^{-4}$), và mô hình $\hat{y} \approx 4.01 + 2.98x$ khớp với quy luật sinh dữ liệu. Tốc độ học nhỏ hơn 10 lần thì cần số vòng lặp nhiều hơn khoảng 10 lần. Thử $\eta = 2.5$ sẽ thấy `w` thành `nan`: GD phân kỳ.
@@ -553,9 +553,11 @@ Dùng lại dữ liệu giá nhà ở Bài 3 ([data/house_prices.csv](data/house
 
 ```python
 import pandas as pd
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 
-df = pd.read_csv('data/house_prices.csv')
+DATA = Path('..') / 'data'   # notebook chạy trong codes/
+df = pd.read_csv(DATA / 'house_prices.csv')
 X = df[['area', 'bedrooms', 'distance']].values   # diện tích, số phòng ngủ, khoảng cách
 y = df['price'].values                             # giá nhà (triệu VND)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

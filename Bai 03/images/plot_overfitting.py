@@ -34,7 +34,10 @@ fig, ax = plt.subplots(figsize=(8, 5))
 ax.plot(X_test[:300], y_test[:300], '.', color="lightgray", label="Tập kiểm tra (300 căn)")
 ax.plot(X_train, y_train, 'ko', label="Tập huấn luyện (20 căn)")
 for name, model, degree, color, style in models:
-    pipeline = make_pipeline(PolynomialFeatures(degree, include_bias=False), StandardScaler(), model)
+    # Chuẩn hóa trước khi lũy thừa: nếu lũy thừa diện tích gốc (200^10 ~ 1e23) thì các cột gần như trùng nhau,
+    # nghiệm bậc 10 không ổn định và thay đổi theo phiên bản thư viện
+    pipeline = make_pipeline(StandardScaler(), PolynomialFeatures(degree, include_bias=False),
+                             StandardScaler(), model)
     pipeline.fit(X_train, y_train)
     rmse_train = np.sqrt(mean_squared_error(y_train, pipeline.predict(X_train)))
     rmse_test = np.sqrt(mean_squared_error(y_test, pipeline.predict(X_test)))
