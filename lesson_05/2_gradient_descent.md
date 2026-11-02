@@ -20,6 +20,14 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 ## 5.1. Gradient Descent
 
+**Gradient Descent** (GD, phương pháp hạ dốc) là thuật toán lặp tìm cực tiểu của một hàm số khả vi: từ một điểm khởi tạo, tại mỗi vòng lặp, tham số được cập nhật một lượng nhỏ theo hướng ngược với gradient tại điểm hiện tại, tức hướng mà giá trị của hàm giảm nhanh nhất tại điểm đó.
+
+**Khái niệm gradient:** gradient của một hàm nhiều biến tại một điểm là vector gồm các đạo hàm riêng của hàm theo từng biến, tính tại điểm đó. Vector này chỉ theo hướng giá trị của hàm tăng nhanh nhất, độ dài của nó là tốc độ tăng theo hướng đó. Với hàm một biến, gradient chính là đạo hàm.
+
+GD chỉ sử dụng thông tin cục bộ: tại vòng lặp thứ $t$, thuật toán chỉ cần gradient $\nabla_{\mathbf{w}}\mathcal{L}(\mathbf{w}_t)$ của hàm mất mát tại điểm hiện tại, không cần biết vị trí cực tiểu hay dạng tổng thể của hàm. Gradient xác định hướng cập nhật, còn độ dài bước cập nhật bằng $\eta\,\|\nabla_{\mathbf{w}}\mathcal{L}(\mathbf{w}_t)\|$, với $\eta$ là tốc độ học.
+
+**Ký hiệu $\nabla$:** tam giác ngược $\nabla$ là toán tử *nabla* (còn gọi là *del*), đọc là "nabla", khác với chữ Hy Lạp $\Delta$ (delta) có đỉnh hướng lên. Biểu thức $\nabla_{\mathbf{w}}\mathcal{L}(\mathbf{w}_t)$ đọc là "nabla theo $\mathbf{w}$ của $\mathcal{L}$ tại $\mathbf{w}_t$", hay "gradient của $\mathcal{L}$ theo $\mathbf{w}$ tại $\mathbf{w}_t$"; chỉ số dưới $\mathbf{w}$ cho biết biến lấy đạo hàm. Trong LaTeX, ký hiệu này viết là `\nabla`. Định nghĩa đầy đủ của gradient được trình bày ở mục 5.1.2.
+
 ### 5.1.1. Vai trò của tối ưu hóa trong Học máy
 
 #### a) Huấn luyện mô hình là giải bài toán tối ưu
@@ -45,7 +53,14 @@ Bước 3 là một **bài toán tối ưu**. Nói cách khác, "học" trong h�
 
 Có hai cách tìm cực tiểu:
 
-**Cách 1 – Nghiệm giải tích:** tại cực tiểu của hàm khả vi, gradient bằng $\mathbf{0}$, nên ta giải phương trình $\nabla\mathcal{L}(\mathbf{w}) = \mathbf{0}$ để có công thức tính trực tiếp $\mathbf{w}$, không cần lặp.
+**Cách 1 – Nghiệm giải tích:** giải phương trình $\nabla\mathcal{L}(\mathbf{w}) = \mathbf{0}$ để có công thức tính trực tiếp $\mathbf{w}$, không cần lặp.
+
+Cơ sở của cách này là tại cực tiểu của hàm khả vi, gradient bằng $\mathbf{0}$. Hàm **khả vi** là hàm có đạo hàm tại mọi điểm: đồ thị trơn, không có góc nhọn, nên điểm nào cũng có tiếp tuyến. Tại cực tiểu, tiếp tuyến nằm ngang, tức đạo hàm bằng 0. Thật vậy, nếu đạo hàm tại một điểm khác 0 thì đồ thị đang dốc xuống về một phía, đi sang phía đó một đoạn nhỏ sẽ gặp giá trị nhỏ hơn, nên điểm đó không thể là cực tiểu. Với hàm nhiều biến, lập luận này đúng cho từng biến $w_j$: mọi đạo hàm riêng đều bằng 0, tức gradient bằng $\mathbf{0}$.
+
+Có hai lưu ý:
+
+- **Cần giả thiết khả vi:** hàm $f(x) = |x|$ có cực tiểu tại $x = 0$, nhưng đó là một góc nhọn nên không có đạo hàm tại điểm này.
+- **Gradient bằng $\mathbf{0}$ chưa chắc là cực tiểu:** đây chỉ là điều kiện cần. Điểm cực đại cũng có đạo hàm bằng 0, hàm $f(x) = x^3$ có đạo hàm bằng 0 tại $x = 0$ dù đó không phải cực trị. Riêng với hàm lồi như MSE (mục c dưới đây), mọi điểm có gradient bằng $\mathbf{0}$ đều là cực tiểu toàn cục, nên nghiệm của phương trình chính là nghiệm cần tìm.
 
 Ví dụ với hồi quy tuyến tính (Bài 3), gradient của MSE (xem mục 5.1.2) bằng $\mathbf{0}$ khi:
 
@@ -66,9 +81,8 @@ Cách này có hai hạn chế:
 
 - Nghiệm tìm được là nghiệm **gần đúng**, độ chính xác phụ thuộc vào số vòng lặp.
 - Mỗi bước chỉ cần tính gradient, không cần giải hệ phương trình, nên dùng được cho nhiều loại mô hình và cả khi $d$ lớn.
-- Hồi quy Logistic, mạng nơ-ron **không có** nghiệm giải tích: trong phương trình $\nabla\mathcal{L}(\mathbf{w}) = \mathbf{0}$, $\mathbf{w}$ nằm trong các hàm phi tuyến (như hàm sigmoid) nên không rút ra được công thức. Vì vậy các mô hình này bắt buộc phải dùng cách lặp.
 
-**Gradient Descent** (GD, phương pháp hạ dốc) là phương pháp lặp cơ bản và phổ biến nhất trong học máy. Hầu hết các thuật toán huấn luyện hiện đại (SGD, Momentum, Adam, …) đều là biến thể của nó.
+Gradient Descent là phương pháp lặp cơ bản và phổ biến nhất trong học máy. Hầu hết các thuật toán huấn luyện hiện đại (SGD, Momentum, Adam, …) đều là biến thể của nó.
 
 #### c) Cực tiểu toàn cục và cực tiểu địa phương
 
@@ -76,7 +90,11 @@ Xét hàm $f: \mathbb{R}^d \to \mathbb{R}$:
 - $\mathbf{x}^*$ là **cực tiểu toàn cục** nếu $f(\mathbf{x}) \ge f(\mathbf{x}^*)$ với **mọi** $\mathbf{x}$.
 - $\mathbf{x}^*$ là **cực tiểu địa phương** nếu $f(\mathbf{x}) \ge f(\mathbf{x}^*)$ với mọi $\mathbf{x}$ **trong một lân cận** của $\mathbf{x}^*$.
 
-Mọi cực tiểu toàn cục đều là cực tiểu địa phương, nhưng điều ngược lại không đúng. Tại cực tiểu (của hàm khả vi), đạo hàm bằng 0.
+Mọi cực tiểu toàn cục đều là cực tiểu địa phương, nhưng điều ngược lại không đúng. Tại cực tiểu (của hàm khả vi), đạo hàm bằng 0. Hình 5.1 minh họa hai loại cực tiểu này trên hàm $f(x) = x^4 - 3x^2 + x$.
+
+![Cực tiểu toàn cục và cực tiểu địa phương](images/global_local_minima.png)
+
+*Hình 5.1: Bảng biến thiên và đồ thị của $f(x) = x^4 - 3x^2 + x$. Hàm có cực tiểu toàn cục tại $x \approx -1.30$ và cực tiểu địa phương tại $x \approx 1.13$; tại cả hai điểm, $f'(x) = 0$ và tiếp tuyến nằm ngang, đạo hàm âm ở bên trái và dương ở bên phải. Mã nguồn vẽ hình: [images/plot_global_local_minima.ipynb](images/plot_global_local_minima.ipynb).*
 
 Với **hàm lồi** (như MSE của hồi quy tuyến tính hay cross-entropy của hồi quy Logistic), mọi cực tiểu địa phương đều là cực tiểu toàn cục. Để bảo đảm GD tìm nghiệm, còn cần nghiệm hữu hạn tồn tại và các điều kiện về độ trơn, tốc độ học. Ví dụ Logistic không điều chuẩn trên dữ liệu tách biệt tuyến tính có thể giảm mất mát về 0 nhưng chuẩn trọng số tăng không bị chặn (Bài 4); giảm mất mát không đồng nghĩa vector tham số hội tụ. Với hàm không lồi (như hàm mất mát của mạng nơ-ron), GD có thể gặp cực tiểu địa phương hoặc điểm dừng khác; trong thực tế, một nghiệm có chất lượng đủ tốt thường vẫn được chấp nhận.
 
@@ -87,16 +105,16 @@ Với **hàm lồi** (như MSE của hồi quy tuyến tính hay cross-entropy c
 #### a) Đạo hàm và độ dốc
 
 Với hàm một biến $f(x)$, **đạo hàm** $f'(x)$ là **hệ số góc của tiếp tuyến** tại $x$, cho biết độ dốc của đồ thị:
-- $f'(x) > 0$: hàm đang **tăng**, đi sang phải thì $f$ tăng.
-- $f'(x) < 0$: hàm đang **giảm**, đi sang phải thì $f$ giảm.
-- $f'(x) = 0$: tiếp tuyến nằm ngang, có thể là điểm cực trị.
-- $|f'(x)|$ càng lớn thì đồ thị càng dốc.
+- $f'(x) > 0$: hàm đang **tăng**. Khi $x$ tăng (đi sang phải), $f$ tăng; khi $x$ giảm (đi sang trái), $f$ giảm.
+- $f'(x) < 0$: hàm đang **giảm**. Khi $x$ tăng, $f$ giảm; khi $x$ giảm, $f$ tăng.
+- $f'(x) = 0$: tiếp tuyến nằm ngang. Điểm này có thể là cực tiểu hoặc cực đại, nhưng cũng có thể không phải cực trị: $f(x) = x^3$ có $f'(0) = 0$ nhưng hàm vẫn tăng ở cả hai phía của $x = 0$.
+- $|f'(x)|$ càng lớn thì đồ thị càng dốc: cùng một thay đổi của $x$, giá trị của $f$ thay đổi càng nhiều.
 
 *Ví dụ:* $f(x) = \frac{1}{2}(x - 1)^2 - 2$ có $f'(x) = x - 1$. Tại $x = 3$: $f'(3) = 2 > 0$, cực tiểu nằm **bên trái**. Tại $x = -1$: $f'(-1) = -2 < 0$, cực tiểu nằm **bên phải**. Tại $x^* = 1$: $f'(1) = 0$, đây là cực tiểu.
 
 ![Tiếp tuyến và dấu của đạo hàm](images/derivative_slope.png)
 
-*Hình 5.1: Hệ số góc của tiếp tuyến chính là đạo hàm: âm tại $x = -1$, dương tại $x = 3$, bằng 0 tại cực tiểu $x^* = 1$. Mã nguồn vẽ hình: [images/plot_derivative_slope.ipynb](images/plot_derivative_slope.ipynb).*
+*Hình 5.2: Hệ số góc của tiếp tuyến chính là đạo hàm: âm tại $x = -1$, dương tại $x = 3$, bằng 0 tại cực tiểu $x^* = 1$. Mã nguồn vẽ hình: [images/plot_derivative_slope.ipynb](images/plot_derivative_slope.ipynb).*
 
 Nhận xét then chốt: **muốn giảm $f$, ta di chuyển $x$ ngược dấu với đạo hàm.**
 
@@ -120,26 +138,65 @@ $$
 \mathcal{L}(w_0, w_1) = \frac{1}{2N}\sum_{i=1}^{N}(w_0 + w_1 x_i - y_i)^2
 $$
 
-Đặt sai số $e_i = \hat{y}_i - y_i = w_0 + w_1 x_i - y_i$. Áp dụng quy tắc đạo hàm hàm hợp, hệ số $\frac{1}{2}$ triệt tiêu với số 2 của bình phương:
+Đặt sai số $e_i = \hat{y}_i - y_i = w_0 + w_1 x_i - y_i$. Khi đó $\mathcal{L}(w_0, w_1) = \frac{1}{2N}\sum_{i=1}^{N} e_i^2$. Áp dụng quy tắc đạo hàm hàm hợp $(u^2)' = 2u \cdot u'$ với $u = e_i$:
+
+**Đạo hàm riêng theo $w_0$:** coi $w_1$ là hằng số, ta có $\dfrac{\partial e_i}{\partial w_0} = 1$, nên $\dfrac{\partial (e_i^2)}{\partial w_0} = 2e_i \cdot 1 = 2e_i$. Hệ số $\frac{1}{2N}$ giản ước với số 2 do số mũ của bình phương đưa xuống:
 
 $$
-\frac{\partial \mathcal{L}}{\partial w_0} = \frac{1}{N}\sum_{i=1}^{N} e_i, \qquad
-\frac{\partial \mathcal{L}}{\partial w_1} = \frac{1}{N}\sum_{i=1}^{N} e_i\, x_i
+\frac{\partial \mathcal{L}}{\partial w_0}
+= \frac{1}{2N}\sum_{i=1}^{N} 2e_i
+= \frac{1}{N}\sum_{i=1}^{N} e_i
 $$
 
-**Tính tay.** Dữ liệu 3 điểm $(x, y)$: $(1, 2)$, $(2, 3)$, $(3, 5)$. Tại $w_0 = 0$, $w_1 = 0$: mọi dự đoán bằng 0, sai số $e = (-2, -3, -5)$.
+**Đạo hàm riêng theo $w_1$:** coi $w_0$ là hằng số, ta có $\dfrac{\partial e_i}{\partial w_1} = x_i$, nên $\dfrac{\partial (e_i^2)}{\partial w_1} = 2e_i \cdot x_i$. Tương tự:
 
 $$
-\mathcal{L}(0, 0) = \frac{1}{6}(4 + 9 + 25) = 6.333, \qquad
-\frac{\partial \mathcal{L}}{\partial w_0} = \frac{-2 - 3 - 5}{3} = -3.333, \qquad
-\frac{\partial \mathcal{L}}{\partial w_1} = \frac{-2 \cdot 1 - 3 \cdot 2 - 5 \cdot 3}{3} = -7.667
+\frac{\partial \mathcal{L}}{\partial w_1}
+= \frac{1}{2N}\sum_{i=1}^{N} 2e_i\, x_i
+= \frac{1}{N}\sum_{i=1}^{N} e_i\, x_i
+$$
+
+Hệ số $\frac{1}{2}$ trong hàm mất mát không làm thay đổi vị trí cực tiểu, chỉ giúp công thức đạo hàm gọn hơn.
+
+**Tính tay:** xét dữ liệu gồm $N = 3$ điểm $(x, y)$ là $(1, 2)$, $(2, 3)$, $(3, 5)$, tại $w_0 = 0$, $w_1 = 0$.
+
+*Bước 1, tính sai số:* mô hình chưa được huấn luyện và trọng số được khởi tạo $w_0 = w_1 = 0$. Thay vào mô hình, với mọi $x_i$:
+
+$$
+\hat{y}_i = w_0 + w_1 x_i = 0 + 0 \cdot x_i = 0
+$$
+
+Do đó $e_i = \hat{y}_i - y_i = -y_i$. Giá trị $\hat{y}_i = 0$ chỉ là hệ quả của việc khởi tạo trọng số bằng 0; dự đoán sẽ thay đổi sau khi Gradient Descent cập nhật $w_0$, $w_1$.
+
+| $i$ | $x_i$ | $y_i$ | $\hat{y}_i$ | $e_i$ | $e_i^2$ | $e_i\,x_i$ |
+|---|---|---|---|---|---|---|
+| 1 | 1 | 2 | 0 | −2 | 4 | $(-2) \cdot 1 = -2$ |
+| 2 | 2 | 3 | 0 | −3 | 9 | $(-3) \cdot 2 = -6$ |
+| 3 | 3 | 5 | 0 | −5 | 25 | $(-5) \cdot 3 = -15$ |
+
+*Bước 2, tính mất mát:* $\frac{1}{2N} = \frac{1}{6}$, lấy tổng cột $e_i^2$:
+
+$$
+\mathcal{L}(0, 0) = \frac{1}{6}(4 + 9 + 25) = \frac{38}{6} = 6.333
+$$
+
+*Bước 3, tính đạo hàm riêng theo $w_0$:* lấy trung bình cột $e_i$:
+
+$$
+\frac{\partial \mathcal{L}}{\partial w_0} = \frac{1}{3}\left[(-2) + (-3) + (-5)\right] = \frac{-10}{3} = -3.333
+$$
+
+*Bước 4, tính đạo hàm riêng theo $w_1$:* lấy trung bình cột $e_i\,x_i$:
+
+$$
+\frac{\partial \mathcal{L}}{\partial w_1} = \frac{1}{3}\left[(-2) \cdot 1 + (-3) \cdot 2 + (-5) \cdot 3\right] = \frac{-23}{3} = -7.667
 $$
 
 Cả hai đạo hàm riêng đều âm: tăng $w_0$ hoặc $w_1$ đều làm mất mát giảm, và tăng $w_1$ có tác dụng mạnh hơn.
 
 ![Hướng của gradient trên đường đồng mức](images/gradient_direction.png)
 
-*Hình 5.2: Đường đồng mức của $\mathcal{L}(w_0, w_1)$ trên dữ liệu 3 điểm. Tại $\mathbf{w} = (0, 0)$, $\nabla_{\mathbf{w}}\mathcal{L}$ và $-\nabla_{\mathbf{w}}\mathcal{L}$ vuông góc với đường đồng mức đi qua điểm đó (đường đậm); hai mũi tên được thu nhỏ còn 1/10 độ dài. Mã nguồn vẽ hình: [images/plot_gradient_direction.ipynb](images/plot_gradient_direction.ipynb).*
+*Hình 5.3: Đường đồng mức của $\mathcal{L}(w_0, w_1)$ trên dữ liệu 3 điểm. Tại $\mathbf{w} = (0, 0)$, $\nabla_{\mathbf{w}}\mathcal{L}$ và $-\nabla_{\mathbf{w}}\mathcal{L}$ vuông góc với đường đồng mức đi qua điểm đó (đường đậm); hai mũi tên được thu nhỏ còn 1/10 độ dài. Mã nguồn vẽ hình: [images/plot_gradient_direction.ipynb](images/plot_gradient_direction.ipynb).*
 
 Hướng giảm nhanh nhất chỉ là tính chất **cục bộ**: trên hình, $-\nabla\mathcal{L}$ không chỉ thẳng tới cực tiểu, nên GD phải tính lại gradient sau mỗi bước.
 
@@ -186,7 +243,7 @@ $x_t$ tiến dần về cực tiểu $x^* = -2$, mỗi bước khoảng cách t�
 
 ![Các bước Gradient Descent của ví dụ tính tay](images/gd_steps.png)
 
-*Hình 5.3: Bốn bước GD trong bảng trên, với $f(x) = (x + 2)^2$, $x_0 = 0$, $\eta = 0.25$. Mã nguồn vẽ hình: [images/plot_gd_steps.ipynb](images/plot_gd_steps.ipynb).*
+*Hình 5.4: Bốn bước GD trong bảng trên, với $f(x) = (x + 2)^2$, $x_0 = 0$, $\eta = 0.25$. Mã nguồn vẽ hình: [images/plot_gd_steps.ipynb](images/plot_gd_steps.ipynb).*
 
 #### b) Hàm nhiều biến
 
@@ -210,7 +267,7 @@ $$
 w_0 = 0 - 0.1 \times (-3.333) = 0.333, \qquad w_1 = 0 - 0.1 \times (-7.667) = 0.767
 $$
 
-Mất mát giảm từ $6.333$ xuống $1.283$ chỉ sau một bước. Bước này chính là mũi tên đỏ ở Hình 5.2.
+Mất mát giảm từ $6.333$ xuống $1.283$ chỉ sau một bước. Bước này chính là mũi tên đỏ ở Hình 5.3.
 
 #### c) Thuật toán
 
@@ -269,7 +326,7 @@ x0 =  5: x = -1.1105, f(x) = -3.2464, sau 30 vòng lặp
 
 ![Gradient Descent cho hàm một biến](images/gd_1d.png)
 
-*Hình 5.4: GD với $\eta = 0.1$ từ hai điểm khởi tạo khác nhau. Mã nguồn vẽ hình: [images/plot_gd_1d.ipynb](images/plot_gd_1d.ipynb).*
+*Hình 5.5: GD với $\eta = 0.1$ từ hai điểm khởi tạo khác nhau. Mã nguồn vẽ hình: [images/plot_gd_1d.ipynb](images/plot_gd_1d.ipynb).*
 
 Cả hai điểm khởi tạo đều tới cùng nghiệm $x \approx -1.11$, nhưng số vòng lặp khác nhau. Từ $x_0 = 5$, quỹ đạo phải đi qua vùng quanh $x \approx 2.7$ nơi đồ thị gần như **nằm ngang** (đạo hàm nhỏ nhưng khác 0), các bước rất ngắn nên tiến triển chậm. Đây là hiện tượng **vùng bằng phẳng** (plateau) thường gặp trong huấn luyện mạng nơ-ron.
 
@@ -283,7 +340,7 @@ Tốc độ học $\eta$ quyết định độ dài mỗi bước đi. Đây là
 
 ![Ảnh hưởng của tốc độ học](images/learning_rate.png)
 
-*Hình 5.5: GD trên $f(x) = x^2 + 5\sin x$ từ $x_0 = -5$ với ba tốc độ học, và giá trị $f(x_t)$ theo vòng lặp. Mã nguồn vẽ hình: [images/plot_learning_rate.ipynb](images/plot_learning_rate.ipynb).*
+*Hình 5.6: GD trên $f(x) = x^2 + 5\sin x$ từ $x_0 = -5$ với ba tốc độ học, và giá trị $f(x_t)$ theo vòng lặp. Mã nguồn vẽ hình: [images/plot_learning_rate.ipynb](images/plot_learning_rate.ipynb).*
 
 | $\eta$ | Hiện tượng |
 |---|---|
@@ -306,7 +363,7 @@ Khoảng cách tới cực tiểu được nhân với $(1 - 2\eta)$ sau mỗi b
 
 ![Ảnh hưởng của tốc độ học trên hàm bậc hai](images/learning_rate_quadratic.png)
 
-*Hình 5.6: GD trên $f(x) = (x + 2)^2$ trong 8 vòng lặp từ $x_0 = 0$ (ô vuông), ngôi sao là cực tiểu $x^* = -2$. Trường hợp $\eta = 0.5$ không vẽ vì tới cực tiểu ngay sau 1 bước. Mã nguồn vẽ hình: [images/plot_learning_rate_quadratic.ipynb](images/plot_learning_rate_quadratic.ipynb).*
+*Hình 5.7: GD trên $f(x) = (x + 2)^2$ trong 8 vòng lặp từ $x_0 = 0$ (ô vuông), ngôi sao là cực tiểu $x^* = -2$. Trường hợp $\eta = 0.5$ không vẽ vì tới cực tiểu ngay sau 1 bước. Mã nguồn vẽ hình: [images/plot_learning_rate_quadratic.ipynb](images/plot_learning_rate_quadratic.ipynb).*
 
 Như vậy tồn tại một **ngưỡng** tốc độ học: vượt ngưỡng thì GD không hội tụ. Ngưỡng này phụ thuộc vào độ cong của hàm (hàm càng "dốc đứng" thì ngưỡng càng nhỏ).
 
@@ -325,7 +382,7 @@ Với hàm hai biến $\mathcal{L}(w_0, w_1)$, có thể vẽ **đường đồn
 
 ![Đường đồng mức và quỹ đạo GD](images/contours.png)
 
-*Hình 5.7: Đường đồng mức của hàm mất mát MSE (dữ liệu 1000 điểm gần đường $y = 4 + 3x$, mục 5.3.1) và quỹ đạo GD từ $\mathbf{w} = (2, 1)$ với $\eta = 1$ và $\eta = 0.1$ trong 100 vòng lặp. Mã nguồn vẽ hình: [images/plot_contours.ipynb](images/plot_contours.ipynb).*
+*Hình 5.8: Đường đồng mức của hàm mất mát MSE (dữ liệu 1000 điểm gần đường $y = 4 + 3x$, mục 5.3.1) và quỹ đạo GD từ $\mathbf{w} = (2, 1)$ với $\eta = 1$ và $\eta = 0.1$ trong 100 vòng lặp. Mã nguồn vẽ hình: [images/plot_contours.ipynb](images/plot_contours.ipynb).*
 
 Các đường đồng mức có dạng **elip dẹt**: theo một hướng hàm rất dốc, theo hướng kia lại rất thoải. GD đi nhanh xuống "đáy thung lũng" rồi bò chậm dọc theo đáy. Với $\eta = 0.1$, sau 100 vòng lặp vẫn chưa tới nghiệm.
 
@@ -337,7 +394,7 @@ Với hàm không lồi, kết quả của GD phụ thuộc vào **điểm khở
 
 ![Cực tiểu địa phương](images/local_minima.png)
 
-*Hình 5.8: Hàm $f(x) = x^4 - 3x^2 + x$ có cực tiểu toàn cục tại $x \approx -1.30$ và cực tiểu địa phương tại $x \approx 1.13$. GD từ $x_0 = -2$ tới cực tiểu toàn cục, từ $x_0 = 2$ mắc kẹt ở cực tiểu địa phương. Mã nguồn vẽ hình: [images/plot_local_minima.ipynb](images/plot_local_minima.ipynb).*
+*Hình 5.9: Hàm $f(x) = x^4 - 3x^2 + x$ có cực tiểu toàn cục tại $x \approx -1.30$ và cực tiểu địa phương tại $x \approx 1.13$. GD từ $x_0 = -2$ tới cực tiểu toàn cục, từ $x_0 = 2$ mắc kẹt ở cực tiểu địa phương. Mã nguồn vẽ hình: [images/plot_local_minima.ipynb](images/plot_local_minima.ipynb).*
 
 Tại cực tiểu địa phương, đạo hàm bằng 0 nên GD dừng lại, không có cách nào "biết" rằng còn điểm thấp hơn ở chỗ khác. Một số cách giảm thiểu: chạy GD nhiều lần với các điểm khởi tạo khác nhau rồi chọn kết quả tốt nhất; dùng SGD hoặc mini-batch (nhiễu trong gradient có thể giúp thoát khỏi cực tiểu nông, mục 5.2); dùng Momentum. Với các hàm lồi như MSE của hồi quy tuyến tính, vấn đề này không xảy ra.
 
@@ -440,9 +497,9 @@ Batch GD và SGD là hai trường hợp đặc biệt của Mini-batch GD với
 
 ![So sánh ba biến thể của GD](images/gd_variants.png)
 
-*Hình 5.9: So sánh ba biến thể GD: (a) quỹ đạo, (b) mất mát theo epoch. Mã nguồn vẽ hình: [images/plot_gd_variants.ipynb](images/plot_gd_variants.ipynb).*
+*Hình 5.10: So sánh ba biến thể GD: (a) quỹ đạo, (b) mất mát theo epoch. Mã nguồn vẽ hình: [images/plot_gd_variants.ipynb](images/plot_gd_variants.ipynb).*
 
-Hình 5.9 dùng dữ liệu 1000 điểm ở mục 5.3.1, cùng khởi tạo $\mathbf{w} = (2, 1)$.
+Hình 5.10 dùng dữ liệu 1000 điểm ở mục 5.3.1, cùng khởi tạo $\mathbf{w} = (2, 1)$.
 
 - **Quỹ đạo của 60 lần cập nhật đầu tiên (a):**
   - Batch GD (60 epoch) đi những bước dài, với $\eta = 1$ vượt qua đáy thung lũng ở vài bước đầu rồi tiến đều tới sát nghiệm.
@@ -564,7 +621,7 @@ for name, batch_size, eta in [('Batch', 1000, 1.0), ('SGD', 1, 0.05), ('Mini-bat
 
 *Mã nguồn: [codes/05_gd_variants.ipynb](codes/05_gd_variants.ipynb).*
 
-Cùng 20 lượt duyệt dữ liệu, Batch GD mới cập nhật 20 lần nên còn khá xa nghiệm, trong khi SGD và mini-batch đã gần nghiệm chỉ sau 1–2 epoch. Đổi lại, mất mát của SGD và mini-batch dao động lên xuống giữa các epoch (Hình 5.9b) thay vì giảm đều.
+Cùng 20 lượt duyệt dữ liệu, Batch GD mới cập nhật 20 lần nên còn khá xa nghiệm, trong khi SGD và mini-batch đã gần nghiệm chỉ sau 1–2 epoch. Đổi lại, mất mát của SGD và mini-batch dao động lên xuống giữa các epoch (Hình 5.10b) thay vì giảm đều.
 
 #### Bước 3: Dữ liệu giá nhà và vai trò của chuẩn hóa
 
@@ -638,7 +695,7 @@ for name, batch_size, eta, n_epochs in [('Batch', len(y_train), 0.5, 100),
 
 ![Ảnh hưởng của chuẩn hóa đến GD](images/feature_scaling.png)
 
-*Hình 5.10: Hàm mất mát của Batch GD trên dữ liệu giá nhà. Dữ liệu gốc với $\eta = 10^{-4}$ (lớn hơn khoảng $1.3 \times 10^{-4}$ sẽ phân kỳ) giảm rất chậm; dữ liệu đã chuẩn hóa với $\eta = 0.5$ tiến sát giá trị nhỏ nhất sau khoảng 30 vòng lặp. Mã nguồn vẽ hình: [images/plot_feature_scaling.ipynb](images/plot_feature_scaling.ipynb).*
+*Hình 5.11: Hàm mất mát của Batch GD trên dữ liệu giá nhà. Dữ liệu gốc với $\eta = 10^{-4}$ (lớn hơn khoảng $1.3 \times 10^{-4}$ sẽ phân kỳ) giảm rất chậm; dữ liệu đã chuẩn hóa với $\eta = 0.5$ tiến sát giá trị nhỏ nhất sau khoảng 30 vòng lặp. Mã nguồn vẽ hình: [images/plot_feature_scaling.ipynb](images/plot_feature_scaling.ipynb).*
 
 **Nhận xét:**
 - Sau khi chuẩn hóa, Batch GD tới rất gần nghiệm OLS chỉ sau 100 vòng lặp với $\eta = 0.5$, gấp 5000 lần tốc độ học $10^{-4}$ phải dùng trên dữ liệu gốc (dữ liệu gốc phân kỳ ngay khi $\eta$ vượt khoảng $1.3 \times 10^{-4}$). **Luôn chuẩn hóa đặc trưng trước khi dùng GD.**
