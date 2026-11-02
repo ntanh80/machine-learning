@@ -270,7 +270,7 @@ $$
 \mathbf{W}^{(1)} = \begin{bmatrix}0.1276 & 0.2551\\ -0.3322 & 0.3356\end{bmatrix}, \quad \mathbf{b}^{(1)} = \begin{bmatrix}0.0276\\ 0.0678\end{bmatrix}
 $$
 
-Sau một bước, $\hat{y}$ tăng từ 0.5309 lên 0.6438 (gần nhãn $y = 1$ hơn), mất mát giảm từ 0.6331 xuống 0.4404. Notebook kiểm tra gradient bằng đạo hàm số (Bài 5): sai lệch chỉ khoảng $10^{-10}$.
+Sau một bước, $\hat{y}$ tăng từ 0.5309 lên 0.6438 (gần nhãn $y = 1$ hơn), mất mát giảm từ 0.6331 xuống 0.4404. Notebook kiểm tra gradient bằng đạo hàm số: sai lệch chỉ khoảng $10^{-10}$.
 
 #### e) Cài đặt bằng NumPy
 

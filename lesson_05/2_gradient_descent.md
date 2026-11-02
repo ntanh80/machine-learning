@@ -59,7 +59,7 @@ Xét hàm $f: \mathbb{R}^d \to \mathbb{R}$:
 
 Mọi cực tiểu toàn cục đều là cực tiểu địa phương, nhưng điều ngược lại không đúng. Tại cực tiểu (của hàm khả vi), đạo hàm bằng 0.
 
-Với **hàm lồi** (như MSE của hồi quy tuyến tính hay cross-entropy của hồi quy Logistic), mọi cực tiểu địa phương đều là cực tiểu toàn cục. Để bảo đảm GD tìm nghiệm, còn cần nghiệm hữu hạn tồn tại và các điều kiện về độ trơn, tốc độ học. Ví dụ Logistic không điều chuẩn trên dữ liệu tách biệt tuyến tính có thể giảm loss về 0 nhưng chuẩn trọng số tăng không bị chặn (Bài 4); giảm loss không đồng nghĩa vector tham số hội tụ. Với hàm không lồi (như hàm mất mát của mạng nơ-ron), GD có thể gặp cực tiểu địa phương hoặc điểm dừng khác; trong thực tế, một nghiệm có chất lượng đủ tốt thường vẫn được chấp nhận.
+Với **hàm lồi** (như MSE của hồi quy tuyến tính hay cross-entropy của hồi quy Logistic), mọi cực tiểu địa phương đều là cực tiểu toàn cục. Để bảo đảm GD tìm nghiệm, còn cần nghiệm hữu hạn tồn tại và các điều kiện về độ trơn, tốc độ học. Ví dụ Logistic không điều chuẩn trên dữ liệu tách biệt tuyến tính có thể giảm mất mát về 0 nhưng chuẩn trọng số tăng không bị chặn (Bài 4); giảm mất mát không đồng nghĩa vector tham số hội tụ. Với hàm không lồi (như hàm mất mát của mạng nơ-ron), GD có thể gặp cực tiểu địa phương hoặc điểm dừng khác; trong thực tế, một nghiệm có chất lượng đủ tốt thường vẫn được chấp nhận.
 
 ---
 
@@ -124,41 +124,6 @@ $$
 
 Thành phần thứ $j$ của vector này chính là $\frac{1}{N}\sum_i e_i\, x_{ij}$, khớp với công thức tính riêng ở trên.
 
-#### d) Kiểm tra gradient bằng đạo hàm số
-
-Tính sai gradient là lỗi rất thường gặp khi tự cài đặt. Có thể kiểm tra bằng **xấp xỉ sai phân trung tâm**: với $\varepsilon$ nhỏ (ví dụ $10^{-6}$),
-
-$$
-\frac{\partial \mathcal{L}}{\partial w_j} \approx \frac{\mathcal{L}(\mathbf{w} + \varepsilon\mathbf{e}_j) - \mathcal{L}(\mathbf{w} - \varepsilon\mathbf{e}_j)}{2\varepsilon}
-$$
-
-trong đó $\mathbf{e}_j$ là vector có phần tử thứ $j$ bằng 1, còn lại bằng 0.
-
-```python
-import numpy as np
-
-X = np.array([[1, 1], [1, 2], [1, 3]], dtype=float)   # mỗi hàng [1, x_i]
-y = np.array([2, 3, 5], dtype=float)
-
-def loss(w):
-    return np.sum((X @ w - y)**2) / (2 * len(y))
-
-def grad(w):
-    return X.T @ (X @ w - y) / len(y)
-
-def numerical_grad(w, eps=1e-6):
-    g = np.zeros_like(w)
-    for j in range(len(w)):
-        e = np.zeros_like(w); e[j] = eps
-        g[j] = (loss(w + e) - loss(w - e)) / (2 * eps)
-    return g
-
-w = np.zeros(2)
-print(loss(w))       # 6.333
-print(grad(w))       # [-3.333 -7.667]
-print(numerical_grad(w))    # [-3.333 -7.667]  -> khớp với công thức
-```
-
 *Mã nguồn: [codes/01_mse_partial_derivatives.ipynb](codes/01_mse_partial_derivatives.ipynb).*
 
 ---
@@ -168,7 +133,7 @@ print(numerical_grad(w))    # [-3.333 -7.667]  -> khớp với công thức
 #### a) Hàm một biến
 
 Giả sử sau vòng lặp $t$ ta đang ở $x_t$. Từ mục 5.1.2:
-- Nếu $f'(x_t) > 0$, một bước đủ nhỏ theo hướng **giảm** $x$ làm $f$ giảm; nếu $f'(x_t) < 0$, hướng giảm cục bộ là **tăng** $x$. Dấu đạo hàm cho hướng giảm cục bộ; chỉ với hàm lồi một biến có nghiệm cực tiểu mới có thể suy ra phía của cực tiểu từ dấu này.
+- Nếu $f'(x_t) > 0$, một bước đủ nhỏ theo hướng **giảm** $x$ làm $f$ giảm; nếu $f'(x_t) < 0$, hướng giảm cục bộ là **tăng** $x$. Dấu đạo hàm cho hướng giảm cục bộ; với hàm lồi một biến có nghiệm cực tiểu, dấu này còn cho biết cực tiểu nằm ở phía nào.
 - Chọn độ dài bước **tỉ lệ** với $|f'(x_t)|$: nơi dốc thì bước dài, nơi thoải thì bước ngắn. Độ lớn đạo hàm không phải khoảng cách tới cực tiểu; hàm không lồi có thể có vùng bằng phẳng ở xa nghiệm tốt.
 
 Từ đó có quy tắc cập nhật:
@@ -237,12 +202,15 @@ Hàm này có đạo hàm $f'(x) = 2x + 5\cos x$. Phương trình $f'(x) = 0$ kh
 import numpy as np
 
 def f(x):
+    # Hàm cần tối thiểu f(x)
     return x**2 + 5 * np.sin(x)
 
 def grad(x):
+    # Đạo hàm f'(x)
     return 2 * x + 5 * np.cos(x)
 
 def gd_1d(x0, eta, max_iter=100, tol=1e-3):
+    # GD từ x0 với tốc độ học η, dừng khi |f'(x)| < tol; trả về dãy x_t
     x = x0
     history = [x0]
     for t in range(max_iter):
@@ -270,7 +238,7 @@ x0 =  5: x = -1.1105, f(x) = -3.2464, sau 30 vòng lặp
 
 *Hình 5.1: GD với $\eta = 0.1$ từ hai điểm khởi tạo khác nhau. Mã nguồn vẽ hình: [images/plot_gd_1d.ipynb](images/plot_gd_1d.ipynb).*
 
-Cả hai điểm khởi tạo đều tới cùng nghiệm $x \approx -1.11$, nhưng số vòng lặp khác nhau. Từ $x_0 = 5$, quỹ đạo phải đi qua vùng quanh $x \approx 2.5$ nơi đồ thị gần như **nằm ngang** (đạo hàm nhỏ nhưng khác 0), các bước rất ngắn nên tiến triển chậm. Đây là hiện tượng **vùng bằng phẳng** (plateau) thường gặp trong huấn luyện mạng nơ-ron.
+Cả hai điểm khởi tạo đều tới cùng nghiệm $x \approx -1.11$, nhưng số vòng lặp khác nhau. Từ $x_0 = 5$, quỹ đạo phải đi qua vùng quanh $x \approx 2.7$ nơi đồ thị gần như **nằm ngang** (đạo hàm nhỏ nhưng khác 0), các bước rất ngắn nên tiến triển chậm. Đây là hiện tượng **vùng bằng phẳng** (plateau) thường gặp trong huấn luyện mạng nơ-ron.
 
 ---
 
@@ -435,7 +403,7 @@ Batch GD và SGD là hai trường hợp đặc biệt của Mini-batch GD với
 
 ![So sánh ba biến thể của GD](images/gd_variants.png)
 
-*Hình 5.5: Ba biến thể GD trên dữ liệu 1000 điểm ở mục 5.3.1, cùng khởi tạo $\mathbf{w} = (2, 1)$. (a) Quỹ đạo của 60 lần cập nhật đầu tiên: Batch GD (60 lần cập nhật = 60 epoch) đi những bước lớn và mượt; SGD (60 lần cập nhật = 60 mẫu, chưa hết 1 epoch) đi những bước nhỏ, zig-zag; mini-batch nằm giữa. (b) Mất mát sau mỗi epoch: tính theo epoch, SGD và mini-batch giảm nhanh hơn Batch GD rất nhiều nhưng dao động quanh cực tiểu. Mã nguồn vẽ hình: [images/plot_gd_variants.ipynb](images/plot_gd_variants.ipynb).*
+*Hình 5.5: Ba biến thể GD trên dữ liệu 1000 điểm ở mục 5.3.1, cùng khởi tạo $\mathbf{w} = (2, 1)$. (a) Quỹ đạo của 60 lần cập nhật đầu tiên: Batch GD (60 lần cập nhật = 60 epoch) đi những bước dài, với $\eta = 1$ vượt qua đáy thung lũng ở vài bước đầu rồi tiến đều tới sát nghiệm; SGD (60 lần cập nhật = 60 mẫu, chưa hết 1 epoch) đi những bước ngắn, lệch hướng ngẫu nhiên; mini-batch (khoảng 2 epoch) tới gần nghiệm rồi dao động quanh đường đi. (b) Mất mát sau mỗi epoch: tính theo epoch, SGD và mini-batch giảm nhanh hơn Batch GD rất nhiều nhưng dao động quanh cực tiểu. Mã nguồn vẽ hình: [images/plot_gd_variants.ipynb](images/plot_gd_variants.ipynb).*
 
 | | Batch GD | Stochastic GD | Mini-batch GD |
 |---|---|---|---|
@@ -480,12 +448,15 @@ w_ols = np.linalg.pinv(Xbar.T @ Xbar) @ Xbar.T @ y
 print('OLS: w =', w_ols)
 
 def loss(w, Xb, y):
+    # Hàm mất mát L(w) = 1/(2N) ||Xb w - y||^2
     return np.sum((Xb @ w - y)**2) / (2 * len(y))
 
 def grad(w, Xb, y):
+    # Gradient của L(w): (1/N) Xb^T (Xb w - y)
     return Xb.T @ (Xb @ w - y) / len(y)
 
 def batch_gd(Xb, y, w_init, eta, max_iter=10000, tol=1e-4):
+    # Batch GD từ w_init với tốc độ học η, dừng khi ||gradient|| < tol
     w = w_init.copy()
     history = [loss(w, Xb, y)]
     for t in range(1, max_iter + 1):
@@ -497,20 +468,20 @@ def batch_gd(Xb, y, w_init, eta, max_iter=10000, tol=1e-4):
 
 for eta in [1, 0.1]:
     w, t, history = batch_gd(Xbar, y, np.array([2., 1.]), eta)
-    print('eta = %-4s w = %s, sau %d vòng lặp, loss = %.6f' % (eta, w.round(4), t, history[-1]))
+    print('eta = %-4s w = %s, sau %d vòng lặp, L = %.6f' % (eta, w.round(4), t, history[-1]))
 ```
 
 **Kết quả:**
 
 ```
 OLS: w = [4.0072 2.9823]
-eta = 1    w = [4.0079 2.9809], sau 95 vòng lặp, loss = 0.018906
-eta = 0.1  w = [4.0079 2.9809], sau 975 vòng lặp, loss = 0.018906
+eta = 1    w = [4.0079 2.9809], sau 95 vòng lặp, L = 0.018906
+eta = 0.1  w = [4.0079 2.9809], sau 975 vòng lặp, L = 0.018906
 ```
 
-GD tìm được nghiệm rất gần nghiệm OLS (sai khác do điều kiện dừng $\|\nabla\mathcal{L}\| < 10^{-4}$), và mô hình $\hat{y} \approx 4.01 + 2.98x$ khớp với quy luật sinh dữ liệu. Tốc độ học nhỏ hơn 10 lần thì cần số vòng lặp nhiều hơn khoảng 10 lần. Thử $\eta = 2.5$ sẽ thấy `w` thành `nan`: GD phân kỳ.
-
 *Mã nguồn: [codes/04_batch_gd_linear_regression.ipynb](codes/04_batch_gd_linear_regression.ipynb).*
+
+GD tìm được nghiệm rất gần nghiệm OLS (sai khác do điều kiện dừng $\|\nabla\mathcal{L}\| < 10^{-4}$), và mô hình $\hat{y} \approx 4.01 + 2.98x$ khớp với quy luật sinh dữ liệu. Tốc độ học nhỏ hơn 10 lần thì cần số vòng lặp nhiều hơn khoảng 10 lần. Thử $\eta = 2.5$ sẽ thấy `w` thành `nan`: GD phân kỳ.
 
 #### Bước 2: Cài đặt chung cho ba biến thể
 
@@ -518,10 +489,11 @@ Một hàm duy nhất với tham số `batch_size` bao gồm cả ba biến th�
 
 ```python
 def minibatch_gd(Xb, y, eta, batch_size, n_epochs, w_init=None, seed=0):
+    # Mini-batch GD: batch_size = N là Batch GD, batch_size = 1 là SGD
     rng = np.random.default_rng(seed)
     N = len(y)
     w = np.zeros(Xb.shape[1]) if w_init is None else w_init.copy()
-    history = [loss(w, Xb, y)]                    # loss trên toàn bộ dữ liệu sau mỗi epoch
+    history = [loss(w, Xb, y)]                    # L trên toàn bộ dữ liệu sau mỗi epoch
     for epoch in range(n_epochs):
         order = rng.permutation(N)               # xáo trộn dữ liệu mỗi epoch
         for s in range(0, N, batch_size):
@@ -530,24 +502,24 @@ def minibatch_gd(Xb, y, eta, batch_size, n_epochs, w_init=None, seed=0):
         history.append(loss(w, Xb, y))
     return w, history
 
-w0 = np.array([2., 1.])
+w_init = np.array([2., 1.])   # điểm khởi tạo
 for name, batch_size, eta in [('Batch', 1000, 1.0), ('SGD', 1, 0.05), ('Mini-batch', 32, 0.5)]:
-    w, history = minibatch_gd(Xbar, y, eta, batch_size, n_epochs=20, w_init=w0)
-    print('%-10s w = %s, loss sau epoch 1, 2, 20: %s' %
+    w, history = minibatch_gd(Xbar, y, eta, batch_size, n_epochs=20, w_init=w_init)
+    print('%-10s w = %s, L sau epoch 1, 2, 20: %s' %
           (name, w.round(4), np.round([history[1], history[2], history[20]], 4)))
 ```
 
 **Kết quả** (giá trị nhỏ nhất của hàm mất mát là $0.0189$):
 
-| Biến thể | Batch size | $\eta$ | Cập nhật/epoch | Loss sau epoch 1 | Loss sau epoch 2 | Loss sau epoch 20 | $\mathbf{w}$ sau 20 epoch |
+| Biến thể | Batch size | $\eta$ | Cập nhật/epoch | $\mathcal{L}$ sau epoch 1 | $\mathcal{L}$ sau epoch 2 | $\mathcal{L}$ sau epoch 20 | $\mathbf{w}$ sau 20 epoch |
 |---|---|---|---|---|---|---|---|
 | Batch GD | 1000 | 1.0 | 1 | 0.3320 | 0.0548 | 0.0205 | $(4.109,\ 2.787)$ |
 | SGD | 1 | 0.05 | 1000 | 0.0217 | 0.0190 | 0.0189 | $(4.021,\ 2.972)$ |
 | Mini-batch GD | 32 | 0.5 | 32 | 0.0282 | 0.0200 | 0.0193 | $(4.035,\ 2.986)$ |
 
-Cùng 20 lượt duyệt dữ liệu, Batch GD mới cập nhật 20 lần nên còn khá xa nghiệm, trong khi SGD và mini-batch đã gần nghiệm chỉ sau 1–2 epoch. Đổi lại, mất mát của SGD và mini-batch dao động lên xuống giữa các epoch (Hình 5.5b) thay vì giảm đều.
-
 *Mã nguồn: [codes/05_gd_variants.ipynb](codes/05_gd_variants.ipynb).*
+
+Cùng 20 lượt duyệt dữ liệu, Batch GD mới cập nhật 20 lần nên còn khá xa nghiệm, trong khi SGD và mini-batch đã gần nghiệm chỉ sau 1–2 epoch. Đổi lại, mất mát của SGD và mini-batch dao động lên xuống giữa các epoch (Hình 5.5b) thay vì giảm đều.
 
 #### Bước 3: Dữ liệu giá nhà và vai trò của chuẩn hóa
 
@@ -565,6 +537,7 @@ y = df['price'].values                             # giá nhà (triệu VND)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 def add_ones(X):
+    # Thêm cột 1 vào trước X (vector mở rộng)
     return np.column_stack([np.ones(len(X)), X])
 
 Xb_train = add_ones(X_train)
@@ -573,12 +546,14 @@ print('OLS:', w_ols.round(2))                    # [505.2  29.98 144.89 -59.46]
 
 # GD trên dữ liệu gốc (chưa chuẩn hóa)
 w, history = minibatch_gd(Xb_train, y_train, eta=3e-4, batch_size=len(y_train), n_epochs=50)
-print(history[:4])                               # loss tăng vọt -> phân kỳ
+print(history[:4])                               # L tăng vọt -> phân kỳ
 w, history = minibatch_gd(Xb_train, y_train, eta=1e-4, batch_size=len(y_train), n_epochs=1000)
 print(w.round(2))                                # [4.46 35.79 8.73 -45.2] -> còn rất xa OLS
 ```
 
-Trên dữ liệu gốc, diện tích có giá trị trung bình khoảng 114 trong khi số phòng chỉ khoảng 3: các đường đồng mức cực kỳ dẹt. Với $\eta = 3 \times 10^{-4}$ GD đã **phân kỳ** (loss tăng từ $7.9 \times 10^6$ lên $1.0 \times 10^8$, $1.4 \times 10^9$, …). Với $\eta = 10^{-4}$ thì không phân kỳ nhưng sau 1000 vòng lặp, $w_0 \approx 4.5$ vẫn còn rất xa giá trị đúng $505.2$.
+*Mã nguồn: [codes/06_gd_house_prices.ipynb](codes/06_gd_house_prices.ipynb).*
+
+Trên dữ liệu gốc, diện tích có giá trị trung bình khoảng 114 trong khi số phòng chỉ khoảng 3: các đường đồng mức cực kỳ dẹt. Với $\eta = 3 \times 10^{-4}$ GD đã **phân kỳ** (mất mát tăng từ $7.9 \times 10^6$ lên $1.0 \times 10^8$, $1.4 \times 10^9$, …). Với $\eta = 10^{-4}$ thì không phân kỳ nhưng sau 1000 vòng lặp, $w_0 \approx 4.5$ vẫn còn rất xa giá trị đúng $505.2$.
 
 **Chuẩn hóa đặc trưng** về trung bình 0, độ lệch chuẩn 1 (chỉ dùng thống kê của tập huấn luyện), rồi so sánh ba biến thể:
 
@@ -588,6 +563,7 @@ Zb_train = add_ones((X_train - mu) / std)
 Zb_test = add_ones((X_test - mu) / std)
 
 def evaluate(w, Zb, y):
+    # Trả về RMSE và R2 của w trên dữ liệu (Zb, y)
     pred = Zb @ w
     rmse = np.sqrt(np.mean((pred - y)**2))
     r2 = 1 - np.sum((pred - y)**2) / np.sum((y - y.mean())**2)
@@ -600,29 +576,29 @@ for name, batch_size, eta, n_epochs in [('Batch', len(y_train), 0.5, 100),
     # Đổi trọng số về thang đo gốc: w_j = w'_j / std_j, w_0 = w'_0 - sum(w'_j * mu_j / std_j)
     w_original = np.r_[w[0] - np.sum(w[1:] * mu / std), w[1:] / std]
     rmse, r2 = evaluate(w, Zb_test, y_test)
-    print('%-10s loss = %.1f, w (thang gốc) = %s, RMSE test = %.2f, R2 = %.4f'
+    print('%-10s L = %.1f, w (thang gốc) = %s, RMSE test = %.2f, R2 = %.4f'
           % (name, history[-1], w_original.round(2), rmse, r2))
 ```
 
 **Kết quả:**
 
-| Phương pháp | Số epoch | Số lần cập nhật | Loss huấn luyện | $w_0$ | $w_1$ (diện tích) | $w_2$ (số phòng) | $w_3$ (khoảng cách) | RMSE test | $R^2$ test |
+| Phương pháp | Số epoch | Số lần cập nhật | $\mathcal{L}$ huấn luyện | $w_0$ | $w_1$ (diện tích) | $w_2$ (số phòng) | $w_3$ (khoảng cách) | RMSE test | $R^2$ test |
 |---|---|---|---|---|---|---|---|---|---|
 | OLS (nghiệm giải tích) | – | – | 45 584.0 | 505.20 | 29.98 | 144.89 | −59.46 | 302.06 | 0.9685 |
 | Batch GD, $\eta = 0.5$ | 100 | 100 | 45 584.0 | 505.26 | 29.98 | 145.10 | −59.46 | 302.05 | 0.9685 |
 | SGD, $\eta = 0.01$ | 10 | 80 000 | 46 949.9 | 647.97 | 29.73 | 140.10 | −65.22 | 305.79 | 0.9677 |
 | Mini-batch ($m = 64$), $\eta = 0.1$ | 10 | 1 250 | 45 657.7 | 519.97 | 29.98 | 147.92 | −60.75 | 302.16 | 0.9685 |
 
+*Mã nguồn: [codes/06_gd_house_prices.ipynb](codes/06_gd_house_prices.ipynb).*
+
 ![Ảnh hưởng của chuẩn hóa đến GD](images/feature_scaling.png)
 
-*Hình 5.6: Hàm mất mát của Batch GD trên dữ liệu giá nhà. Dữ liệu gốc với $\eta = 10^{-4}$ (lớn hơn sẽ phân kỳ) giảm rất chậm; dữ liệu đã chuẩn hóa với $\eta = 0.5$ đạt giá trị nhỏ nhất sau khoảng 30 vòng lặp. Mã nguồn vẽ hình: [images/plot_feature_scaling.ipynb](images/plot_feature_scaling.ipynb).*
+*Hình 5.6: Hàm mất mát của Batch GD trên dữ liệu giá nhà. Dữ liệu gốc với $\eta = 10^{-4}$ (lớn hơn khoảng $1.3 \times 10^{-4}$ sẽ phân kỳ) giảm rất chậm; dữ liệu đã chuẩn hóa với $\eta = 0.5$ tiến sát giá trị nhỏ nhất sau khoảng 30 vòng lặp. Mã nguồn vẽ hình: [images/plot_feature_scaling.ipynb](images/plot_feature_scaling.ipynb).*
 
 **Nhận xét:**
-- Sau khi chuẩn hóa, Batch GD hội tụ về đúng nghiệm OLS chỉ sau 100 vòng lặp với $\eta = 0.5$, gấp 5000 lần tốc độ học $10^{-4}$ phải dùng trên dữ liệu gốc (dữ liệu gốc phân kỳ ngay khi $\eta$ vượt khoảng $1.3 \times 10^{-4}$). **Luôn chuẩn hóa đặc trưng trước khi dùng GD.**
+- Sau khi chuẩn hóa, Batch GD tới rất gần nghiệm OLS chỉ sau 100 vòng lặp với $\eta = 0.5$, gấp 5000 lần tốc độ học $10^{-4}$ phải dùng trên dữ liệu gốc (dữ liệu gốc phân kỳ ngay khi $\eta$ vượt khoảng $1.3 \times 10^{-4}$). **Luôn chuẩn hóa đặc trưng trước khi dùng GD.**
 - Mini-batch GD đạt chất lượng gần như OLS ($R^2 = 0.9685$) chỉ sau 10 epoch. SGD với $\eta$ cố định dao động quanh nghiệm nên hệ số $w_0$ còn lệch, RMSE kém hơn một chút; có thể cải thiện bằng cách giảm dần tốc độ học.
 - Với dữ liệu nhỏ như thế này, nghiệm OLS là đủ. GD thực sự cần thiết khi dữ liệu lớn, số đặc trưng nhiều, hoặc mô hình không có nghiệm giải tích (hồi quy Logistic, mạng nơ-ron).
-
-*Mã nguồn: [codes/06_gd_house_prices.ipynb](codes/06_gd_house_prices.ipynb).*
 
 #### Bước 4: Sử dụng scikit-learn
 
@@ -642,9 +618,9 @@ print('w0 =', sgd.intercept_, ' w =', sgd.coef_)   # trên dữ liệu đã chu�
 print('R2 test =', model.score(X_test, y_test))    # ~0.9685
 ```
 
-Tương tự, `SGDClassifier(loss='log_loss')` huấn luyện hồi quy Logistic bằng SGD.
-
 *Mã nguồn: [codes/07_sgd_regressor_sklearn.ipynb](codes/07_sgd_regressor_sklearn.ipynb).*
+
+Tương tự, `SGDClassifier(loss='log_loss')` huấn luyện hồi quy Logistic bằng SGD.
 
 ---
 
@@ -688,7 +664,7 @@ $$
 ### Bài tập thực hành
 
 13. Viết chương trình GD tìm cực tiểu của $f(x) = x^2 + 4x + 4$. Vẽ đồ thị hàm số và các điểm $x_t$ qua các vòng lặp với $\eta \in \{0.1, 0.5, 0.9, 1.05\}$, nhận xét.
-14. Cài đặt hồi quy Logistic bằng Mini-batch GD cho dữ liệu giờ ôn thi ở Bài 4 (gradient $\frac{1}{m}\mathbf{X}_\mathcal{B}^T(\sigma(\mathbf{X}_\mathcal{B}\mathbf{w}) - \mathbf{y}_\mathcal{B})$). So sánh nghiệm với `LogisticRegression(penalty=None)`.
+14. Cài đặt hồi quy Logistic bằng Mini-batch GD cho dữ liệu giờ ôn thi ở Bài 4 (gradient $\frac{1}{m}\mathbf{X}_\mathcal{B}^T(\sigma(\mathbf{X}_\mathcal{B}\mathbf{w}) - \mathbf{y}_\mathcal{B})$). So sánh nghiệm với `LogisticRegression(C=np.inf)`.
 15. Với dữ liệu giá nhà:
     - a. Chạy Mini-batch GD với batch size $\in \{8, 32, 128, 512\}$ (cùng $\eta = 0.1$, 10 epoch). Vẽ mất mát theo epoch và so sánh thời gian chạy.
     - b. Cài đặt SGD với tốc độ học giảm dần $\eta_t = \eta_0 / (1 + k\,t)$ ($t$ là số epoch). So sánh RMSE trên tập kiểm tra với SGD tốc độ học cố định.
