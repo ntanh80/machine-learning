@@ -77,6 +77,7 @@ lesson_XX/
   ```
 
 - Chuỗi hiển thị (`print`, nhãn trục, tiêu đề hình) viết tiếng Việt có dấu.
+- Cụm in đậm mở đầu đoạn văn hoặc mục liệt kê kết thúc bằng dấu `:`, không dùng dấu chấm, và chữ đầu sau dấu `:` viết thường (sai: `**Nghiệm giải tích.** Tại cực tiểu…`; đúng: `**Nghiệm giải tích:** tại cực tiểu…`).
 
 ### 3.4. Ký hiệu toán học – thống nhất giữa các bài
 
