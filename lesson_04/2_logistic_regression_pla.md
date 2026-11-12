@@ -4,8 +4,11 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 # Bài 4. Hồi quy Logistic và thuật toán PLA
 
-> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 7 – Mô hình nơ-ron Perceptron; Chương 9 – Hồi quy logistic; Bộ dữ liệu ung thư phổi lấy từ Kaggle. Mã nguồn demo: thư mục [codes/](codes/).
+> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 7 – Mô hình nơ-ron Perceptron; Chương 9 – Hồi quy logistic. Bộ dữ liệu ung thư phổi lấy từ Kaggle.
 >
+> Mã nguồn demo: thư mục [codes/](codes/).
+>
+> Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
 - [4.1. Mô hình hồi quy Logistic](#41-mô-hình-hồi-quy-logistic)
 - [4.2. Thuật toán PLA](#42-thuật-toán-pla)

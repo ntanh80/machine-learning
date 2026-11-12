@@ -6,7 +6,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Lời nói đầu; Chương 13 – Mạng nơ-ron nhân tạo; Chương 14 – Một số dự án học máy tiêu biểu (Random Forest). Bagging, Boosting, Stacking chỉ có Random Forest trong giáo trình, phần còn lại tham khảo L. Breiman, *Bagging predictors*, Machine Learning, 1996; Y. Freund, R. Schapire, *A decision-theoretic generalization of on-line learning and an application to boosting*, 1997; J. Friedman, *Greedy function approximation: a gradient boosting machine*, 2001; D. Wolpert, *Stacked generalization*, 1992; I. Goodfellow, Y. Bengio, A. Courville, *Deep Learning*, MIT Press, 2016 và tài liệu scikit-learn (*Neural network models*, *Ensembles*).
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`). Notebook dùng PyTorch cần cài thêm thư viện `torch`.
+> Mã nguồn demo: thư mục [codes/](codes/). Notebook dùng PyTorch cần cài thêm thư viện `torch`.
 >
 > Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 

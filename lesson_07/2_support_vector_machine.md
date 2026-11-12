@@ -6,7 +6,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 10 – Máy vector hỗ trợ. SVM lề mềm và hàm kernel chỉ được nhắc tới trong giáo trình (phần câu hỏi ôn tập), tham khảo C. Cortes, V. Vapnik, *Support-vector networks*, Machine Learning, 1995; C. M. Bishop, *Pattern Recognition and Machine Learning*, Springer, 2006 (Chương 6, 7) và tài liệu scikit-learn (*Support Vector Machines*).
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+> Mã nguồn demo: thư mục [codes/](codes/).
 >
 > Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 

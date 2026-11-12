@@ -6,7 +6,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 1 – Phân nhóm các thuật toán học máy; Chương 11 – Phân cụm K-means; Chương 12 – Phân cụm phân cấp. Khởi tạo k-means++ tham khảo D. Arthur, S. Vassilvitskii, *k-means++: The advantages of careful seeding*, SODA 2007; liên kết Ward và chỉ số Adjusted Rand tham khảo tài liệu scikit-learn (*Clustering*). Bộ dữ liệu Iris lấy từ UCI Machine Learning Repository.
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các file đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+> Mã nguồn demo: thư mục [codes/](codes/).
 >
 > Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 

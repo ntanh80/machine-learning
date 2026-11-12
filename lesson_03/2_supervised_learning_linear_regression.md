@@ -6,7 +6,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 1 – Các khái niệm cơ bản; Chương 4 – Hồi quy tuyến tính. Elastic Net, các độ đo MAE, $R^2$ và kiểm định chéo không có trong giáo trình, tham khảo tài liệu scikit-learn.
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các notebook đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+> Mã nguồn demo: thư mục [codes/](codes/).
 >
 > Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 

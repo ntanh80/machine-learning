@@ -6,7 +6,7 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 
 > Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Lời nói đầu; Chương 1 – Các khái niệm cơ bản; Chương 13 – Mạng nơ-ron nhân tạo. Phần 1.2 (môi trường lập trình) không có trong giáo trình, tham khảo tài liệu chính thức của Anaconda, NumPy, Pandas, Matplotlib, scikit-learn và Jupyter.
 >
-> Mã nguồn demo: thư mục [codes/](codes/), các notebook đánh số theo thứ tự trình bày trong bài, mỗi notebook chạy độc lập từ đầu đến cuối (mở bằng Jupyter, thư mục hiện hành là `codes/`).
+> Mã nguồn demo: thư mục [codes/](codes/).
 >
 > Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
 
