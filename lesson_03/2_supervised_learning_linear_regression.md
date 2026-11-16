@@ -517,7 +517,7 @@ Ngoài dự đoán, hồi quy tuyến tính còn được dùng để **giải t
 
 #### c) Hạn chế
 
-**Nhạy cảm với nhiễu và giá trị ngoại lai (outliers).** Giả sử dữ liệu chiều cao – cân nặng có thêm một điểm bất thường **(150 cm, 90 kg)**. Vì hồi quy tuyến tính tối thiểu hóa **sai số bình phương**, các sai số lớn bị **khuếch đại**, nên chỉ một vài điểm ngoại lai cũng có thể làm lệch đáng kể đường hồi quy. Cách khắc phục:
+**Nhạy cảm với nhiễu và giá trị ngoại lai (outliers):** giả sử dữ liệu chiều cao – cân nặng có thêm một điểm bất thường **(150 cm, 90 kg)**. Vì hồi quy tuyến tính tối thiểu hóa **sai số bình phương**, các sai số lớn bị **khuếch đại**, nên chỉ một vài điểm ngoại lai cũng có thể làm lệch đáng kể đường hồi quy. Cách khắc phục:
 - Loại bỏ điểm nhiễu trước khi huấn luyện (khó áp dụng khi dữ liệu lớn hoặc nhiều chiều).
 - Dùng **hàm mất mát kháng nhiễu**: *Huber loss* (như L2 khi sai số nhỏ, như L1 khi sai số lớn), *RANSAC*, *Theil–Sen*.
 
@@ -533,9 +533,9 @@ Với điểm ngoại lai (150 cm, 90 kg), hồi quy tuyến tính dự đoán n
 
 *Mã nguồn: [codes/03_height_weight_regression.ipynb](codes/03_height_weight_regression.ipynb) (mục Ảnh hưởng của điểm ngoại lai).*
 
-**Chỉ biểu diễn được quan hệ tuyến tính.** Nhiều bài toán thực tế có quan hệ **phi tuyến**. Có thể khắc phục bằng cách thêm đặc trưng phi tuyến (mục 3.2.1), nhưng điều này dễ dẫn đến **quá khớp**.
+**Chỉ biểu diễn được quan hệ tuyến tính:** nhiều bài toán thực tế có quan hệ **phi tuyến**. Có thể khắc phục bằng cách thêm đặc trưng phi tuyến (mục 3.2.1), nhưng điều này dễ dẫn đến **quá khớp**.
 
-**Đa cộng tuyến (multicollinearity).** Khi các đặc trưng tương quan cao (ví dụ diện tích và số phòng ngủ), ma trận $\mathbf{X}^T\mathbf{X}$ gần suy biến, các hệ số ước lượng trở nên **không ổn định** (thay đổi mạnh khi dữ liệu thay đổi ít).
+**Đa cộng tuyến (multicollinearity):** khi các đặc trưng tương quan cao (ví dụ diện tích và số phòng ngủ), ma trận $\mathbf{X}^T\mathbf{X}$ gần suy biến, các hệ số ước lượng trở nên **không ổn định** (thay đổi mạnh khi dữ liệu thay đổi ít).
 
 Hai hạn chế sau được giải quyết bằng **điều chuẩn**, nội dung chính của phần 3.2.
 

@@ -69,13 +69,13 @@ $$
 f_\theta : \mathcal{X} \to \mathcal{Y}
 $$
 
-trong đó $\theta$ là tập **tham số** của mô hình. Với tập dữ liệu huấn luyện $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$, việc học được phát biểu thành **bài toán tối ưu**:
+trong đó $\theta$ là tập **tham số** của mô hình. Với tập dữ liệu huấn luyện $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^{N}$, việc học được phát biểu thành **bài toán tối ưu**:
 
 $$
-\theta^* = \arg\min_{\theta} \frac{1}{n}\sum_{i=1}^{n} L\big(y_i, f_\theta(\mathbf{x}_i)\big)
+\theta^* = \arg\min_{\theta} \frac{1}{N}\sum_{i=1}^{N} \ell\big(y_i, f_\theta(\mathbf{x}_i)\big)
 $$
 
-trong đó $L$ là **hàm mất mát** (loss function), đo mức độ sai lệch giữa giá trị dự đoán $f_\theta(\mathbf{x}_i)$ và giá trị thật $y_i$. Huấn luyện mô hình là điều chỉnh $\theta$ để sai lệch trung bình nhỏ nhất.
+trong đó $\ell$ là **mất mát của một mẫu** (loss function), đo mức độ sai lệch giữa giá trị dự đoán $f_\theta(\mathbf{x}_i)$ và giá trị thật $y_i$. Huấn luyện mô hình là điều chỉnh $\theta$ để sai lệch trung bình nhỏ nhất.
 
 *Ví dụ (giáo trình):* dự đoán doanh thu của một cửa hàng từ số lượng khách và chi phí quảng cáo mỗi ngày. Mỗi ngày là một cặp $(\mathbf{x}_i, y_i)$, với $\mathbf{x}_i$ = (số khách, chi phí quảng cáo), $y_i$ = doanh thu thực tế. Ban đầu mô hình dự đoán sai lệch nhiều; điều chỉnh dần $\theta$ để giảm sai số trung bình, ta thu được mô hình phù hợp nhất với dữ liệu đã quan sát.
 
@@ -85,10 +85,10 @@ Trong khuôn mẫu học có giám sát trên, ta phân biệt bốn thành ph�
 |---|---|---|
 | **Dữ liệu** | Mỗi điểm dữ liệu được biểu diễn bằng **vector đặc trưng** $\mathbf{x} = (x_1, \dots, x_d)^T \in \mathbb{R}^d$ (ảnh, âm thanh, văn bản đều phải chuyển thành số) | Bài 2 |
 | **Mô hình** $f_\theta$ | Dạng hàm dùng để dự đoán: đường thẳng, cây quyết định, mạng nơ-ron, … | Bài 3, 4, 6, 7, 9 |
-| **Hàm mất mát** $L$ | Đo mức độ sai của mô hình | Bài 3, 4 |
+| **Hàm mất mát** $\mathcal{L}$ | Đo mức độ sai của mô hình | Bài 3, 4 |
 | **Thuật toán tối ưu** | Cách tìm $\theta^*$, phổ biến nhất là Gradient Descent | Bài 5 |
 
-**Dữ liệu huấn luyện, xác thực và kiểm tra.** Để đánh giá khách quan, dữ liệu thường được chia thành ba tập không giao nhau:
+**Dữ liệu huấn luyện, xác thực và kiểm tra:** để đánh giá khách quan, dữ liệu thường được chia thành ba tập không giao nhau:
 
 | Tập | Dùng để |
 |---|---|
@@ -678,17 +678,17 @@ Dùng đường dẫn tương đối như trên thay cho đường dẫn tuyệt
 
 ### 1.2.4. Bài tập thực hành
 
-**Bài 1. Cài đặt môi trường.**
+**Bài 1. Cài đặt môi trường:**
 - a. Cài Anaconda (hoặc Miniconda), tạo môi trường `ml` và cài các thư viện như mục 1.2.1.
 - b. Chạy [codes/01_check_environment.ipynb](codes/01_check_environment.ipynb). Chụp màn hình kết quả gồm phiên bản Python và bốn thư viện.
 - c. Chạy `conda env list` và `conda list scikit-learn`, giải thích ý nghĩa kết quả.
 
-**Bài 2. Làm quen với Jupyter Notebook.** Tạo notebook `bai_tap_01.ipynb` gồm:
+**Bài 2. Làm quen với Jupyter Notebook:** tạo notebook `bai_tap_01.ipynb` gồm:
 - a. Một ô Markdown có tiêu đề, họ tên, mã sinh viên và công thức $\hat{y} = w_0 + w_1 x_1 + w_2 x_2$ viết bằng LaTeX.
 - b. Một ô code in ra lời chào và ngày giờ hiện tại (dùng thư viện `datetime`).
 - c. Thực hiện *Kernel → Restart & Run All* và đảm bảo notebook chạy không lỗi.
 
-**Bài 3. NumPy.**
+**Bài 3. NumPy:**
 - a. Tạo ma trận $\mathbf{X}$ kích thước $5 \times 3$ gồm số nguyên ngẫu nhiên trong đoạn $[0, 10]$ (`np.random.randint`, đặt `np.random.seed(0)`).
 - b. Tính trung bình, độ lệch chuẩn của từng cột; lấy các hàng có phần tử ở cột đầu lớn hơn 5.
 - c. Chuẩn hóa mỗi cột về trung bình 0, độ lệch chuẩn 1: $z = (x - \mu)/\sigma$, chỉ dùng phép toán vector hóa, không dùng vòng lặp. Kiểm tra lại trung bình và độ lệch chuẩn sau chuẩn hóa.
@@ -702,7 +702,7 @@ Dùng đường dẫn tương đối như trên thay cho đường dẫn tuyệt
 - d. Vẽ biểu đồ phân tán số buổi đi học (trục hoành) và điểm giữa kỳ (trục tung), tô màu theo kết quả đạt / không đạt. Đặt đầy đủ nhãn trục, tiêu đề, chú thích bằng tiếng Việt.
 - e. Theo biểu đồ, đặc trưng nào (số giờ tự học, số buổi đi học, điểm giữa kỳ) giúp phân biệt hai nhóm tốt nhất?
 
-**Bài 5. Scikit-learn.**
+**Bài 5. Scikit-learn:**
 - a. Chạy lại [codes/05_first_model_scikit_learn.ipynb](codes/05_first_model_scikit_learn.ipynb) với $k \in \{1, 3, 5, 15, 51\}$, ghi lại độ chính xác trên tập kiểm tra, nhận xét.
 - b. Thay `KNeighborsClassifier` bằng `DecisionTreeClassifier` (thư viện `sklearn.tree`). Cách gọi `fit`, `predict`, `score` có thay đổi không?
 - c. Dùng mô hình k-NN để dự đoán kết quả của sinh viên trong [data/students.csv](data/students.csv) từ ba đặc trưng `study_hours`, `attendance`, `midterm`: chia 70/30, huấn luyện với $k = 3$, tính độ chính xác, và dự đoán kết quả cho một sinh viên học 5 giờ/tuần, đi học 11 buổi, điểm giữa kỳ 5.5.
@@ -716,7 +716,7 @@ Dùng đường dẫn tương đối như trên thay cho đường dẫn tuyệt
 - Mục tiêu của học máy trong phân tích dữ liệu: dự đoán, phân loại, khám phá cấu trúc, phát hiện bất thường, khuyến nghị, ra quyết định tự động.
 - Ba phương thức học chính: **có giám sát** (dữ liệu có nhãn; phân lớp và hồi quy), **không giám sát** (không có nhãn; phân cụm), **tăng cường** (học qua tương tác với môi trường và điểm thưởng).
 - Học máy được ứng dụng rộng rãi trong y tế, tài chính, giao thông, giáo dục, thương mại điện tử, nông nghiệp; kết quả mô hình cần được dùng có trách nhiệm.
-- **AI ⊃ Học máy ⊃ Học sâu.** Học sâu dùng mạng nơ-ron nhiều tầng tự học đặc trưng, phù hợp với ảnh, âm thanh, văn bản và dữ liệu lớn; học máy truyền thống phù hợp với dữ liệu dạng bảng, dữ liệu vừa phải, cần diễn giải.
+- **AI ⊃ Học máy ⊃ Học sâu:** học sâu dùng mạng nơ-ron nhiều tầng tự học đặc trưng, phù hợp với ảnh, âm thanh, văn bản và dữ liệu lớn; học máy truyền thống phù hợp với dữ liệu dạng bảng, dữ liệu vừa phải, cần diễn giải.
 - Các khái niệm của học máy (vector đặc trưng, hàm mất mát, Gradient Descent, quá khớp, đánh giá mô hình) là **nền tảng trực tiếp** của Xử lý ngôn ngữ tự nhiên và Thị giác máy tính.
 - Môi trường thực hành: **Anaconda** (conda quản lý gói và môi trường), các thư viện **NumPy** (mảng), **Pandas** (bảng dữ liệu), **Matplotlib** (đồ thị), **Scikit-learn** (mô hình theo quy trình `fit` → `predict` → `score`), lập trình trên **Jupyter Notebook**.
 
@@ -728,7 +728,7 @@ Dùng đường dẫn tương đối như trên thay cho đường dẫn tuyệt
 
 1. Trình bày khái niệm học máy. Phân tích ba thành phần T, E, P trong định nghĩa của Mitchell và áp dụng cho bài toán dự đoán sinh viên có đạt học phần hay không.
 2. So sánh lập trình truyền thống và học máy. Cho một ví dụ bài toán nên dùng học máy và một ví dụ không cần dùng học máy, giải thích.
-3. Vì sao nói "học máy về bản chất là một bài toán tối ưu"? Giải thích ý nghĩa của các thành phần trong công thức $\theta^* = \arg\min_{\theta} \frac{1}{n}\sum_{i=1}^{n} L\big(y_i, f_\theta(\mathbf{x}_i)\big)$.
+3. Vì sao nói "học máy về bản chất là một bài toán tối ưu"? Giải thích ý nghĩa của các thành phần trong công thức $\theta^* = \arg\min_{\theta} \frac{1}{N}\sum_{i=1}^{N} \ell\big(y_i, f_\theta(\mathbf{x}_i)\big)$.
 4. Nêu vai trò của tập huấn luyện, tập xác thực và tập kiểm tra. Vì sao không được dùng tập kiểm tra để chọn mô hình? Khả năng tổng quát hóa là gì?
 5. Nêu các mục tiêu chính của việc sử dụng học máy trong phân tích dữ liệu, mỗi mục tiêu cho một ví dụ.
 6. Phân biệt Trí tuệ nhân tạo, Học máy và Học sâu về khái niệm và phạm vi ứng dụng. Vẽ sơ đồ thể hiện quan hệ giữa ba lĩnh vực.

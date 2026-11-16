@@ -200,7 +200,7 @@ Cả hai đạo hàm riêng đều âm: tăng $w_0$ hoặc $w_1$ đều làm m�
 
 Hướng giảm nhanh nhất chỉ là tính chất **cục bộ**: trên hình, $-\nabla\mathcal{L}$ không chỉ thẳng tới cực tiểu, nên GD phải tính lại gradient sau mỗi bước.
 
-**Dạng tổng quát (ma trận).** Với $\mathbf{X}$ có mỗi hàng là một vector mở rộng $\mathbf{x}_i^T = [1, x_{i1}, \dots, x_{id}]$:
+**Dạng tổng quát (ma trận):** với $\mathbf{X}$ có mỗi hàng là một vector mở rộng $\mathbf{x}_i^T = [1, x_{i1}, \dots, x_{id}]$:
 
 $$
 \mathcal{L}(\mathbf{w}) = \frac{1}{2N}\|\mathbf{X}\mathbf{w} - \mathbf{y}\|_2^2
@@ -230,7 +230,7 @@ $$
 
 trong đó $\eta > 0$ là **tốc độ học** (learning rate). Dấu trừ thể hiện việc đi **ngược** hướng đạo hàm, tức "xuống dốc".
 
-**Tính tay.** Tìm cực tiểu của $f(x) = x^2 + 4x + 4 = (x + 2)^2$, có $f'(x) = 2x + 4$. Chọn $x_0 = 0$, $\eta = 0.25$:
+**Tính tay:** tìm cực tiểu của $f(x) = x^2 + 4x + 4 = (x + 2)^2$, có $f'(x) = 2x + 4$. Chọn $x_0 = 0$, $\eta = 0.25$:
 
 | $t$ | $x_t$ | $f'(x_t)$ | $x_{t+1} = x_t - 0.25\,f'(x_t)$ | $f(x_{t+1})$ |
 |---|---|---|---|---|
@@ -349,7 +349,7 @@ Tốc độ học $\eta$ quyết định độ dài mỗi bước đi. Đây là
 | Quá lớn ($0.5$) | Bước đi quá dài, **vượt qua** cực tiểu sang phía bên kia, rồi lại vượt ngược lại: **dao động** mãi quanh cực tiểu mà không hội tụ. |
 | Lớn hơn nữa | Mỗi bước vượt xa hơn bước trước, $f(x_t)$ tăng dần đến vô cùng: **phân kỳ** (trong code thấy giá trị `inf`, `nan`). |
 
-**Phân tích với hàm bậc hai.** Với $f(x) = (x + 2)^2$, quy tắc cập nhật là $x_{t+1} = x_t - 2\eta(x_t + 2)$, hay
+**Phân tích với hàm bậc hai:** với $f(x) = (x + 2)^2$, quy tắc cập nhật là $x_{t+1} = x_t - 2\eta(x_t + 2)$, hay
 
 $$
 x_{t+1} + 2 = (1 - 2\eta)(x_t + 2)

@@ -31,8 +31,10 @@ Khi nhãn $y$ chỉ nhận một số hữu hạn giá trị rời rạc, mỗi 
 Cho tập huấn luyện gồm $N$ mẫu đã gán nhãn:
 
 $$
-\mathcal{D} = \{(\mathbf{x}_1, y_1), (\mathbf{x}_2, y_2), \dots, (\mathbf{x}_N, y_N)\}, \qquad \mathbf{x}_i \in \mathbb{R}^d, \quad y_i \in \{c_1, c_2, \dots, c_C\}
+\mathcal{D} = \{(\mathbf{x}_1, y_1), (\mathbf{x}_2, y_2), \dots, (\mathbf{x}_N, y_N)\}
 $$
+
+trong đó $\mathbf{x}_i \in \mathbb{R}^d$ và $y_i \in \{c_1, c_2, \dots, c_C\}$, với $C$ là số lớp.
 
 Mục tiêu là học một hàm $f$ sao cho với một mẫu mới $\mathbf{x}$, nhãn dự đoán $\hat{y} = f(\mathbf{x})$ trùng với nhãn thật càng nhiều càng tốt.
 
@@ -91,7 +93,7 @@ Ta cần một hàm biến $\mathbf{x}^T\mathbf{w} \in (-\infty, +\infty)$ thàn
 **Hàm sigmoid** (còn gọi là hàm logistic) được định nghĩa:
 
 $$
-\sigma(s) = \frac{1}{1 + e^{-s}}
+\sigma(z) = \frac{1}{1 + e^{-z}}
 $$
 
 ![Hàm sigmoid](images/sigmoid.png)
@@ -102,38 +104,38 @@ $$
 
 | Tính chất | Ý nghĩa |
 |---|---|
-| $0 < \sigma(s) < 1$ với mọi $s$ | Đầu ra được hiểu là **xác suất** |
-| $\lim_{s \to -\infty} \sigma(s) = 0$, $\lim_{s \to +\infty} \sigma(s) = 1$ | $s$ rất âm → gần chắc chắn lớp 0; $s$ rất dương → gần chắc chắn lớp 1 |
-| $\sigma(0) = 0.5$ | $s = 0$ là điểm "phân vân" nhất, tương ứng **ranh giới quyết định** |
-| Đơn điệu tăng | $s$ càng lớn, xác suất lớp 1 càng lớn |
-| $\sigma(-s) = 1 - \sigma(s)$ | Đối xứng qua điểm $(0;\, 0.5)$ |
+| $0 < \sigma(z) < 1$ với mọi $z$ | Đầu ra được hiểu là **xác suất** |
+| $\lim_{z \to -\infty} \sigma(z) = 0$, $\lim_{z \to +\infty} \sigma(z) = 1$ | $z$ rất âm → gần chắc chắn lớp 0; $z$ rất dương → gần chắc chắn lớp 1 |
+| $\sigma(0) = 0.5$ | $z = 0$ là điểm "phân vân" nhất, tương ứng **ranh giới quyết định** |
+| Đơn điệu tăng | $z$ càng lớn, xác suất lớp 1 càng lớn |
+| $\sigma(-z) = 1 - \sigma(z)$ | Đối xứng qua điểm $(0;\, 0.5)$ |
 | Liên tục, khả vi tại mọi điểm | Dùng được Gradient Descent (khác với hàm ngưỡng cứng) |
 
-So với hàm ngưỡng cứng (nhảy từ 0 lên 1 tại $s = 0$), sigmoid chuyển **mượt**: điểm nằm gần ranh giới có xác suất gần 0.5 (mô hình không chắc), điểm nằm xa ranh giới có xác suất gần 0 hoặc 1 (mô hình rất chắc).
+So với hàm ngưỡng cứng (nhảy từ 0 lên 1 tại $z = 0$), sigmoid chuyển **mượt**: điểm nằm gần ranh giới có xác suất gần 0.5 (mô hình không chắc), điểm nằm xa ranh giới có xác suất gần 0 hoặc 1 (mô hình rất chắc).
 
 #### c) Đạo hàm của hàm sigmoid
 
 Một tính chất rất quan trọng, sẽ dùng ở mục 4.1.4:
 
 $$
-\sigma'(s) = \sigma(s)\big(1 - \sigma(s)\big)
+\sigma'(z) = \sigma(z)\big(1 - \sigma(z)\big)
 $$
 
 **Chứng minh:**
 
 $$
-\sigma'(s) = \frac{d}{ds}\left(1 + e^{-s}\right)^{-1} = \frac{e^{-s}}{(1 + e^{-s})^2} = \frac{1}{1 + e^{-s}} \cdot \frac{e^{-s}}{1 + e^{-s}} = \sigma(s)\big(1 - \sigma(s)\big)
+\sigma'(z) = \frac{d}{dz}\left(1 + e^{-z}\right)^{-1} = \frac{e^{-z}}{(1 + e^{-z})^2} = \frac{1}{1 + e^{-z}} \cdot \frac{e^{-z}}{1 + e^{-z}} = \sigma(z)\big(1 - \sigma(z)\big)
 $$
 
-vì $\dfrac{e^{-s}}{1 + e^{-s}} = 1 - \dfrac{1}{1 + e^{-s}} = 1 - \sigma(s)$. Đạo hàm đạt cực đại $0.25$ tại $s = 0$ (Hình 4.1b).
+vì $\dfrac{e^{-z}}{1 + e^{-z}} = 1 - \dfrac{1}{1 + e^{-z}} = 1 - \sigma(z)$. Đạo hàm đạt cực đại $0.25$ tại $z = 0$ (Hình 4.1b).
 
-> **Hàm tanh.** Một hàm có hình dạng tương tự là $\tanh(s) = \dfrac{e^{s} - e^{-s}}{e^{s} + e^{-s}} = 2\sigma(2s) - 1$, nhận giá trị trong $(-1, 1)$. Hàm tanh hay dùng trong mạng nơ-ron (Bài 9); với hồi quy Logistic ta dùng sigmoid vì cần đầu ra trong $(0, 1)$.
+> **Hàm tanh.** Một hàm có hình dạng tương tự là $\tanh(z) = \dfrac{e^{z} - e^{-z}}{e^{z} + e^{-z}} = 2\sigma(2z) - 1$, nhận giá trị trong $(-1, 1)$. Hàm tanh hay dùng trong mạng nơ-ron (Bài 9); với hồi quy Logistic ta dùng sigmoid vì cần đầu ra trong $(0, 1)$.
 
 ```python
 import numpy as np
 
-def sigmoid(s):
-    return 1 / (1 + np.exp(-s))
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
 
 print(sigmoid(np.array([-5, -1, 0, 1, 5])))
 # [0.0067 0.2689 0.5    0.7311 0.9933]
@@ -221,7 +223,7 @@ Vậy hồi quy Logistic là **mô hình tuyến tính của log-odds**. Khi $x_
 | Tìm nghiệm | Có nghiệm giải tích (OLS) hoặc GD | Không có nghiệm giải tích, dùng GD |
 | Độ đo đánh giá | MAE, MSE, RMSE, $R^2$ | Accuracy, Precision, Recall, F1, ROC-AUC (mục 4.1.5, 4.1.6) |
 
-Cả hai đều có dạng chung $\hat{y} = f(\mathbf{x}^T\mathbf{w})$, chỉ khác **hàm kích hoạt** $f$: hồi quy tuyến tính dùng $f(s) = s$, hồi quy Logistic dùng $f(s) = \sigma(s)$. Thuật toán PLA ở mục 4.2 dùng $f(s) = \text{sgn}(s)$.
+Cả hai đều có dạng chung $\hat{y} = f(\mathbf{x}^T\mathbf{w})$, chỉ khác **hàm kích hoạt** $f$: hồi quy tuyến tính dùng $f(z) = z$, hồi quy Logistic dùng $f(z) = \sigma(z)$. Thuật toán PLA ở mục 4.2 dùng $f(z) = \text{sgn}(z)$.
 
 ---
 
@@ -231,7 +233,7 @@ Cả hai đều có dạng chung $\hat{y} = f(\mathbf{x}^T\mathbf{w})$, chỉ kh
 
 MSE vẫn có thể dùng để đo sai số của dự đoán xác suất, nhưng khi kết hợp với sigmoid, hàm mục tiêu theo trọng số **có thể không lồi**, khiến tối ưu khó hơn. Vì vậy, ở đây ta dùng **cross-entropy**, xuất phát từ phương pháp **ước lượng hợp lý cực đại** (Maximum Likelihood Estimation – MLE): *chọn $\mathbf{w}$ sao cho xác suất mô hình sinh ra đúng các nhãn quan sát được là lớn nhất.* Không đồng nhất “không lồi” với “chắc chắn có nhiều cực tiểu địa phương”.
 
-**Bước 1 – Xác suất của một mẫu.** Đặt $a_i = \sigma(\mathbf{x}_i^T\mathbf{w})$. Theo mô hình:
+**Bước 1 – Xác suất của một mẫu:** đặt $a_i = \sigma(\mathbf{x}_i^T\mathbf{w})$. Theo mô hình:
 
 $$
 P(y_i = 1 \mid \mathbf{x}_i; \mathbf{w}) = a_i, \qquad P(y_i = 0 \mid \mathbf{x}_i; \mathbf{w}) = 1 - a_i
@@ -248,18 +250,18 @@ $$
 **Bước 2 – Giả sử các mẫu độc lập với nhau**:
 
 $$
-L(\mathbf{w}) = P(\mathbf{y} \mid \mathbf{X}; \mathbf{w}) = \prod_{i=1}^{N} a_i^{\,y_i} (1 - a_i)^{1 - y_i}
+P(\mathbf{y} \mid \mathbf{X}; \mathbf{w}) = \prod_{i=1}^{N} a_i^{\,y_i} (1 - a_i)^{1 - y_i}
 $$
 
-Bài toán MLE: $\mathbf{w}^* = \arg\max_{\mathbf{w}} L(\mathbf{w})$.
+Bài toán MLE: $\mathbf{w}^* = \arg\max_{\mathbf{w}} P(\mathbf{y} \mid \mathbf{X}; \mathbf{w})$.
 
-**Bước 3 – Lấy logarit, đổi dấu.** Tích của nhiều số nhỏ hơn 1 rất dễ tràn số dưới, và khó lấy đạo hàm. Vì $\ln$ là hàm đồng biến, cực đại $L$ tương đương cực đại $\ln L$, và tương đương cực tiểu $-\frac{1}{N}\ln L$. Ta được **hàm mất mát cross-entropy** (log loss):
+**Bước 3 – Lấy logarit, đổi dấu:** tích của nhiều số nhỏ hơn 1 rất dễ tràn số dưới, và khó lấy đạo hàm. Vì $\ln$ là hàm đồng biến, cực đại $P(\mathbf{y} \mid \mathbf{X}; \mathbf{w})$ tương đương cực đại $\ln P(\mathbf{y} \mid \mathbf{X}; \mathbf{w})$, và tương đương cực tiểu $-\frac{1}{N}\ln P(\mathbf{y} \mid \mathbf{X}; \mathbf{w})$. Ta được **hàm mất mát cross-entropy** (log loss):
 
 $$
 \boxed{\mathcal{L}(\mathbf{w}) = -\frac{1}{N}\sum_{i=1}^{N} \Big[ y_i \ln a_i + (1 - y_i) \ln(1 - a_i) \Big], \qquad a_i = \sigma(\mathbf{x}_i^T\mathbf{w})}
 $$
 
-**Ý nghĩa trực quan.** Với một mẫu:
+**Ý nghĩa trực quan:** với một mẫu:
 - Nếu $y_i = 1$: mất mát là $-\ln a_i$. Mô hình dự đoán $a_i \to 1$ (đúng) thì mất mát $\to 0$; dự đoán $a_i \to 0$ (sai) thì mất mát $\to +\infty$.
 - Nếu $y_i = 0$: mất mát là $-\ln(1 - a_i)$, tương tự theo chiều ngược lại.
 
@@ -303,16 +305,16 @@ $$
 
 Các biến thể Batch / Stochastic / Mini-batch và cách chọn $\eta$ được học chi tiết ở Bài 5.
 
-**Diễn giải quy tắc cập nhật.** Đại lượng $a_i - y_i$ là **sai số dự đoán**:
+**Diễn giải quy tắc cập nhật:** đại lượng $a_i - y_i$ là **sai số dự đoán**:
 - Mẫu có $y_i = 1$ nhưng $a_i$ nhỏ: $a_i - y_i < 0$, nên $\mathbf{w}$ được cộng thêm một phần $\mathbf{x}_i$, làm $\mathbf{x}_i^T\mathbf{w}$ tăng, $a_i$ tăng lên gần 1.
 - Mẫu có $y_i = 0$ nhưng $a_i$ lớn: $\mathbf{w}$ bị trừ đi một phần $\mathbf{x}_i$, làm $a_i$ giảm.
 - Mẫu đã dự đoán đúng và tự tin ($a_i \approx y_i$): gần như không cập nhật.
 
-> **Điều chuẩn (weight decay).** Giống Ridge ở Bài 3, có thể thêm thành phần phạt L2 để giảm quá khớp: $\mathcal{L}(\mathbf{w}) + \frac{\lambda}{2N}\|\mathbf{w}\|_2^2$. Khi dữ liệu tách biệt tuyến tính hoàn toàn, nếu không điều chuẩn thì $\|\mathbf{w}\|$ tăng vô hạn (sigmoid càng ngày càng giống hàm ngưỡng cứng). Lớp `LogisticRegression` của scikit-learn **mặc định có điều chuẩn L2** với tham số `C` $= 1/\lambda$ (mặc định `C=1.0`).
+> **Điều chuẩn (weight decay).** Giống Ridge ở Bài 3, có thể thêm thành phần phạt L2 để giảm quá khớp: $\mathcal{L}_{\text{L2}}(\mathbf{w}) = \mathcal{L}(\mathbf{w}) + \frac{\lambda}{2N}\|\mathbf{w}\|_2^2$. Khi dữ liệu tách biệt tuyến tính hoàn toàn, nếu không điều chuẩn thì $\|\mathbf{w}\|$ tăng vô hạn (sigmoid càng ngày càng giống hàm ngưỡng cứng). Lớp `LogisticRegression` của scikit-learn **mặc định có điều chuẩn L2** với tham số `C` $= 1/\lambda$ (mặc định `C=1.0`).
 
 #### d) Ví dụ: dự đoán khả năng thi đỗ
 
-**Tính tay một bước lặp.** Khởi tạo $\mathbf{w} = [w_0, w_1]^T = [0, 0]^T$, $\eta = 0.5$. Khi đó mọi $a_i = \sigma(0) = 0.5$ và
+**Tính tay một bước lặp:** khởi tạo $\mathbf{w} = [w_0, w_1]^T = [0, 0]^T$, $\eta = 0.5$. Khi đó mọi $a_i = \sigma(0) = 0.5$ và
 
 $$
 \mathcal{L}(\mathbf{0}) = -\frac{1}{20}\sum_{i=1}^{20} \ln 0.5 = \ln 2 \approx 0.6931
@@ -337,7 +339,7 @@ y = np.array([0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1])
 # Vector mở rộng: thêm cột 1 vào trước -> mỗi hàng là [1, x_i]
 Xbar = np.column_stack([np.ones(len(X)), X])
 
-def sigmoid(s):
+def sigmoid(z):
     return 1 / (1 + np.exp(-s))
 
 def loss(w, Xbar, y):
@@ -430,12 +432,12 @@ w1 = [[1.50504657]]
 
 Giải thích kết quả:
 
-- **Hệ số.** `intercept_` là $w_0$, `coef_` là $w_1$. Nghiệm $w_0 \approx -4.0787$, $w_1 \approx 1.5050$ khớp với nghiệm Gradient Descent tự cài đặt ($-4.0777$, $1.5046$). Sai khác rất nhỏ là vì Gradient Descent dừng sau 2000 vòng lặp, chưa tới đúng điểm cực tiểu; còn scikit-learn dùng thuật toán tối ưu bậc cao hơn (mặc định `lbfgs`) nên hội tụ sát hơn.
+- **Hệ số:** `intercept_` là $w_0$, `coef_` là $w_1$. Nghiệm $w_0 \approx -4.0787$, $w_1 \approx 1.5050$ khớp với nghiệm Gradient Descent tự cài đặt ($-4.0777$, $1.5046$). Sai khác rất nhỏ là vì Gradient Descent dừng sau 2000 vòng lặp, chưa tới đúng điểm cực tiểu; còn scikit-learn dùng thuật toán tối ưu bậc cao hơn (mặc định `lbfgs`) nên hội tụ sát hơn.
 - **`predict_proba`** trả về ma trận $(N, 2)$, mỗi hàng là một mẫu, mỗi cột là một lớp theo thứ tự `model.classes_` $= [0, 1]$. Cột 1 chính là $\sigma(\mathbf{x}^T\mathbf{w})$. Hai cột cộng lại bằng 1:
   - ôn 2 giờ: $P(\text{đỗ}) = \sigma(-4.0787 + 1.5050 \times 2) = \sigma(-1.069) \approx 0.256$;
   - ôn 4 giờ: $P(\text{đỗ}) = \sigma(-4.0787 + 1.5050 \times 4) = \sigma(1.941) \approx 0.875$.
 - **`predict`** trả về nhãn: lớp 1 khi $P(\text{đỗ}) \ge 0.5$, tương đương $x$ nằm bên phải ranh giới $x \approx 2.71$ giờ. Sinh viên ôn 2 giờ được dự đoán trượt (0), ôn 4 giờ được dự đoán đỗ (1).
-- **Vai trò của `C`.** Nếu để mặc định (`C=1.0`, tức có điều chuẩn L2), hàm mất mát được cộng thêm mức phạt cho trọng số lớn. Các hệ số khi đó nhỏ hơn về độ lớn ($w_0 \approx -3.14$, $w_1 \approx 1.15$), đường cong sigmoid thoải hơn và xác suất dự đoán bớt "tự tin". `C` càng nhỏ thì phạt càng mạnh.
+- **Vai trò của `C`:** nếu để mặc định (`C=1.0`, tức có điều chuẩn L2), hàm mất mát được cộng thêm mức phạt cho trọng số lớn. Các hệ số khi đó nhỏ hơn về độ lớn ($w_0 \approx -3.14$, $w_1 \approx 1.15$), đường cong sigmoid thoải hơn và xác suất dự đoán bớt "tự tin". `C` càng nhỏ thì phạt càng mạnh.
 
 ---
 
@@ -509,7 +511,7 @@ print(confusion_matrix(y, y_pred))
 tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
 ```
 
-**Ma trận nhầm lẫn chuẩn hóa.** Khi hai lớp có số mẫu khác nhau, nên đổi số đếm thành tỉ lệ bằng tham số `normalize`:
+**Ma trận nhầm lẫn chuẩn hóa:** khi hai lớp có số mẫu khác nhau, nên đổi số đếm thành tỉ lệ bằng tham số `normalize`:
 
 | `normalize` | Chia cho | Kết quả với ví dụ trên | Ý nghĩa ô dưới phải |
 |---|---|---|---|
@@ -550,7 +552,7 @@ $$
 
 Tỉ lệ mẫu được dự đoán đúng trên tổng số mẫu. Ví dụ trên: $\frac{9 + 7}{20} = 0.80$.
 
-**Hạn chế với dữ liệu mất cân bằng.** Giả sử 1.000 người đi khám có 10 người mắc bệnh. Một "mô hình" luôn trả lời *không bệnh* đạt Accuracy $= 990/1000 = 99\%$ nhưng **bỏ sót toàn bộ** người bệnh, hoàn toàn vô dụng. Khi các lớp chênh lệch nhiều, cần thêm các chỉ số sau.
+**Hạn chế với dữ liệu mất cân bằng:** giả sử 1.000 người đi khám có 10 người mắc bệnh. Một "mô hình" luôn trả lời *không bệnh* đạt Accuracy $= 990/1000 = 99\%$ nhưng **bỏ sót toàn bộ** người bệnh, hoàn toàn vô dụng. Khi các lớp chênh lệch nhiều, cần thêm các chỉ số sau.
 
 #### b) Precision (độ chuẩn xác)
 
@@ -570,7 +572,7 @@ $$
 
 Tương tự, với lớp âm có **độ đặc hiệu** (specificity) $= \frac{TN}{TN + FP}$: tỉ lệ mẫu âm được nhận ra đúng. Ví dụ trên: $\frac{7}{7 + 3} = 0.70$.
 
-**Đánh đổi Precision – Recall.** Hạ ngưỡng $\tau$ thì mô hình dự đoán "dương" nhiều hơn: Recall tăng nhưng Precision thường giảm (báo nhầm nhiều hơn). Nâng ngưỡng thì ngược lại. Không thể chỉ tối ưu một chỉ số. Ví dụ ôn thi: với ngưỡng 0.5 thì Precision = Recall = 0.80; hạ xuống 0.3 thì Recall tăng lên 0.90 (chỉ bỏ sót 1 người đỗ) nhưng Precision giảm còn 0.75 (báo nhầm 3 người trượt).
+**Đánh đổi Precision – Recall:** hạ ngưỡng $\tau$ thì mô hình dự đoán "dương" nhiều hơn: Recall tăng nhưng Precision thường giảm (báo nhầm nhiều hơn). Nâng ngưỡng thì ngược lại. Không thể chỉ tối ưu một chỉ số. Ví dụ ôn thi: với ngưỡng 0.5 thì Precision = Recall = 0.80; hạ xuống 0.3 thì Recall tăng lên 0.90 (chỉ bỏ sót 1 người đỗ) nhưng Precision giảm còn 0.75 (báo nhầm 3 người trượt).
 
 #### d) F1-Score
 
@@ -705,7 +707,7 @@ Siêu phẳng chia không gian thành hai nửa. Các điểm cùng phía cho $\
 
 Quy tắc phân loại: $\hat{y} = \text{sgn}(\mathbf{x}^T\mathbf{w})$.
 
-**Điều kiện phân loại đúng.** Vì $y_i \in \{-1, +1\}$, điểm $\mathbf{x}_i$ được phân loại đúng khi $\mathbf{x}_i^T\mathbf{w}$ cùng dấu với $y_i$, tức:
+**Điều kiện phân loại đúng:** vì $y_i \in \{-1, +1\}$, điểm $\mathbf{x}_i$ được phân loại đúng khi $\mathbf{x}_i^T\mathbf{w}$ cùng dấu với $y_i$, tức:
 
 $$
 y_i\, \mathbf{x}_i^T\mathbf{w} > 0 \quad \text{(đúng)}, \qquad y_i\, \mathbf{x}_i^T\mathbf{w} \le 0 \quad \text{(sai)}
@@ -728,7 +730,7 @@ Cả hồi quy Logistic và Perceptron đều có ranh giới là siêu phẳng 
 Gọi $\mathcal{M}$ là tập các điểm bị phân loại sai với $\mathbf{w}$ hiện tại. Cách tự nhiên nhất là đếm số điểm sai:
 
 $$
-\mathcal{L}_1(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} \big(-y_i\, \text{sgn}(\mathbf{x}_i^T\mathbf{w})\big)
+\mathcal{L}_{\text{sgn}}(\mathbf{w}) = \sum_{\mathbf{x}_i \in \mathcal{M}} \big(-y_i\, \text{sgn}(\mathbf{x}_i^T\mathbf{w})\big)
 $$
 
 (mỗi điểm sai có $y_i\,\text{sgn}(\mathbf{x}_i^T\mathbf{w}) = -1$, đóng góp $+1$). Nhưng hàm $\text{sgn}$ rời rạc, không khả vi, không dùng được Gradient Descent. Bỏ hàm $\text{sgn}$ đi, ta được **hàm mất mát Perceptron**:
@@ -862,7 +864,7 @@ print(perceptron_model.intercept_, perceptron_model.coef_, perceptron_model.scor
 
 | | PLA (Perceptron) | Hồi quy Logistic |
 |---|---|---|
-| Hàm kích hoạt | $\text{sgn}(s)$ | $\sigma(s)$ |
+| Hàm kích hoạt | $\text{sgn}(z)$ | $\sigma(z)$ |
 | Nhãn | $\{-1, +1\}$ | $\{0, 1\}$ |
 | Đầu ra | Nhãn cứng | Xác suất, cho phép chọn ngưỡng |
 | Hàm mất mát | $\sum_{\mathcal{M}} -y_i\,\mathbf{x}_i^T\mathbf{w}$ (chỉ điểm sai) | Cross-entropy (mọi điểm) |
@@ -1047,7 +1049,7 @@ print(classification_report(y_test, y_pred, digits=3))
 - Mô hình phát hiện được 46/48 người bệnh (Recall 95.8%), chỉ bỏ sót 2 người.
 - Nhưng với lớp không bệnh, mô hình chỉ nhận đúng 4/8 người (độ đặc hiệu 50%): một nửa người khỏe bị báo nhầm là có bệnh.
 
-**So sánh với mô hình "ngây thơ".** Một mô hình luôn dự đoán "có bệnh" (`DummyClassifier(strategy='most_frequent')`) đạt Accuracy $= 48/56 = 0.857$ và F1 $= 0.923$, chỉ thấp hơn mô hình của ta một chút. Đây là minh họa rõ ràng cho mục 4.1.6: **với dữ liệu mất cân bằng, Accuracy và F1 của lớp đa số không đủ để đánh giá**. Cần xem thêm ma trận nhầm lẫn, chỉ số của lớp thiểu số (cột `recall` của lớp 0 trong `classification_report`) và ROC-AUC (mô hình ngây thơ có AUC = 0.5, mô hình của ta có AUC = 0.943).
+**So sánh với mô hình "ngây thơ":** một mô hình luôn dự đoán "có bệnh" (`DummyClassifier(strategy='most_frequent')`) đạt Accuracy $= 48/56 = 0.857$ và F1 $= 0.923$, chỉ thấp hơn mô hình của ta một chút. Đây là minh họa rõ ràng cho mục 4.1.6: **với dữ liệu mất cân bằng, Accuracy và F1 của lớp đa số không đủ để đánh giá**. Cần xem thêm ma trận nhầm lẫn, chỉ số của lớp thiểu số (cột `recall` của lớp 0 trong `classification_report`) và ROC-AUC (mô hình ngây thơ có AUC = 0.5, mô hình của ta có AUC = 0.943).
 
 #### b) Xử lý mất cân bằng lớp: `class_weight='balanced'`
 
@@ -1073,7 +1075,7 @@ Hai mô hình có cùng Accuracy nhưng nhầm theo hai kiểu khác nhau: mô h
 
 #### c) Chọn ngưỡng phân loại
 
-**Chỉ chọn ngưỡng từ tập huấn luyện.** Trước khi xem kết quả test, đặt tiêu chí giả định cho bài tập: Recall OOF ít nhất 0.95, sau đó tối đa hóa độ đặc hiệu trong các ngưỡng đạt yêu cầu. Đây là cách minh họa một ràng buộc nghiệp vụ, không phải khuyến nghị y khoa. Dùng `cross_val_predict` trên 220 mẫu train để mỗi mẫu nhận xác suất từ mô hình không học mẫu đó. `Pipeline` bảo đảm scaler cũng chỉ fit trên phần huấn luyện của mỗi fold.
+**Chỉ chọn ngưỡng từ tập huấn luyện:** trước khi xem kết quả test, đặt tiêu chí giả định cho bài tập: Recall OOF ít nhất 0.95, sau đó tối đa hóa độ đặc hiệu trong các ngưỡng đạt yêu cầu. Đây là cách minh họa một ràng buộc nghiệp vụ, không phải khuyến nghị y khoa. Dùng `cross_val_predict` trên 220 mẫu train để mỗi mẫu nhận xác suất từ mô hình không học mẫu đó. `Pipeline` bảo đảm scaler cũng chỉ fit trên phần huấn luyện của mỗi fold.
 
 ```python
 from sklearn.model_selection import cross_val_predict, StratifiedKFold
@@ -1148,7 +1150,7 @@ ROC-AUC trung bình trên các fold của train khoảng 0.92: mô hình hồi q
 
 Giữ nguyên tập train/test và bước chuẩn hóa, thay hồi quy Logistic bằng Perceptron để so sánh hai phương pháp đã học ở mục 4.1 và 4.2.
 
-**Bước 1. Chạy PLA bằng NumPy để kiểm tra dữ liệu có tách biệt tuyến tính không.** Nhãn đổi sang $\{-1, +1\}$, thêm cột 1 vào $\mathbf{X}$; mỗi epoch duyệt lần lượt 220 mẫu train, cập nhật $\mathbf{w} \leftarrow \mathbf{w} + y_i\mathbf{x}_i$ khi mẫu $i$ bị sai, rồi đếm số điểm sai trên toàn tập train:
+**Bước 1. Chạy PLA bằng NumPy để kiểm tra dữ liệu có tách biệt tuyến tính không:** nhãn đổi sang $\{-1, +1\}$, thêm cột 1 vào $\mathbf{X}$; mỗi epoch duyệt lần lượt 220 mẫu train, cập nhật $\mathbf{w} \leftarrow \mathbf{w} + y_i\mathbf{x}_i$ khi mẫu $i$ bị sai, rồi đếm số điểm sai trên toàn tập train:
 
 ```python
 scaler = StandardScaler().fit(X_train)                  # chuẩn hóa học trên train
@@ -1171,7 +1173,7 @@ for epoch in range(n_epochs):
 
 Số điểm sai của PLA dao động trong khoảng 14 – 32 suốt 50 epoch, không bao giờ về 0 (Hình 4.9a): dữ liệu **không tách biệt tuyến tính**, nên PLA không dừng và $\mathbf{w}$ cuối cùng phụ thuộc vào thời điểm cắt vòng lặp. Hồi quy Logistic tối ưu hàm mất mát lồi, cho nghiệm ổn định với 15 điểm sai trên train.
 
-**Bước 2. Huấn luyện `Perceptron` của scikit-learn.** `Perceptron` tự dừng khi hàm mất mát không giảm thêm (tham số `tol`), nên vẫn kết thúc dù dữ liệu không tách biệt tuyến tính. Mô hình không có `predict_proba`; để tính ROC-AUC dùng `decision_function`, trả về điểm số $s = \mathbf{x}^T\mathbf{w}$:
+**Bước 2. Huấn luyện `Perceptron` của scikit-learn:** `Perceptron` tự dừng khi hàm mất mát không giảm thêm (tham số `tol`), nên vẫn kết thúc dù dữ liệu không tách biệt tuyến tính. Mô hình không có `predict_proba`; để tính ROC-AUC dùng `decision_function`, trả về điểm số $z = \mathbf{x}^T\mathbf{w}$:
 
 ```python
 from sklearn.linear_model import Perceptron
@@ -1195,7 +1197,7 @@ print('ROC-AUC:', roc_auc_score(y_test, score_perceptron))
 
 *Hình 4.9: (a) Số điểm train bị phân loại sai sau mỗi epoch của PLA, so với hồi quy Logistic (đường nét đứt). (b) Ma trận nhầm lẫn của Perceptron trên tập kiểm tra. (c) Đường cong ROC của hai mô hình trên tập kiểm tra. Mã nguồn vẽ hình: [images/plot_lung_cancer_pla.ipynb](images/plot_lung_cancer_pla.ipynb).*
 
-**Bước 3. So sánh bằng kiểm định chéo trên train.** Test chỉ khác nhau một mẫu nên chưa đủ kết luận; dùng lại CV 5 phần ở mục d) cho cả hai mô hình:
+**Bước 3. So sánh bằng kiểm định chéo trên train:** test chỉ khác nhau một mẫu nên chưa đủ kết luận; dùng lại CV 5 phần ở mục d) cho cả hai mô hình:
 
 | CV 5 phần trên train | Accuracy | F1 | ROC-AUC |
 |---|---|---|---|
@@ -1215,7 +1217,7 @@ Thay đổi thứ tự duyệt mẫu (`random_state` từ 0 đến 9) làm ROC-A
 ## 4.4. Kết luận
 
 - **Phân loại** là bài toán học có giám sát với nhãn rời rạc; phân loại nhị phân có hai lớp, thường mã hóa $\{0, 1\}$ hoặc $\{-1, +1\}$.
-- **Hàm sigmoid** $\sigma(s) = \frac{1}{1 + e^{-s}}$ ánh xạ $\mathbb{R}$ vào $(0, 1)$, khả vi, có đạo hàm $\sigma' = \sigma(1 - \sigma)$.
+- **Hàm sigmoid** $\sigma(z) = \frac{1}{1 + e^{-z}}$ ánh xạ $\mathbb{R}$ vào $(0, 1)$, khả vi, có đạo hàm $\sigma' = \sigma(1 - \sigma)$.
 - **Hồi quy Logistic** dự đoán xác suất $P(y = 1 \mid \mathbf{x}) = \sigma(\mathbf{x}^T\mathbf{w})$; ranh giới quyết định là siêu phẳng $\mathbf{x}^T\mathbf{w} = 0$; $w_j$ là mức thay đổi log-odds khi $x_j$ tăng 1 đơn vị.
 - Hàm mất mát **cross-entropy** thu được từ **MLE**; gradient $\frac{1}{N}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}) - \mathbf{y})$; tối ưu bằng **Gradient Descent** vì không có nghiệm giải tích.
 - **Ma trận nhầm lẫn** (TP, TN, FP, FN) cho biết mô hình nhầm theo kiểu nào. **Accuracy** dễ gây hiểu lầm với dữ liệu mất cân bằng; **Precision** đo độ tin cậy khi báo dương, **Recall** đo khả năng không bỏ sót, **F1** cân bằng cả hai; **ROC-AUC** đánh giá mô hình trên mọi ngưỡng.
@@ -1229,7 +1231,7 @@ Thay đổi thứ tự duyệt mẫu (`random_state` từ 0 đến 9) làm ROC-A
 ### Câu hỏi lý thuyết
 
 1. Phát biểu bài toán phân loại nhị phân. Tại sao không nên dùng hồi quy tuyến tính rồi phân loại theo ngưỡng 0.5?
-2. Trình bày các tính chất của hàm sigmoid. Chứng minh $\sigma'(s) = \sigma(s)(1 - \sigma(s))$ và $\sigma(-s) = 1 - \sigma(s)$.
+2. Trình bày các tính chất của hàm sigmoid. Chứng minh $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ và $\sigma(-z) = 1 - \sigma(z)$.
 3. Viết công thức mô hình hồi quy Logistic. Chứng minh ranh giới quyết định với ngưỡng 0.5 là siêu phẳng $\mathbf{x}^T\mathbf{w} = 0$. Ranh giới thay đổi thế nào nếu dùng ngưỡng $\tau = 0.8$?
 4. Giải thích ý nghĩa của trọng số $w_j$ trong hồi quy Logistic thông qua log-odds. Với mô hình $P(\text{đỗ}) = \sigma(1.5\,x - 4)$, mỗi giờ ôn tập thêm làm odds thi đỗ thay đổi bao nhiêu lần?
 5. Từ giả thiết $P(y_i = 1 \mid \mathbf{x}_i; \mathbf{w}) = \sigma(\mathbf{x}_i^T\mathbf{w})$, hãy xây dựng hàm mất mát cross-entropy bằng phương pháp MLE và tính gradient của nó.

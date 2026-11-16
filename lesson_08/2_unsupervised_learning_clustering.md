@@ -112,13 +112,13 @@ $$
 
 $\mathcal{L}$ còn gọi là **inertia** hay **WSS** (within-cluster sum of squares). Bài toán K-means: tìm cách gán $\mathbf{c}$ và các tâm $\boldsymbol{\mu}$ làm $\mathcal{L}$ nhỏ nhất. Đây là bài toán khó (biến $c_i$ rời rạc, số cách chia cực lớn), nên không tìm nghiệm tối ưu toàn cục mà dùng chiến lược **tối ưu xen kẽ** hai nhóm biến.
 
-**Cố định tâm, tối ưu cách gán.** $\mathcal{L}$ là tổng các số hạng độc lập theo từng điểm, nên mỗi điểm chọn tâm gần nhất:
+**Cố định tâm, tối ưu cách gán:** $\mathcal{L}$ là tổng các số hạng độc lập theo từng điểm, nên mỗi điểm chọn tâm gần nhất:
 
 $$
 c_i = \arg\min_{k}\|\mathbf{x}_i - \boldsymbol{\mu}_k\|_2^2
 $$
 
-**Cố định cách gán, tối ưu tâm.** Với cụm $k$ gồm $N_k$ điểm, cần cực tiểu $\sum_{i: c_i = k}\|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2$. Đạo hàm theo $\boldsymbol{\mu}_k$ bằng $-2\sum_{i: c_i = k}(\mathbf{x}_i - \boldsymbol{\mu}_k)$, cho bằng 0:
+**Cố định cách gán, tối ưu tâm:** với cụm $k$ gồm $N_k$ điểm, cần cực tiểu $\sum_{i: c_i = k}\|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2$. Đạo hàm theo $\boldsymbol{\mu}_k$ bằng $-2\sum_{i: c_i = k}(\mathbf{x}_i - \boldsymbol{\mu}_k)$, cho bằng 0:
 
 $$
 \boldsymbol{\mu}_k = \frac{1}{N_k}\sum_{i: c_i = k}\mathbf{x}_i
@@ -160,7 +160,7 @@ def kmeans(X, K, max_iter=100, seed=0):
     return assign(X, centers), centers
 ```
 
-**Tính hội tụ.** Mỗi bước gán và mỗi bước cập nhật đều không làm tăng $\mathcal{L}$ (mỗi bước là nghiệm tối ưu của một bài toán con), và số cách gán là hữu hạn, nên thuật toán luôn **dừng sau hữu hạn bước**. Tuy nhiên kết quả chỉ là một **cực tiểu địa phương**.
+**Tính hội tụ:** mỗi bước gán và mỗi bước cập nhật đều không làm tăng $\mathcal{L}$ (mỗi bước là nghiệm tối ưu của một bài toán con), và số cách gán là hữu hạn, nên thuật toán luôn **dừng sau hữu hạn bước**. Tuy nhiên kết quả chỉ là một **cực tiểu địa phương**.
 
 ![Các bước lặp của K-means](images/kmeans_steps.png)
 
@@ -212,9 +212,9 @@ print(model.predict([[0, 0]]))     # cụm của điểm mới
 
 $K$ phải chọn trước. $K$ quá nhỏ gộp các nhóm khác biệt; $K$ quá lớn chia vụn dữ liệu thành các nhóm không có ý nghĩa. Giá trị **tối ưu toàn cục** $\mathcal{L}^*(K)$ **không tăng** khi tăng $K$ (bằng 0 khi $K = N$, mỗi điểm một cụm), nên không thể chọn $K$ chỉ bằng cách cực tiểu inertia. Kết quả thực nghiệm của các lần chạy Lloyd hữu hạn có thể không giảm đều do khởi tạo và nghiệm cục bộ khác nhau; cần chạy nhiều khởi tạo trước khi so sánh.
 
-**Phương pháp Elbow (khuỷu tay).** Chạy K-means với $K = 1, 2, \dots$, vẽ $\mathcal{L}(K)$ theo $K$. Ban đầu $\mathcal{L}$ giảm nhanh (tách được các nhóm thật), sau một giá trị $K$ thì giảm chậm hẳn (chỉ còn chia nhỏ các nhóm thật). Điểm gãy trên đồ thị, giống khuỷu tay, là $K$ hợp lý.
+**Phương pháp Elbow (khuỷu tay):** chạy K-means với $K = 1, 2, \dots$, vẽ $\mathcal{L}(K)$ theo $K$. Ban đầu $\mathcal{L}$ giảm nhanh (tách được các nhóm thật), sau một giá trị $K$ thì giảm chậm hẳn (chỉ còn chia nhỏ các nhóm thật). Điểm gãy trên đồ thị, giống khuỷu tay, là $K$ hợp lý.
 
-**Chỉ số Silhouette.** Với mỗi điểm $\mathbf{x}_i$:
+**Chỉ số Silhouette:** với mỗi điểm $\mathbf{x}_i$:
 - $a(i)$: khoảng cách trung bình từ $\mathbf{x}_i$ tới các điểm **khác** trong cùng cụm (độ gắn kết);
 - $b(i)$: khoảng cách trung bình nhỏ nhất từ $\mathbf{x}_i$ tới các điểm của **một cụm khác** (cụm láng giềng gần nhất);
 

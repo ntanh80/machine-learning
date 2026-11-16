@@ -3,9 +3,6 @@ pre, pre code { font-size: 16px !important; line-height: 1.5 !important; }
 </style>
 
 # Bài 7. Máy véc-tơ hỗ trợ (SVM)
-
-> Tài liệu tham khảo: *Giáo trình Machine Learning 2026*, Chương 10 – Máy vector hỗ trợ. SVM lề mềm và hàm kernel chỉ được nhắc tới trong giáo trình (phần câu hỏi ôn tập), tham khảo C. Cortes, V. Vapnik, *Support-vector networks*, Machine Learning, 1995; C. M. Bishop, *Pattern Recognition and Machine Learning*, Springer, 2006 (Chương 6, 7) và tài liệu scikit-learn (*Support Vector Machines*).
->
 > Mã nguồn demo: thư mục [codes/](codes/).
 >
 > Danh sách thư viện và phiên bản đã dùng: [requirements.txt](../requirements.txt).
@@ -33,8 +30,37 @@ $$
 
 với $\mathbf{w} = [w_1, \dots, w_d]^T$ là vector trọng số và $b$ là hệ số tự do (bias). Trong không gian 2 chiều siêu phẳng là một đường thẳng, trong 3 chiều là một mặt phẳng.
 
-- **$\mathbf{w}$ vuông góc với siêu phẳng** (vector pháp tuyến): với hai điểm $\mathbf{x}_A, \mathbf{x}_B$ bất kỳ trên siêu phẳng, $\mathbf{w}^T(\mathbf{x}_A - \mathbf{x}_B) = 0$. $\mathbf{w}$ quyết định hướng, $b$ quyết định vị trí của siêu phẳng.
-- Siêu phẳng chia không gian thành hai nửa: $\mathbf{w}^T\mathbf{x} + b > 0$ (phía $\mathbf{w}$ chỉ tới) và $\mathbf{w}^T\mathbf{x} + b < 0$.
+**$\mathbf{w}$ vuông góc với siêu phẳng:** lấy hai điểm $\mathbf{x}_A, \mathbf{x}_B$ bất kỳ nằm trên siêu phẳng, tức là $\mathbf{w}^T\mathbf{x}_A + b = 0$ và $\mathbf{w}^T\mathbf{x}_B + b = 0$. Trừ hai đẳng thức cho nhau, $b$ bị triệt tiêu:
+
+$$
+\mathbf{w}^T(\mathbf{x}_A - \mathbf{x}_B) = 0
+$$
+
+Vector $\mathbf{x}_A - \mathbf{x}_B$ nối hai điểm trên siêu phẳng nên nằm dọc theo siêu phẳng. Tích vô hướng của nó với $\mathbf{w}$ bằng 0, nghĩa là $\mathbf{w}$ vuông góc với mọi hướng nằm trong siêu phẳng. Vì vậy $\mathbf{w}$ được gọi là **vector pháp tuyến** của siêu phẳng.
+
+**Vai trò của $\mathbf{w}$ và $b$:**
+
+- $\mathbf{w}$ quyết định **hướng** (độ nghiêng) của siêu phẳng: siêu phẳng luôn vuông góc với $\mathbf{w}$.
+- $b$ quyết định **vị trí**: giữ nguyên $\mathbf{w}$ và thay đổi $b$ thì siêu phẳng tịnh tiến song song với chính nó. Khoảng cách từ gốc tọa độ tới siêu phẳng là $\frac{|b|}{\|\mathbf{w}\|_2}$ (thay $\mathbf{x}_i = \mathbf{0}$ vào công thức khoảng cách ở mục b). Khi $b = 0$, siêu phẳng đi qua gốc tọa độ.
+
+**Hai nửa không gian:** siêu phẳng chia không gian thành hai phần:
+
+- $\mathbf{w}^T\mathbf{x} + b > 0$: nửa không gian phía $\mathbf{w}$ chỉ tới;
+- $\mathbf{w}^T\mathbf{x} + b < 0$: nửa không gian phía ngược lại.
+
+Lý do: lấy một điểm $\mathbf{x}_0$ trên siêu phẳng rồi đi một đoạn theo hướng $\mathbf{w}$, được điểm $\mathbf{x} = \mathbf{x}_0 + t\mathbf{w}$ với $t > 0$. Khi đó
+
+$$
+\mathbf{w}^T\mathbf{x} + b = \underbrace{\mathbf{w}^T\mathbf{x}_0 + b}_{=0} + t\,\mathbf{w}^T\mathbf{w} = t\|\mathbf{w}\|_2^2 > 0
+$$
+
+Đi ngược hướng $\mathbf{w}$ ($t < 0$) thì giá trị này âm. Giá trị $\mathbf{w}^T\mathbf{x} + b$ càng lớn về độ lớn thì điểm càng xa siêu phẳng.
+
+**Ví dụ trong $\mathbb{R}^2$:** chọn $\mathbf{w} = [1, 1]^T$, $b = -2$. Siêu phẳng là đường thẳng $x_1 + x_2 - 2 = 0$.
+
+- Hai điểm $\mathbf{x}_A = (2, 0)$ và $\mathbf{x}_B = (0, 2)$ nằm trên đường thẳng. $\mathbf{x}_A - \mathbf{x}_B = (2, -2)$, và $\mathbf{w}^T(\mathbf{x}_A - \mathbf{x}_B) = 1 \cdot 2 + 1 \cdot (-2) = 0$: $\mathbf{w}$ vuông góc với đường thẳng.
+- Điểm $(2, 2)$ nằm về phía $\mathbf{w}$ chỉ tới: $2 + 2 - 2 = 2 > 0$. Gốc tọa độ $(0, 0)$ nằm phía còn lại: $0 + 0 - 2 = -2 < 0$.
+- Khoảng cách từ gốc tọa độ tới đường thẳng là $\frac{|-2|}{\sqrt{1^2 + 1^2}} = \sqrt{2}$. Đổi $b = -4$ thì được đường thẳng $x_1 + x_2 = 4$, song song với đường cũ và cách gốc $\frac{4}{\sqrt{2}} = 2\sqrt{2}$.
 
 Ký hiệu nhãn $y_i \in \{-1, +1\}$ như PLA (Bài 4). Cho tập huấn luyện $\{(\mathbf{x}_i, y_i)\}_{i=1}^{N}$. Siêu phẳng **phân chia đúng** dữ liệu nếu mọi điểm nằm đúng phía:
 
@@ -50,13 +76,60 @@ $$
 
 #### b) Khoảng cách từ một điểm tới siêu phẳng
 
-Khoảng cách từ $\mathbf{x}_i$ tới siêu phẳng là
+Công thức khoảng cách được xây dựng lần lượt từ đường thẳng ($d = 2$), mặt phẳng ($d = 3$) đến siêu phẳng tổng quát ($d$ bất kỳ). Cả ba trường hợp có chung một quy tắc: **thay tọa độ điểm vào vế trái của phương trình, lấy trị tuyệt đối, rồi chia cho độ dài vector pháp tuyến.**
+
+**Đường thẳng trong $\mathbb{R}^2$:** đường thẳng $w_1x_1 + w_2x_2 + b = 0$ có vector pháp tuyến $\mathbf{w} = [w_1, w_2]^T$. Khoảng cách từ điểm $(x_1, x_2)$ tới đường thẳng là
+
+$$
+\frac{|w_1x_1 + w_2x_2 + b|}{\sqrt{w_1^2 + w_2^2}}
+$$
+
+Đây chính là công thức $\frac{|ax_0 + by_0 + c|}{\sqrt{a^2 + b^2}}$ quen thuộc ở hình học phổ thông, chỉ đổi tên hệ số.
+
+Ví dụ: đường thẳng $3x_1 + 4x_2 - 12 = 0$, tức $\mathbf{w} = [3, 4]^T$, $b = -12$, $\|\mathbf{w}\|_2 = \sqrt{3^2 + 4^2} = 5$.
+
+- Điểm $(4, 3)$: $3 \cdot 4 + 4 \cdot 3 - 12 = 12$, khoảng cách $\frac{12}{5} = 2.4$; giá trị dương nên điểm nằm về phía $\mathbf{w}$ chỉ tới.
+- Gốc tọa độ $(0, 0)$: $3 \cdot 0 + 4 \cdot 0 - 12 = -12$, khoảng cách $\frac{12}{5} = 2.4$; giá trị âm nên điểm nằm phía ngược lại.
+- Điểm $(4, 0)$: $12 + 0 - 12 = 0$, khoảng cách bằng 0, tức điểm nằm trên đường thẳng.
+
+**Mặt phẳng trong $\mathbb{R}^3$:** mặt phẳng $w_1x_1 + w_2x_2 + w_3x_3 + b = 0$ có vector pháp tuyến $\mathbf{w} = [w_1, w_2, w_3]^T$. Khoảng cách từ điểm $(x_1, x_2, x_3)$ tới mặt phẳng là
+
+$$
+\frac{|w_1x_1 + w_2x_2 + w_3x_3 + b|}{\sqrt{w_1^2 + w_2^2 + w_3^2}}
+$$
+
+So với đường thẳng, tử số và mẫu số chỉ thêm một số hạng ứng với tọa độ thứ ba.
+
+Ví dụ: mặt phẳng $2x_1 - x_2 + 2x_3 - 6 = 0$, tức $\mathbf{w} = [2, -1, 2]^T$, $b = -6$, $\|\mathbf{w}\|_2 = \sqrt{2^2 + (-1)^2 + 2^2} = 3$.
+
+- Điểm $(3, 0, 3)$: $2 \cdot 3 - 0 + 2 \cdot 3 - 6 = 6$, khoảng cách $\frac{6}{3} = 2$, nằm về phía $\mathbf{w}$ chỉ tới.
+- Gốc tọa độ: $0 - 0 + 0 - 6 = -6$, khoảng cách cũng bằng 2 nhưng nằm phía ngược lại.
+- Điểm $(1, 2, 3)$: $2 - 2 + 6 - 6 = 0$, điểm nằm trên mặt phẳng.
+
+**Siêu phẳng trong $\mathbb{R}^d$:** tổng quát hóa hai trường hợp trên, tử số là $w_1x_1 + \dots + w_dx_d + b = \mathbf{w}^T\mathbf{x} + b$ và mẫu số là $\sqrt{w_1^2 + \dots + w_d^2} = \|\mathbf{w}\|_2$. Khoảng cách từ $\mathbf{x}_i$ tới siêu phẳng là
 
 $$
 \frac{|\mathbf{w}^T\mathbf{x}_i + b|}{\|\mathbf{w}\|_2}
 $$
 
-(tổng quát của công thức khoảng cách từ điểm tới đường thẳng $\frac{|ax_0 + by_0 + c|}{\sqrt{a^2 + b^2}}$). Với điểm được phân loại đúng, $y_i$ cùng dấu với $\mathbf{w}^T\mathbf{x}_i + b$, nên có thể viết **khoảng cách có dấu**:
+Với $d = 2$ và $d = 3$, công thức này trùng với hai công thức ở trên. Với $d > 3$ không vẽ được hình, nhưng cách tính vẫn như vậy.
+
+**Chứng minh (đúng với mọi $d$):** gọi $\mathbf{x}_p$ là hình chiếu vuông góc của $\mathbf{x}_i$ lên siêu phẳng. Đoạn nối $\mathbf{x}_p$ với $\mathbf{x}_i$ vuông góc với siêu phẳng, tức là cùng phương với $\mathbf{w}$, nên
+
+$$
+\mathbf{x}_i = \mathbf{x}_p + r\,\frac{\mathbf{w}}{\|\mathbf{w}\|_2}
+$$
+
+với $\frac{\mathbf{w}}{\|\mathbf{w}\|_2}$ là vector đơn vị theo hướng $\mathbf{w}$ và $|r|$ là khoảng cách cần tìm. Nhân hai vế với $\mathbf{w}^T$ rồi cộng $b$, dùng $\mathbf{w}^T\mathbf{x}_p + b = 0$ (vì $\mathbf{x}_p$ nằm trên siêu phẳng):
+
+$$
+\mathbf{w}^T\mathbf{x}_i + b = \underbrace{\mathbf{w}^T\mathbf{x}_p + b}_{=0} + r\,\frac{\mathbf{w}^T\mathbf{w}}{\|\mathbf{w}\|_2} = r\,\|\mathbf{w}\|_2
+\quad\Rightarrow\quad r = \frac{\mathbf{w}^T\mathbf{x}_i + b}{\|\mathbf{w}\|_2}
+$$
+
+Dấu của $r$ cho biết điểm nằm ở phía nào (mục a), độ lớn $|r|$ là khoảng cách. Áp dụng cho điểm $(4, 3)$ ở ví dụ đường thẳng: $r = 2.4$, hình chiếu $\mathbf{x}_p = (4, 3) - 2.4 \cdot \frac{(3, 4)}{5} = (2.56;\ 1.08)$, và $3 \cdot 2.56 + 4 \cdot 1.08 - 12 = 0$, đúng là nằm trên đường thẳng.
+
+Với điểm được phân loại đúng, $y_i$ cùng dấu với $\mathbf{w}^T\mathbf{x}_i + b$, nên có thể viết **khoảng cách có dấu**:
 
 $$
 d_i = \frac{y_i(\mathbf{w}^T\mathbf{x}_i + b)}{\|\mathbf{w}\|_2}
@@ -202,7 +275,7 @@ print(y * (X @ w + b))                       # [1. 1. 4. 4. 1. 2. 2. 3.]
 
 Nghiệm: $\mathbf{w} = (1, 0)$, $b = -2$, siêu phẳng $x_1 = 2$, độ rộng lề $2/\|\mathbf{w}\| = 2$. Ba điểm có $y_i(\mathbf{w}^T\mathbf{x}_i + b) = 1$ là $(3, 1)$, $(3, -1)$, $(1, 0)$: đó là các **vector hỗ trợ**.
 
-**Kiểm tra bằng tay qua bài toán đối ngẫu.** Gọi $\lambda_1, \lambda_2, \lambda_3$ là nhân tử của $(1, 0)$, $(3, 1)$, $(3, -1)$ (các điểm khác có $\lambda = 0$). Từ $\sum\lambda_i y_i = 0$: $\lambda_1 = \lambda_2 + \lambda_3$. Từ $\mathbf{w} = \sum\lambda_i y_i\mathbf{x}_i$:
+**Kiểm tra bằng tay qua bài toán đối ngẫu:** gọi $\lambda_1, \lambda_2, \lambda_3$ là nhân tử của $(1, 0)$, $(3, 1)$, $(3, -1)$ (các điểm khác có $\lambda = 0$). Từ $\sum\lambda_i y_i = 0$: $\lambda_1 = \lambda_2 + \lambda_3$. Từ $\mathbf{w} = \sum\lambda_i y_i\mathbf{x}_i$:
 
 $$
 \mathbf{w} = -\lambda_1(1, 0) + \lambda_2(3, 1) + \lambda_3(3, -1) = \big(3(\lambda_2 + \lambda_3) - \lambda_1,\ \lambda_2 - \lambda_3\big) = (2\lambda_1,\ \lambda_2 - \lambda_3)
@@ -341,7 +414,7 @@ $$
 
 Dự đoán là tổng có trọng số độ tương đồng $K$ giữa điểm mới và các vector hỗ trợ.
 
-**Ví dụ: kernel đa thức bậc 2.** Với $\mathbf{x}, \mathbf{z} \in \mathbb{R}^2$:
+**Ví dụ: kernel đa thức bậc 2:** với $\mathbf{x}, \mathbf{z} \in \mathbb{R}^2$:
 
 $$
 (\mathbf{x}^T\mathbf{z})^2 = (x_1z_1 + x_2z_2)^2 = x_1^2z_1^2 + 2x_1x_2z_1z_2 + x_2^2z_2^2 = \phi(\mathbf{x})^T\phi(\mathbf{z})

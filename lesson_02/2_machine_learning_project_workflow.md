@@ -198,7 +198,7 @@ Kết quả cho thấy bốn vấn đề: 20 dòng trùng lặp; cột khu vực
 | 4 | Thiếu **đặc trưng** (số phòng, năm xây dựng) | Điền bằng trung vị (ít bị ảnh hưởng bởi ngoại lai hơn trung bình) | `fillna(median)` hoặc `SimpleImputer` | 995 |
 | 5 | Ngoại lai diện tích | Phát hiện bằng quy tắc IQR, kiểm tra rồi xóa nếu là lỗi | xem dưới | 989 |
 
-**Quy tắc IQR.** Gọi $Q_1, Q_3$ là phân vị 25% và 75%, $\text{IQR} = Q_3 - Q_1$. Điểm nằm ngoài khoảng $[Q_1 - 1.5\,\text{IQR},\ Q_3 + 1.5\,\text{IQR}]$ được coi là ngoại lai. Với diện tích: $Q_1 = 78.3$, $Q_3 = 161.6$, khoảng hợp lệ là $[-46.6;\ 286.5]$, có 6 căn vượt ngưỡng (diện tích từ 844 đến 1989 m²).
+**Quy tắc IQR:** gọi $Q_1, Q_3$ là phân vị 25% và 75%, $\text{IQR} = Q_3 - Q_1$. Điểm nằm ngoài khoảng $[Q_1 - 1.5\,\text{IQR},\ Q_3 + 1.5\,\text{IQR}]$ được coi là ngoại lai. Với diện tích: $Q_1 = 78.3$, $Q_3 = 161.6$, khoảng hợp lệ là $[-46.6;\ 286.5]$, có 6 căn vượt ngưỡng (diện tích từ 844 đến 1989 m²).
 
 ```python
 q1, q3 = df['area'].quantile([0.25, 0.75])
@@ -276,7 +276,7 @@ $$
 
 với $f_{t,d}$ là số lần từ $t$ xuất hiện trong văn bản $d$, $N$ là số văn bản, $n_t$ là số văn bản chứa $t$. **Theo quy ước giáo khoa này**, "Sinh", "viên", "ICTU" có mặt ở cả hai câu nên $\text{IDF} = \log(2/2) = 0$, còn "trí", "tuệ", "dữ", "liệu" có TF–IDF dương, mang thông tin phân biệt hai câu.
 
-**Quy ước trong scikit-learn.** Notebook dùng `TfidfVectorizer()` mặc định: TF là số lần xuất hiện, $\text{IDF}(t) = \ln\frac{1+N}{1+n_t} + 1$, sau đó chuẩn hóa mỗi vector TF–IDF về độ dài L2 bằng 1. Vì vậy một từ có mặt ở mọi văn bản có IDF bằng **1**, không phải 0. Đây là hai quy ước tính trọng số; không so trực tiếp kết quả tính tay ở trên với đầu ra mặc định của thư viện. Ngay cả `smooth_idf=False` vẫn giữ số hạng cộng 1 trong IDF.
+**Quy ước trong scikit-learn:** notebook dùng `TfidfVectorizer()` mặc định: TF là số lần xuất hiện, $\text{IDF}(t) = \ln\frac{1+N}{1+n_t} + 1$, sau đó chuẩn hóa mỗi vector TF–IDF về độ dài L2 bằng 1. Vì vậy một từ có mặt ở mọi văn bản có IDF bằng **1**, không phải 0. Đây là hai quy ước tính trọng số; không so trực tiếp kết quả tính tay ở trên với đầu ra mặc định của thư viện. Ngay cả `smooth_idf=False` vẫn giữ số hạng cộng 1 trong IDF.
 
 *Mã nguồn: [codes/02_bag_of_words.ipynb](codes/02_bag_of_words.ipynb).*
 
@@ -400,13 +400,13 @@ $$
 hệ số $w$ và hệ số chệch $b$ là hai tham số. Để đánh giá mức độ phù hợp, dùng **hàm mất mát**, ví dụ sai số bình phương trung bình:
 
 $$
-L(w, b) = \frac{1}{2N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2
+\mathcal{L}(w, b) = \frac{1}{2N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2
 $$
 
 Huấn luyện là tìm tham số làm hàm mất mát nhỏ nhất:
 
 $$
-\theta^* = \arg\min_{\theta} L(\theta)
+\theta^* = \arg\min_{\theta} \mathcal{L}(\theta)
 $$
 
 Phân biệt với **siêu tham số** (hyperparameters): các giá trị được **chọn trước khi huấn luyện**, không học được bằng cách cực tiểu hàm mất mát trên tập huấn luyện, nhưng ảnh hưởng lớn đến chất lượng mô hình.

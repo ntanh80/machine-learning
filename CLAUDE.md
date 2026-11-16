@@ -69,6 +69,7 @@ lesson_XX/
 ### 3.3. Nội dung hiển thị và comment – tiếng Việt có dấu
 
 - Nội dung bài giảng (tiêu đề, văn bản trong `.md`, ô Markdown của notebook) viết tiếng Việt có dấu.
+- **Giọng văn khoa học:** văn phong khách quan, chính xác, súc tích; phát biểu rõ ràng, có định nghĩa hoặc lập luận làm căn cứ; dùng thuật ngữ nhất quán. Tránh khẩu ngữ, cách nói cảm tính, phóng đại và xưng hô trực tiếp với người đọc (sai: `Thuật toán này cực kỳ mạnh, bạn sẽ thấy nó chạy rất ngon`; đúng: `Thuật toán hội tụ về nghiệm tối ưu khi tốc độ học đủ nhỏ`).
 - **Comment trong code** viết tiếng Việt có dấu, không viết không dấu (sai: `# Du lieu chieu cao`).
 - Mỗi biến/hàm quan trọng có comment giải thích ý nghĩa, nêu ký hiệu tương ứng trong bài giảng nếu có:
 
@@ -77,7 +78,10 @@ lesson_XX/
   ```
 
 - Chuỗi hiển thị (`print`, nhãn trục, tiêu đề hình) viết tiếng Việt có dấu.
-- Cụm in đậm mở đầu đoạn văn hoặc mục liệt kê kết thúc bằng dấu `:`, không dùng dấu chấm, và chữ đầu sau dấu `:` viết thường (sai: `**Nghiệm giải tích.** Tại cực tiểu…`; đúng: `**Nghiệm giải tích:** tại cực tiểu…`).
+- **Cụm in đậm mở đầu** (đầu đoạn văn, đầu mục liệt kê, hoặc đứng riêng một dòng làm tiêu đề nhỏ) kết thúc bằng dấu `:`, **không dùng dấu chấm**, trong cả file `.md` lẫn ô Markdown của notebook:
+  - Chữ đầu sau dấu `:` viết thường, trừ tên riêng, viết tắt, code, công thức (sai: `**Nghiệm giải tích.** Tại cực tiểu…`; đúng: `**Nghiệm giải tích:** tại cực tiểu…`; giữ nguyên: `**Gain Ratio:** C4.5 chia…`).
+  - Cụm đứng riêng một dòng cũng vậy (sai: `**Nhận xét.**`, `**Vai trò của $\mathbf{w}$ và $b$.**`; đúng: `**Nhận xét:**`, `**Vai trò của $\mathbf{w}$ và $b$:**`).
+  - Cụm có số thứ tự thì ngăn số và tên bằng dấu `–` để không có hai dấu `:` (đúng: `**Bước 1 – Xác suất của một mẫu:**`; sai: `**Bước 1: entropy của tập ban đầu:**`).
 
 ### 3.4. Ký hiệu toán học – thống nhất giữa các bài
 

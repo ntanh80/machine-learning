@@ -97,7 +97,7 @@ Các nơ-ron được xếp thành các **lớp** (layer). Trong **mạng truy�
 | Phân loại nhị phân | 1 | Sigmoid (xác suất lớp dương) | Cross-entropy nhị phân |
 | Phân loại $K$ lớp | $K$ | Softmax (phân phối xác suất trên $K$ lớp) | Cross-entropy |
 
-**Ký hiệu.** Mạng có $L$ lớp (không kể lớp vào), lớp $l$ có $n_l$ nơ-ron. Lớp $l$ có ma trận trọng số $\mathbf{W}^{(l)}$ kích thước $n_l \times n_{l-1}$ (phần tử $w^{(l)}_{ji}$ là trọng số từ nơ-ron $i$ của lớp $l-1$ tới nơ-ron $j$ của lớp $l$) và vector bias $\mathbf{b}^{(l)} \in \mathbb{R}^{n_l}$. Số tham số của lớp $l$ là $n_l \times n_{l-1} + n_l$. Ví dụ mạng 64 – 64 – 10 nhận dạng chữ số ở mục 9.1.3 có $64 \times 64 + 64 + 64 \times 10 + 10 = 4810$ tham số.
+**Ký hiệu:** mạng có $L$ lớp (không kể lớp vào), lớp $l$ có $n_l$ nơ-ron. Lớp $l$ có ma trận trọng số $\mathbf{W}^{(l)}$ kích thước $n_l \times n_{l-1}$ (phần tử $w^{(l)}_{ji}$ là trọng số từ nơ-ron $i$ của lớp $l-1$ tới nơ-ron $j$ của lớp $l$) và vector bias $\mathbf{b}^{(l)} \in \mathbb{R}^{n_l}$. Số tham số của lớp $l$ là $n_l \times n_{l-1} + n_l$. Ví dụ mạng 64 – 64 – 10 nhận dạng chữ số ở mục 9.1.3 có $64 \times 64 + 64 + 64 \times 10 + 10 = 4810$ tham số.
 
 #### c) Hàm kích hoạt
 
@@ -190,7 +190,7 @@ $$
 \boldsymbol{\delta}^{(l)} = \frac{\partial \ell}{\partial \mathbf{z}^{(l)}}
 $$
 
-**Bước 1 – sai số ở lớp ra.** Với lớp ra sigmoid và cross-entropy (hoặc softmax và cross-entropy, hoặc lớp ra tuyến tính và MSE), công thức rất gọn:
+**Bước 1 – sai số ở lớp ra:** với lớp ra sigmoid và cross-entropy (hoặc softmax và cross-entropy, hoặc lớp ra tuyến tính và MSE), công thức rất gọn:
 
 $$
 \boldsymbol{\delta}^{(L)} = \mathbf{a}^{(L)} - \mathbf{y} = \hat{\mathbf{y}} - \mathbf{y}
@@ -198,7 +198,7 @@ $$
 
 (chứng minh như gradient của hồi quy Logistic ở Bài 4: $\frac{\partial \ell}{\partial \hat{y}} = \frac{\hat{y} - y}{\hat{y}(1 - \hat{y})}$ và $\frac{\partial \hat{y}}{\partial z} = \hat{y}(1 - \hat{y})$).
 
-**Bước 2 – lan truyền sai số ngược về các lớp trước.** Vì $\mathbf{z}^{(l+1)} = \mathbf{W}^{(l+1)}f(\mathbf{z}^{(l)}) + \mathbf{b}^{(l+1)}$, theo quy tắc hàm hợp:
+**Bước 2 – lan truyền sai số ngược về các lớp trước:** vì $\mathbf{z}^{(l+1)} = \mathbf{W}^{(l+1)}f(\mathbf{z}^{(l)}) + \mathbf{b}^{(l+1)}$, theo quy tắc hàm hợp:
 
 $$
 \boldsymbol{\delta}^{(l)} = \big(\mathbf{W}^{(l+1)}\big)^T\boldsymbol{\delta}^{(l+1)} \odot f'(\mathbf{z}^{(l)}), \qquad l = L-1, \dots, 1
@@ -206,7 +206,7 @@ $$
 
 trong đó $\odot$ là phép nhân từng phần tử. Mỗi nơ-ron ở lớp $l$ nhận một phần sai số của các nơ-ron lớp $l+1$, theo tỉ lệ trọng số nối giữa chúng, rồi nhân với độ dốc của hàm kích hoạt tại chính nó.
 
-**Bước 3 – gradient theo tham số.** Vì $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$:
+**Bước 3 – gradient theo tham số:** vì $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$:
 
 $$
 \frac{\partial \ell}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)}\big(\mathbf{a}^{(l-1)}\big)^T, \qquad \frac{\partial \ell}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}
@@ -323,7 +323,7 @@ Với 10 nơ-ron ẩn, cross-entropy giảm từ 0.613 (epoch 1) xuống 0.264 (
 
 #### f) Mạng nơ-ron với scikit-learn và PyTorch
 
-**scikit-learn.** `MLPClassifier` (phân loại) và `MLPRegressor` (hồi quy) cài đặt mạng truyền thẳng, huấn luyện bằng lan truyền ngược với thuật toán tối ưu `adam` (mặc định), `sgd` hoặc `lbfgs`. Ví dụ nhận dạng chữ số viết tay (`load_digits`: 1797 ảnh $8 \times 8$, 10 lớp):
+**scikit-learn:** `MLPClassifier` (phân loại) và `MLPRegressor` (hồi quy) cài đặt mạng truyền thẳng, huấn luyện bằng lan truyền ngược với thuật toán tối ưu `adam` (mặc định), `sgd` hoặc `lbfgs`. Ví dụ nhận dạng chữ số viết tay (`load_digits`: 1797 ảnh $8 \times 8$, 10 lớp):
 
 ```python
 from sklearn.neural_network import MLPClassifier
@@ -351,7 +351,7 @@ Trong lần chia và khởi tạo này, mạng 5 nơ-ron đạt 99.11% trên tra
 
 *Mã nguồn: [codes/04_mlp_sklearn.ipynb](codes/04_mlp_sklearn.ipynb).*
 
-**PyTorch.** Theo giáo trình, mạng 4 – 10 – 8 – 3 (ReLU) phân loại hoa Iris. PyTorch tự động tính gradient: `loss.backward()` thực hiện lan truyền ngược, `optimizer.step()` cập nhật trọng số.
+**PyTorch:** theo giáo trình, mạng 4 – 10 – 8 – 3 (ReLU) phân loại hoa Iris. PyTorch tự động tính gradient: `loss.backward()` thực hiện lan truyền ngược, `optimizer.step()` cập nhật trọng số.
 
 ```python
 import torch.nn as nn
